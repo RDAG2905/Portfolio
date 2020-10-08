@@ -1,0 +1,112 @@
+﻿@using Greco2.Models.Denuncia
+@model IEnumerable<ListaSabanaMM>
+
+<style>
+    td {
+        /*background-image: linear-gradient(white 70%,#f2f2f2);*/
+        font-size: 12px;
+    }
+
+    thead {
+        /*background-image: linear-gradient(white 30%,#e6e6e6);*/
+        background-color: #f9f9f9;
+    }
+
+    tr:hover {
+        background-image: linear-gradient(white,#f2f2f2);
+    }
+    table {
+        max-width: 1300px;
+        background-color: white;
+        border: 1px solid lightgray;
+        border-radius: 4px;
+        padding: 10px 10px 10px 10px;
+        margin-left:3px;
+    }
+</style>
+
+    <table class="table table-bordered" id="tablalistaSabana">
+
+        <thead>
+            
+            <tr class="text-primary">
+                <th style="padding-left:20px;">DenunciaId</th>
+                <th nowrap>Nro Expediente</th>
+                <th>Fecha</th>
+                <th>Organismo</th>
+                <th>Servicio</th>
+                <th>Estudio</th>
+                <th>Denunciante</th>
+                <th>Responsable</th>
+                <th>Estado Actual</th>
+                <th>Tipo Proceso</th>
+
+
+            </tr>
+        </thead>
+        <tbody style="text-align:left;">
+
+
+            @foreach (var item in @Model)
+            {
+            <tr>
+
+
+                <td class="text-primary" style="width:80px;text-align:center;">
+                    @Html.DisplayFor(modelItem => item.DenunciaId)
+                    @*@Html.ActionLink(@item.DenunciaId.ToString(), "GetDenunciaById", "Denuncias", new { id = @item.DenunciaId }, null)*@
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Expediente)
+                </td>
+                <td style="max-width:250px;" nowrap>
+                    @Html.DisplayFor(modelItem => item.Fecha_Creacion)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Organismo)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Servicio)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Estudio)
+                </td>
+
+                <td>
+                    @Html.DisplayFor(modelItem => item.Denunciante)
+                </td>
+
+                @{
+                    var responsable = item.ResponsableApellido + ',' + item.ResponsableNombre;
+                    <td>
+                        @responsable
+                    </td>
+                }
+
+                <td>
+                    @Html.DisplayFor(modelItem => item.Estado_Actual)
+                </td>
+                <td nowrap>
+                    @Html.DisplayFor(modelItem => item.Tipo_Proceso)
+                </td>
+
+
+
+
+
+            </tr>
+
+            }
+
+        </tbody>
+    </table>
+
+
+
+    <div style="margin-top:10px;margin-left:500px;font-size:12px;">
+        <label class="text-primary">@Html.Raw(" Denuncias actualizadas : " + Model.Count())</label><i class="fa fa-check-square" style="font-size:13px;color:forestgreen;margin-left:10px;"></i>
+    </div>
+
+
+
+

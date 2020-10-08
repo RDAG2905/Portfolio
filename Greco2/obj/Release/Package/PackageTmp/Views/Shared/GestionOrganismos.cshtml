@@ -1,0 +1,837 @@
+﻿@using Greco2.Models.Organismo
+    @model OrganismoModelView
+
+<style>
+    input[type=text], select {
+        height: 30px;
+        max-width: 280px;
+        
+    }
+
+        input[type=text],select > option {
+            font-size: 12px;
+        }
+
+    .row {
+        margin-top: 5px;
+    }
+
+    input[type=button] {
+        height: 30px;
+        max-width:120px;
+    }
+    
+    
+    label {
+    text-align:left;
+    }
+
+    #elementos {
+        margin-left: -60px;
+        margin-right: -50px;
+    }
+
+    .row {
+        margin-top: 5px;
+        /*font-size: 11px;*/
+    }
+
+    .btn {
+        /*height: 26px;*/
+        width: 100px;
+    }
+
+
+    .form-control, label {
+        font-size: 12px;
+        max-height: 26px;
+        /*border-color: #f1f1f1;*/        
+    }
+    .panel-default {
+        border-color: #f1f1f1;
+    }
+</style>
+
+<div>
+    <div class="panel panel-default">
+        <div class="panel-heading"><h4 class="text-primary">Gestión de Organismos</h4></div>
+        <div class="panel-body">
+          
+            <div class="row col-lg-offset-3">
+                <label class="col-xs-1" style="margin-right:60px;margin-left:-10px;">Nombre:</label>
+                <input type="text" class="form-control col-xs-1" id="filtroOrganismo" />
+                <input style="margin-left:20px;" type="button" value="Nuevo" class="btn btn-sm btn-primary col-xs-1" id="NuevoOrganismo"
+                       data-toggle="modal" data-target="#nuevoModalOrganismo" onclick="cleanInputsOrganismos();" />
+            </div>
+
+
+            <div class="row col-lg-offset-3">
+
+                <label class="col-xs-1" style="margin-right:60px;margin-left:-10px;">Provincias:</label>
+                @Html.DropDownListFor(m => m.provinciaSeleccionada, Model.Provincias, "", new { @class = "col-xs-1 form-control", id = "comboProvinciasBusquedaOR" })
+                <input style="margin-left:20px;" type="button" value="Limpiar" class="btn btn-sm btn-primary col-xs-1" onclick="limpiarFiltrosBusqueda()" />
+            </div>
+            <div class="row col-lg-offset-3">
+
+                <label class="col-xs-1" style="margin-right:60px;margin-left:-10px;">Localidades:</label>
+                @Html.DropDownListFor(m => m.localidadSeleccionada, Model.Localidades, "", new { @class = "col-xs-1 form-control", id = "comboLocalidadesBusquedaOR" })
+                <input style="margin-left:20px;" type="button" value="Buscar" class="btn btn-sm btn-primary col-xs-1" onclick="GetOrganismos();" id="BuscarOrganismo" />
+            </div>
+            <div class="row col-lg-offset-3">
+
+                <label class="col-xs-1" style="margin-right:60px;margin-left:-10px;">Regiones:</label>
+                @Html.DropDownListFor(m => m.regionSeleccionada, Model.Regiones, "", new { @class = "col-xs-1 form-control", id = "comboRegionesBusquedaOR" })
+
+            </div>
+
+            @*<br />*@
+        </div>
+    </div>
+    @*<div class="jumbotron" style="background-color:#f7f7f7;">
+            <h4 >Gestión de Organismos</h4>
+        </div>*@
+
+    @*<div class="row col-lg-offset-3">
+        <label class="col-xs-1" style="margin-right:60px;margin-left:-10px;">Nombre:</label>
+        <input type="text" class="form-control col-xs-1" id="filtroOrganismo" />
+        <input style="margin-left:-30px;" type="button" value="Nuevo" class="btn btn-sm btn-primary col-xs-1" id="NuevoOrganismo"
+               data-toggle="modal" data-target="#nuevoModalOrganismo" onclick="cleanInputsOrganismos();" />
+    </div>
+
+
+    <div class="row col-lg-offset-3">
+        
+        <label class="col-xs-1" style="margin-right:60px;margin-left:-10px;">Provincias:</label>
+        @Html.DropDownListFor(m => m.provinciaSeleccionada, Model.Provincias, "", new { @class = "col-xs-1 form-control", id = "comboProvinciasBusquedaOR" })
+        <input style="margin-left:20px;" type="button" value="Limpiar" class="btn btn-sm btn-primary col-xs-1" onclick="limpiarFiltrosBusqueda()" />
+    </div>
+    <div class="row col-lg-offset-3">
+        
+        <label class="col-xs-1" style="margin-right:60px;margin-left:-10px;">Localidades:</label>
+        @Html.DropDownListFor(m => m.localidadSeleccionada, Model.Localidades, "", new { @class = "col-xs-1 form-control", id = "comboLocalidadesBusquedaOR" })
+        <input style="margin-left:20px;" type="button" value="Buscar" class="btn btn-sm btn-primary col-xs-1" onclick="GetOrganismos();" id="BuscarOrganismo" />
+    </div>
+    <div class="row col-lg-offset-3">
+        
+        <label class="col-xs-1" style="margin-right:60px;margin-left:-10px;">Regiones:</label>
+        @Html.DropDownListFor(m => m.regionSeleccionada, Model.Regiones, "", new { @class = "col-xs-1 form-control", id = "comboRegionesBusquedaOR" })
+
+    </div>*@
+
+
+
+    @*<br />
+    <br />*@
+    <div class="container-fluid"  id="elementos">
+
+    </div>
+
+</div>
+
+@*inicio Popup Nuevo*@
+<div class="modal fade" id="nuevoModalOrganismo" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+
+                <button type="button" class="close" data-dismiss="modal" id="btnCerrarModalNuevoOrganismo">×</button>
+                <h4 class="modal-title text-primary" id="myModalLabel">Nuevo Organismo</h4>
+            </div>
+            <div class="modal-body center-block">
+                <div id="nuevoMotivoDeReclamoBodyContent">
+                    <br />
+                    <form>
+                        @Html.AntiForgeryToken()
+                        <div class="row col-lg-offset-2">
+                            <label class="col-xs-2" style="margin-right:20px;">Nombre</label>
+                            <input class="form-control col-xs-1" type="text" id="nuevoOrganismo" />
+                        </div>
+                        <label type="text" class="text-danger" id="MensajeNombreInvalido" style="display:none;"></label>
+                        <div class="row col-lg-offset-2">
+                            @Html.LabelFor(x => x.Provincias, null, new { @class = "col-xs-2" , style = "margin-right:20px;" })
+                            @Html.DropDownListFor(m => m.provinciaSeleccionada, Model.Provincias, "", new { @class = "col-xs-1 form-control", id = "comboProvinciasNuevoOR" })
+                        </div>
+                        <div class="row col-lg-offset-2">
+                            @Html.LabelFor(x => x.Localidades, null, new { @class = "col-xs-2" ,style = "margin-right:20px;" })
+                            @Html.DropDownListFor(m => m.localidadSeleccionada, Model.Localidades, "", new { @class = "col-xs-1 form-control", id = "comboLocalidadesNuevoOR" })
+                        </div>
+                        <div class="row col-lg-offset-2">
+                            @Html.LabelFor(x => x.Regiones, null, new { @class = "col-xs-2", style = "margin-right:20px;" })
+                            @Html.DropDownListFor(m => m.regionSeleccionada, Model.Regiones, "", new { @class = "col-xs-1 form-control", id = "comboRegionesNuevoOR" })
+                        </div>
+                    </form>
+                    <br />
+                    <div id="divExisteOrganismo" style="color:white;">
+
+                    </div>
+                </div>
+
+            </div>
+            <div class="modal-footer">
+                <div class="row" id="nuevoMotivoDeReclamoContent">
+                    <span  class="col-md-offset-2"></span>                               @*onclick="guardarNuevo('CrearOrganismo','ListarOrganismos')"*@
+                    <input id="guardarNuevo" type="button" class="btn btn-sm btn-primary col-xs-3" value="Guardar" onclick="existeElOrganismo();" />
+                    <input type="button" class="btn btn-sm btn-toolbar col-xs-3" value="Cancelar" data-dismiss='modal' />
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@*----------- Fin Popup Nuevo ----------*@
+
+
+@*inicio Popup Edit*@
+<div class="modal fade" id="editModalOrganismo" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+
+                <button type="button" class="close" data-dismiss="modal" id="btnCloseEditOrganismo">×</button>
+                <h4 class="modal-title" id="myModalLabel">Editar Organismo</h4>
+            </div>
+            <div class="modal-body center-block">
+
+                <div id="editBodyContent">
+                    <form>
+                        @Html.AntiForgeryToken()
+                        <input type="hidden" id="idElementEdit" />
+                        <br />
+                        <div class="row col-lg-offset-2">
+                            <label class="col-xs-2" style="margin-right:20px;">Nombre</label>
+                            <input class="input-lg form-control col-xs-1" type="text" id="NombreEdicion" />
+                        </div>
+                        <div class="row col-lg-offset-2">
+                            @Html.LabelFor(x => x.Provincias, null, new { @class = "col-xs-2" , style = "margin-right:20px;" })
+                            @Html.DropDownListFor(m => m.provinciaSeleccionada, Model.Provincias, "", new { @class = "col-xs-1 form-control", id = "comboProvinciasEditOR" })
+                        </div>
+                        <div class="row col-lg-offset-2">
+                            @Html.LabelFor(x => x.Localidades, null, new { @class = "col-xs-2" , style = "margin-right:20px;" })
+                            @Html.DropDownListFor(m => m.localidadSeleccionada, Model.Localidades, "", new { @class = "col-xs-1 form-control", id = "comboLocalidadesEditOR" })
+
+                        </div>
+                        <div class="row col-lg-offset-2">
+                            @Html.LabelFor(x => x.Regiones, null, new { @class = "col-xs-2" , style = "margin-right:20px;" })
+                            @Html.DropDownListFor(m => m.regionSeleccionada, Model.Regiones, "", new { @class = "col-xs-1 form-control", id = "comboRegionesEditOR" })
+
+                        </div>
+                        <br />
+                        <div class="row col-lg-offset-2">
+                            <label class="col-xs-2">Inactivo</label>
+                            <input style="margin-left:5px;" class="col-xs-1" type="checkbox" id="campoActivacion" name="checkActivo" />
+                        </div>
+                    </form>
+                </div>
+
+            </div>
+            <div class="modal-footer">
+                <div class="row" id="editFooterContent">
+                    <span  class="col-md-offset-2"></span>
+                    <input type="button" class="btn btn-sm btn-primary col-xs-3" value="Guardar" onclick="guardarOrganismoEditado()" id="guardarEdicion"/>
+                    <input type="button" class="btn btn-sm btn-toolbar col-xs-3" value="Cancelar" data-dismiss='modal' />
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@*----------- Inicio Popup Edit ----------*@
+
+<div class="modal fade" id="deleteModalOrganismo" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" id="btnCerrarModalEliminarOrganismo">×</button>
+            </div>
+            <div id="deletePopupContent" class="modal-body center-block">
+                <h4>Está a punto de eliminar el Organismo con Id : </h4>
+                <form>
+                    @Html.AntiForgeryToken()
+                    <h4 id="idDeleteHidden"></h4>
+                </form>
+
+            </div>
+            <div id="divExisteRelacionesOrganismo" style="color:white">
+
+            </div>
+            <div id="deleteFooterContent" class="modal-footer">
+                <button type="button" class="btn btn-danger" id="btnDelete" onclick="validarRelaciones()">Eliminar</button>
+                <button type="button" class="btn btn-toolbar" data-dismiss="modal">Cancelar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    //function cleanNuevoModal() {
+    //    $('#NombreLocalidad').val('');
+    //    $('#comboProvinciasModal')[0].selectedIndex = 0;
+    //    $('#guardarNuevo').removeAttr('data-dismiss', 'modal');       
+    //}
+
+    function cleanInputsOrganismos() {
+       
+        $('#nuevoOrganismo').val('');
+        $('#comboProvinciasNuevoOR')[0].selectedIndex = 0;
+        $('#comboLocalidadesNuevoOR')[0].selectedIndex = 0;
+        $('#comboRegionesNuevoOR')[0].selectedIndex = 0;
+        $('#divExisteOrganismo').empty();
+    }
+
+
+    function limpiarFiltrosBusqueda() {
+        $('#filtroOrganismo').val('');
+        $('#comboProvinciasBusquedaOR')[0].selectedIndex = 0;
+        $('#comboLocalidadesBusquedaOR')[0].selectedIndex = 0;
+        $('#comboRegionesBusquedaOR')[0].selectedIndex = 0;
+        $('#elementos').empty();
+    }  
+
+    function losFiltrosSonValidados() {
+        var mensaje = "Ingrese algún Filtro de Búsqueda";
+        if ((($('#filtroOrganismo').val().length == 0) &&
+            ($('#comboProvinciasBusquedaOR')[0].selectedIndex == 0) &&
+            ($('#comboLocalidadesBusquedaOR')[0].selectedIndex == 0) &&
+            ($('#comboRegionesBusquedaOR')[0].selectedIndex == 0))) {
+            toastr.warning(mensaje);
+            return false;
+        } else {
+            return true;
+        }
+    }
+
+    $("#nuevoOrganismo").keypress(function (e) {
+        if (e.which == 13) {
+            e.preventDefault();
+            existeElOrganismo();
+            //return false;
+        }
+    });
+
+    $("#filtroOrganismo").keypress(function (e) {
+        if (e.which == 13) {
+            e.preventDefault();
+            GetOrganismos();
+        }
+    });
+
+
+    function GetOrganismos() {
+        $('#elementos').empty();
+        //if (losFiltrosSonValidados()) {
+            mostrarLoading();
+            $('#BuscarOrganismo').prop("disabled", true);
+            $.ajax({
+                url: '@Url.Action("BuscarOrganismo","Admin")' /*"/Admin/" + action*/,
+                type: "GET",
+                data: {
+                    nombre: $('#filtroOrganismo').val(),
+                    provinciaId: $('#comboProvinciasBusquedaOR').find('option:selected').val(),
+                    localidadId: $('#comboLocalidadesBusquedaOR').find('option:selected').val(),
+                    regionId: $('#comboRegionesBusquedaOR').find('option:selected').val()
+                },
+                success: function (response) {
+                    
+                    ocultarLoading();
+                    $('#elementos').html(response);
+                    $('#BuscarOrganismo').prop("disabled", false);
+                },
+                error: function (response) {
+                    ocultarLoading();
+                    toastr.error(response.responseText + ' ' + response.statusText);
+                    $('#BuscarOrganismo').prop("disabled", false);
+                }
+            });
+        //}
+    }
+
+    function esValido() {
+            var mensaje = "Todos los campos son obligatorios";
+        if (($('#nuevoOrganismo').val().trim().length == 0) ||
+            ($('#comboProvinciasNuevoOR')[0].selectedIndex == 0) ||
+            ($('#comboLocalidadesNuevoOR')[0].selectedIndex == 0) ||
+            ($('#comboRegionesNuevoOR')[0].selectedIndex == 0)) {
+            toastr.warning(mensaje);
+            return false;
+        } else {
+            $('#guardarNuevo').attr('data-dismiss', 'modal');
+            return true;
+        }
+            
+       
+    }
+
+    function guardarNuevoOrganismo() {
+        if (esValido()) {
+            var token = '@Html.AntiForgeryToken()';
+            var gnotoken = $(token).val();
+            $('#btnCerrarModalNuevoOrganismo').click();
+            $.ajax({
+                url: '@Url.Action("CrearOrganismo", "Admin")',
+                type: "POST",
+                data: {
+                    Nombre: $('#nuevoOrganismo').val(),
+                    provinciaId: $('#comboProvinciasNuevoOR').find("option:selected").val(),
+                    localidadId: $('#comboLocalidadesNuevoOR').find("option:selected").val(),
+                    regionId: $('#comboRegionesNuevoOR').find("option:selected").val(),
+                    __RequestVerificationToken: gnotoken
+                },
+                success: function (response) {
+                    //toastr.success("Registro guardado correctamente");
+                    $('#elementos').html(response);
+                    $('#guardarNuevo').removeAttr('data-dismiss');
+                },
+                error: function (response) {
+                    toastr.error(response.responseText + ' ' + response.status);
+                }
+            });
+        }
+
+    }
+
+    function esValidoOrganismo() {
+        var mensaje = "Todos los campos son obligatorios";
+        if (($('#nuevoOrganismo').val().length == 0) ||
+            ($('#comboProvinciasNuevoOR')[0].selectedIndex == 0) ||
+            ($('#comboLocalidadesNuevoOR')[0].selectedIndex == 0) ||
+            ($('#comboRegionesNuevoOR')[0].selectedIndex == 0)) {
+            toastr.warning(mensaje);
+            return false;
+        } else {
+            return true;
+        }
+    }
+
+    function existeElOrganismo() {
+        $('#guardarNuevo').prop("disabled", true);
+        var token = '@Html.AntiForgeryToken()';
+        var ctoken = $(token).val();
+        if (esValidoOrganismo()) {
+             $.ajax({
+                 url: '@Url.Action("ExisteOrganismo","Admin")',
+                 type: "POST",
+                 data: {
+                     Nombre: $('#nuevoOrganismo').val(),
+                     __RequestVerificationToken: ctoken
+                 },
+                 success: function (response) {
+                     $("#divExisteOrganismo").html(response);
+                     $('#guardarNuevo').prop("disabled",false);
+
+                 },
+                 error: function (response) {
+                     toastr.error(response.responseText + ' ' + response.status);
+                     $('#guardarNuevo').prop("disabled", false);
+                 }
+             });
+        }
+        $('#guardarNuevo').prop("disabled", false);
+    };
+
+
+    function deshabilitarGuardarEdicion() {
+        $('#guardarEdicion').removeAttr('data-dismiss', 'modal');
+    }
+
+    function habilitarGuardarEdicion() {
+        $('#guardarEdicion').attr('data-dismiss', 'modal');
+    }
+    
+
+    function esValidoNombreEdicion() {   
+
+        if (($('#NombreEdicion').val().trim().length == 0) ||
+            ($('#comboProvinciasEditOR')[0].selectedIndex == 0) ||
+            ($('#comboLocalidadesEditOR')[0].selectedIndex == 0) ||
+            ($('#comboRegionesEditOR')[0].selectedIndex == 0)) {
+            
+            toastr.warning('Todos los campos son obligatorios');
+            deshabilitarGuardarEdicion();
+            return false;
+        } else {
+            ////toastr.success('OK');
+            //habilitarGuardarEdicion();
+            return true;
+        }
+    }
+
+
+    @*function guardarOrganismoEditado() {
+        if (esValidoNombreEdicion()) {
+            
+             var token = '@Html.AntiForgeryToken()';
+             var goetoken = $(token).val();
+            $.ajax({
+                url: '@Url.Action("guardarOrganismoEditado","Admin")',
+                type: "POST",
+                data: {
+                    id: $('#idElementEdit').val(),
+                    Nombre: $('#NombreEdicion').val(),
+                    provinciaId: $('#comboProvinciasEditOR').find("option:selected").val(),
+                    localidadId: $('#comboLocalidadesEditOR').find("option:selected").val(),
+                    regionId: $('#comboRegionesEditOR').find("option:selected").val(),
+                    campoActivacion: $('input:checkbox[name=checkActivo]:checked').val(),
+                    __RequestVerificationToken: goetoken
+
+                },
+                success: function (response) {
+                    toastr.success("Registro guardado correctamente");
+                    $('#elementos').html(response);
+                   
+                },
+                error: function (response) {
+                    toastr.error(response.responseText + ' ' + response.status);
+                }
+            });
+        }
+    }*@
+
+    
+     function guardarOrganismoEditado() {
+        if (esValidoNombreEdicion()) {
+            var token = '@Html.AntiForgeryToken()';
+            var atoken = $(token).val();
+            $('#guardarEdicion').prop("disabled",true);
+            $.ajax({
+                url: '@Url.Action("guardarOrganismoEditado", "Admin")',
+                type: "POST",
+                data: {
+                    id: $('#idElementEdit').val(),
+                    Nombre: $('#NombreEdicion').val(),
+                    provinciaId: $('#comboProvinciasEditOR').find("option:selected").val(),
+                    localidadId: $('#comboLocalidadesEditOR').find("option:selected").val(),
+                    regionId: $('#comboRegionesEditOR').find("option:selected").val(),
+                    campoActivacion: $('input:checkbox[name=checkActivo]:checked').val(),
+                    __RequestVerificationToken: atoken
+                },
+                success: function (response) {                 
+                    try {
+                        if (response == "ACTUALIZADO") {                           
+                            GetOrganismoActualizado(); 
+                            $('#btnCloseEditOrganismo').click();
+                            $('#guardarEdicion').prop("disabled", false);
+                        }
+                        else
+                            if (response == "No se pueden actualizar los Datos.</br>Ya existe un Organismo con el mismo Nombre.") {
+                                toastr.warning(response);
+                            }
+                            else {
+                                toastr.error(response);   
+                                //toastr.error("Verifique si la Sesión sigue activa.</br>Verifique si los datos fueron actualizados.");            
+                            }
+                    } catch (error) {
+                        toastr.error(error);
+                    }
+                    
+                },
+                error: function (response) {
+                    toastr.error(response.responseText + ' ' + response.status);
+                }
+            });
+            $('#guardarEdicion').prop("disabled", false);
+        }
+        
+    }
+
+    function GetOrganismoActualizado() {
+        $.ajax({
+                url: '@Url.Action("GetOrganismoActualizado", "Admin")',
+                type: "GET",
+                data: {
+                    id: $('#idElementEdit').val()
+                   
+            }, success: function (result) {
+                    $('#elementos').html(result);
+
+            }, error: function (result) {
+                    toastr.error(result.responseText + ' ' + result.status);
+            }
+        });
+
+    }
+
+    $("#NombreEdicion").keypress(function (e) {
+        if (e.which == 13) {
+            e.preventDefault();
+            guardarOrganismoEditado();
+            //return false;
+        }
+    });
+
+
+    @*function guardarOrganismoEditado() {
+        
+        if (esValidoNombreEdicion()) {
+            $.ajax({
+                url: '@Url.Action("guardarOrganismoEditado", "Admin")',
+                type: "POST",
+                data: {
+                    id: $('#idElementEdit').val(),
+                    nombre: $('#NombreEdicion').val(),
+                    provinciaId: $('#comboProvinciasEditOR').find("option:selected").val(),
+                    localidadId: $('#comboLocalidadesEditOR').find("option:selected").val(),
+                    regionId: $('#comboRegionesEditOR').find("option:selected").val(),
+                    campoActivacion: $('input:checkbox[name=checkActivo]:checked').val()
+                },
+                success: function (response) {
+                    toastr.success("Registro guardado correctamente");
+                    $('#elementos').html(response);
+                },
+                error: function (response) {
+                   
+                    toastr.error(response.responseText + ' ' + response.status);
+                }
+            });
+        }
+       
+    }*@
+
+
+    function limpiarCamposEdicion() {
+        $('#NombreEdicion').val('');
+        $('#comboProvinciasEditOR')[0].selectedIndex = 0;
+        $('#comboLocalidadesEditOR')[0].selectedIndex = 0;
+        $('#comboRegionesEditOR')[0].selectedIndex = 0;
+    }
+
+    function editarOrganismo(Id) {
+        deshabilitarGuardarEdicion();
+        limpiarCamposEdicion();
+        $.ajax({
+            url: '@Url.Action("EditarOrganismo","Admin")',
+            type: "GET",
+            data: {
+                id: Id
+            },
+            success: function (response) {
+                try {
+                    $('#idElementEdit').val(response.Id);
+                    $('#NombreEdicion').val(response.Nombre);
+                    var provinciaId = response.Provincia_Id;
+                    var localidadId = response.Localidad_Id;
+                    var regionId = response.Region_Id;
+                    
+                    $('#campoActivacion').prop('checked', response.Activo);
+                    $("#comboProvinciasEditOR option").each(function (i, valor) {
+                        //console.log(i + ' : ' + $(valor).val())
+                        if ($(valor).val() == provinciaId) {
+                            $(valor).prop('selected', true);
+                            //console.log('son iguales');                          
+                        }
+                    });
+                    $("#comboLocalidadesEditOR option").each(function (i, valor) {
+                        //console.log(i + ' : ' + $(valor).val())
+                        if ($(valor).val() == localidadId) {
+                            $(valor).prop('selected', true);
+                            //console.log('son iguales');                          
+                        }
+                    });
+                    $("#comboRegionesEditOR option").each(function (i, valor) {
+                        //console.log(i + ' : ' + $(valor).val())
+                        if ($(valor).val() == regionId) {
+                            $(valor).prop('selected', true);
+                            //console.log('son iguales');                          
+                        }
+                    });
+                } catch (response) {
+                    toastr.error(response);
+                }
+            },
+            error: function (response) {
+                toastr.error(response.responseText + ' ' + response.status);
+            }
+        });
+    }
+
+
+    @*function eliminarOrganismo() {
+            var idOculto = document.getElementById('idDeleteHidden');
+            var Id = parseInt(idOculto.innerText);
+            console.log(Id);
+
+            $.ajax({
+                url: '@Url.Action("EliminarOrganismo","Admin")',
+                type: "Post",
+                data: {
+                    id: Id
+                },
+                success: function (result) {
+                    try {
+                        if (result == "Registro eliminado con éxito") {
+                            filaARemover.remove();
+                            filaARemover = undefined;
+                        }
+                        toastr.info(result);
+                    } catch (error) {
+                        toastr.error(error);
+                    }
+                },
+                error: function (result) {
+                    toastr.error(result.responseText);
+                }
+            });
+
+    }*@
+
+    function EliminarOrganismo() {
+        var idOculto = document.getElementById('idDeleteHidden');
+        var Id = parseInt(idOculto.innerText);
+       var token = '@Html.AntiForgeryToken()';
+         var eptoken = $(token).val();
+         $('#btnCerrarModalEliminarOrganismo').click();  
+        $.ajax({
+            url: '@Url.Action("EliminarOrganismo","Admin")',
+            type: "Post",
+            data: {
+                id: Id,
+                __RequestVerificationToken: eptoken
+            },
+            success: function (result) {
+                try {
+                    
+                    if (result == "Registro eliminado con éxito") {
+                        filaARemover.remove();
+                        filaARemover = undefined;
+                        toastr.success(result);
+                    } else {
+                        toastr.error(result);
+                    }
+                } catch (error) {
+                    toastr.error(error);
+                }
+            },
+            error: function (result) {
+                toastr.error(result.responseText);
+            }
+        });
+
+    }
+
+   
+
+    function validarRelaciones() {
+        
+         var idOculto = document.getElementById('idDeleteHidden');
+         var Id = parseInt(idOculto.innerText);
+          var token = '@Html.AntiForgeryToken()';
+        var vrtoken = $(token).val();
+        $('#btnDelete').prop("disabled", false);
+          
+            $.ajax({
+                url: '@Url.Action("TieneRelacionesElOrganismo", "Admin")',
+                type: "Post",
+                data: {
+                    organismoId: Id,
+                    __RequestVerificationToken: vrtoken  
+                },
+                success: function (result) {
+                    $('#divExisteRelacionesOrganismo').html(result);
+                    $('#btnDelete').prop("disabled", true);
+                },
+                error: function (result) {
+                    toastr.error(result.responseText);
+                }
+            });
+        $('#btnDelete').prop("disabled",false);
+    }
+
+
+    function cargarIdModalDelete(id, element) {
+        $('#idDeleteHidden').html(id);
+        filaARemover = $(element).parent().parent();
+        $('#divExisteRelacionesOrganismo').empty();
+        $('#btnDelete').prop("disabled",false);
+    }
+
+    function LimpiarTodo() {
+        $('#elementos').empty();
+        $('#filtroProvincias').val('');
+    }
+    
+
+    $("#comboProvinciasBusquedaOR").change(function () {
+
+            if ($(this)[0].selectedIndex != 0) {
+
+                $.ajax({
+                    url: '@Url.Action("GetLocalidadesPorProvincia", "FiltroDenuncias")',
+                    type: "Post",
+                    data: {
+                        idProvincia: $('#comboProvinciasBusquedaOR option:selected').val()
+                    },
+                    success: function (response) {
+                        $('#comboLocalidadesBusquedaOR').empty();
+                        $('#comboLocalidadesBusquedaOR').append('<option value=""/>');
+                        $(response).each(function () {
+                            $('#comboLocalidadesBusquedaOR').append(
+                                $('<option/>', { value: this.Id }).html(this.Nombre)
+                            );
+                        });
+                        
+                    },
+                    error: function (response) {
+                        toastr.error(response);
+                    }
+                });
+            }
+    });
+
+
+    $("#comboProvinciasNuevoOR").change(function () {
+
+            if ($(this)[0].selectedIndex != 0) {
+
+                $.ajax({
+                    url: '@Url.Action("GetLocalidadesPorProvincia", "FiltroDenuncias")',
+                    type: "Post",
+                    data: {
+                        idProvincia: $('#comboProvinciasNuevoOR option:selected').val()
+                    },
+                    success: function (response) {
+                        $('#comboLocalidadesNuevoOR').empty();
+                        $('#comboLocalidadesNuevoOR').append('<option value=""/>');
+                        $(response).each(function () {
+                            $('#comboLocalidadesNuevoOR').append(
+                                $('<option/>', { value: this.Id }).html(this.Nombre)
+                            );
+                        });
+                        
+                    },
+                    error: function (response) {
+                        toastr.error(response);
+                    }
+                });
+            }
+    });
+
+    @*$("#comboProvinciasEditOR").change(function () {
+
+            if ($(this)[0].selectedIndex != 0) {
+
+                $.ajax({
+                    url: '@Url.Action("GetLocalidadesPorProvincia", "FiltroDenuncias")',
+                    type: "Post",
+                    data: {
+                        idProvincia: $('#comboProvinciasEditOR option:selected').val()
+                    },
+                    success: function (response) {
+                        $('#comboLocalidadesEditOR').empty();
+                        $('#comboLocalidadesEditOR').append('<option value=""/>');
+                        $(response).each(function () {
+                            $('#comboLocalidadesEditOR').append(
+                                $('<option/>', { value: this.Id }).html(this.Nombre)
+                            );
+                        });
+                        
+                    },
+                    error: function (response) {
+                        toastr.error(response);
+                    }
+                });
+            }
+    });*@
+</script>
+
+
+
+

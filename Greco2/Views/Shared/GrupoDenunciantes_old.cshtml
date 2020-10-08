@@ -1,0 +1,49 @@
+﻿<div id="grupoDenunciantesContainer">
+    <div class="borde" style="padding-right:40px">
+        <div class="list-group-item" style="border:2px inherit;">
+            <div class="row">
+                <label style="margin-right:10px;margin-left:80px;" class="col-xs-1">Agregar </label>
+                <input style="max-width:100px;text-align:center;" id="cantidadDenunciantes" class="form-control input-sm col-xs-1" />
+                <div class="col-xs-1" style="margin-right:50px;"><i onclick="limpiarInput('cantidadDenunciantes');" style="color:darkgray;" class="glyphicon glyphicon-backward"></i></div>
+
+                <button class="col-xs-1 btn btn-default" onclick="eliminarFilasGrupo();"><i style="color:darkgray;" class="glyphicon glyphicon-fast-backward"></i></button>
+
+                <label style="margin-right:10px;margin-left:80px;" class="col-xs-1">Quitar </label>
+                <input style="max-width:100px;text-align:center;" id="cantidadDenunciantesASacar" class="form-control input-sm col-xs-1" />
+                <div class="col-xs-1"><i onclick="limpiarInput('cantidadDenunciantesASacar');" style="color:darkgray;" class="glyphicon glyphicon-backward"></i></div>
+            </div>
+        </div>
+        <br />
+        <div id="divListaDenunciantes">
+            <table id="lista" class="table" style="width:900px;">
+                <thead>
+                    <tr>
+                        <th></th>
+                        <th class="text-center">Nombre</th>
+                        <th class="text-center">Apellido</th>
+                        <th class="text-center">Dni</th>
+                        <th></th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+
+            </table>
+        </div>
+
+        <div class="navbar-right">
+            <button id="guardarGrupoDenunciantes" class="btn btn-sm btn-primary right" style="margin-right:80px;">Guardar</button>
+        </div>
+    </div>
+</div>
+
+@section scripts{
+<script>
+
+    function eliminarFilasGrupo() {
+        var tbody = $('#lista tbody');
+        tbody.empty();
+    }
+    </script>
+    
+}

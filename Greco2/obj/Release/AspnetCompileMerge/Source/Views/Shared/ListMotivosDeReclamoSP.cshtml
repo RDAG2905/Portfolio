@@ -1,0 +1,97 @@
+﻿@using Greco2.Models.MotivoDeReclamo
+@model IEnumerable<MotivoDeReclamoSP>
+
+<style>
+
+    /*table {
+        margin-left: 80px;
+        margin-right: 80px;
+    }*/
+    th {
+        text-align: center;
+        background-color: #f9f9f9;
+    }
+
+    td, th {
+        font-size: 12px;
+    }
+
+    .check {
+        width: 20px;
+    }
+
+    .thleft {
+        text-align: left;
+    }
+
+    .thright {
+        text-align: right;
+    }
+</style>
+
+@if (Model.Any())
+{
+<div style="display:flex;max-height:250px;overflow:auto">
+    <table class="table table-hover">
+        <thead>
+            <tr>
+                <th></th>
+                <th class="thleft">Nombre</th>
+                <th class="thleft">Servicio</th>
+                <th class="thleft col-xs-2">Proceso</th>
+                <th class="col-xs-1">Editar</th>
+                <th class="col-xs-1">Eliminar</th>
+                <th class="thright">Inactivo</th>
+            </tr>
+        </thead>
+
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td class="check" style="text-align:right">
+                    @Html.DisplayFor(i => item.Id)
+                </td>
+                <td style="width:380px;">
+                    @Html.DisplayFor(i => item.Nombre)
+                </td>
+                <td style="width:320px;">
+                    @Html.DisplayFor(i => item.Servicio)
+                </td>
+                <td style="width:350px;">
+                    @Html.DisplayFor(i => item.ProcesoDescripcion)
+                </td>
+
+                <td class="check">
+                    <a onclick="editarMotivoDeReclamo(@item.Id)" data-toggle='modal' data-target='#editModalMotivoDeReclamo'><i class="glyphicon glyphicon-pencil col-xs-1"></i></a>
+                </td>
+                <td class="check">
+                        <a onclick="cargarIdModalDelete(@item.Id.ToString(),this)" data-toggle='modal' data-target='#deleteModalMotivosDeReclamo'><i class="glyphicon glyphicon-trash text-danger col-xs-1"></i></a>
+                    </td>
+                <td class="thright">
+                    @Html.DisplayFor(i => @item.Deleted)
+                </td>
+            </tr>
+        }
+
+    </table>
+</div>
+    @*<br />*@
+    <div class="text-success col-xs-12">@ViewBag.Success</div>   
+    <br />
+    <div class="text-primary">Total:  @Model.Count()</div>
+
+}
+else
+{
+    <br />
+    <div id="infoResult" class="alert alert-info text-center col-xs-12">
+            <h4>No se encontraron coincidencias</h4>
+    </div>
+    @*<br />
+    <div id="infoResult" class="list-group-item col-xs-12">
+        <h4 style="color:darkturquoise;">La Búsqueda no arroja resultados</h4>
+    </div>*@
+
+}
+
+

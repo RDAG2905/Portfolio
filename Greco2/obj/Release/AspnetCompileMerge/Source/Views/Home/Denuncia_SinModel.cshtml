@@ -1,0 +1,868 @@
+﻿@*@model Greco2.Models.Denuncia.DenunciaModelView*@
+
+<style>
+    
+
+    input[type=text], input[type=date], input[type=time], label {
+        max-width: 220px;
+        height: 25px;
+        margin-right: 50px;
+    }
+
+
+
+    text {
+        color: dodgerblue;
+        margin-left: 10px;
+        /*margin-top: 15px;*/
+        max-width: 220px;
+        /*background-color:lightgray;*/
+    }
+
+    .leftText {
+        text-align: left;
+    }
+
+    input[type=checkbox] {
+        margin-left: 80px;
+        margin-right: 1px;
+    }
+
+    #comboOrganismos, #comboEstudios, #comboModalidadGestion, #comboSubTipoProceso, #comboMediador, #comboDomicilioMediador,
+    #comboMotivoReclamo, #comboServicioDenunciado, #comboEstadoConciliacion, #comboTipoEvento, #comboReqInforme,
+    #comboListaTipoEvento {
+        width: 180px;
+    }
+
+    input[type=button] {
+        border-radius: 4px;
+    }
+
+    .h-divider {
+        margin-top: 25px;
+        /*margin-bottom: 5px;*/
+        height: 1px;
+        width: 100%;
+        border-top: 1px solid #0066ff;
+    }
+
+    .borde {
+        /*display:flex;*/
+        /*border-style: solid;*/
+        background-color: white;
+        /*border-color: #cccccc;*/
+        /*border-color: #808080;*/
+        border-color: #999999;
+        border-color: lightgray;
+        border-width: 1px;
+        border-radius: 4px;
+        margin-top: 5px;
+        margin-bottom: 5px;
+        /*margin-left: -25px;*/
+        padding-left: 40px;
+        padding-right: 20px;
+        padding-top: 30px;
+        padding-bottom: 30px;
+    }
+
+    #ParentContainer, #grupoDenunciantesContainer {
+        /*background-color: #f2f2f2;*/
+        background-color: #e6e6e6;
+        border-radius: 4px;
+        padding-top: 10px;
+        /*margin-left: -10px auto;
+        margin-right: -10px auto;*/
+        /*width:1200px;*/
+    }
+    #grupoDenunciantesContainer {
+        padding-left: 30px;
+        padding-right: 30px;
+        padding-bottom: 30px;
+        display:flex;
+    }
+        
+        #Buscador, #Cleaner, #alta {
+            margin-left: -30px;
+            height: 25px;
+            /*width:25px;*/
+            justify-content: center;
+            padding-left: 7px;
+            padding-right: 7px;
+        }
+
+    #checkEvento {
+        margin-left: 10PX;
+    }
+
+    .bordeBotonera {
+        border-radius: 4px;
+        padding-left: 25px;
+        padding-top: 6px;
+        padding-bottom: 6px;
+        text-align: center;
+        background-color: white;
+        height: 42px;
+    }
+
+    .btnGuardar {
+        padding-left: 50px;
+        padding-right: 50px;
+    }
+
+    .container-fluid {
+        margin: 0 auto;
+    }
+
+    th {
+        max-width: 200px;
+        padding: 5px 5px 5px 5px;
+    }
+
+    table {
+        text-align: center;
+    }
+
+    .menu {
+        /*background-color: #00547E;*/
+        /*background-color: #002966;*/
+        background-color: #337ab7; /*#0066ff #0047b3 #262626 #666666 #d9d9d9 #bfbfbf #337ab7*/
+        /*background:linear-gradient(#002966,#0047b3);*/
+        /*border-bottom: 8px solid #04A3ED;*/
+        border-bottom: 4px solid #04A3ED;
+        /*border-bottom: 4px solid #d9d9d9;*/
+        border-radius: 4px;
+        width: 120%;
+        height: 40px;
+        /*padding: 10px 10px;*/
+        position: static;
+        margin-top: -20px;
+        /*margin: 0px;*/
+        margin-left: -110px;
+        /*margin-right: -50px;*/
+        z-index: 1;
+        /*height: 35px;*/
+        /*opacity: 0.9;*/
+    }
+
+        .menu .navbar-nav > .active > a {
+            background-color: #04A3ED;
+            color: white;
+            font-weight: bold;
+        }
+
+        .menu .navbar-nav > li > a {
+            font-size: 13px;
+            color: white;
+            padding: 10px 35px;
+        }
+
+            .menu .navbar-nav > li > a:hover {
+                background-color: #04A3ED;
+            }
+
+    .navbar-header > a {
+        font-family: 'Ubuntu Condensed', sans-serif;
+        padding: 0px;
+        margin: 0px;
+        text-decoration: none;
+        color: white;
+        font-size: 25px;
+        /*font-size: 20px;*/
+        padding: 5px 30px;
+    }
+
+        .navbar-header > a:hover {
+            text-decoration: none;
+            color: #04A3ED;
+        }
+
+    /*a:active {
+        background-color: #e6e6e6;
+    }*/
+
+</style>@*background-color: #f2f2f2;*@
+
+
+<div class="container">
+    <div class="navbar navbar-default navbar-header" style="height:20px;width:120%;margin-left:-120px;margin-bottom:-5px;">
+        <div class="row">
+            <input style="margin-left:150px;" type="button" name="name" value="Visualizar Modificaciones" class="btn btn-sm btn-primary" />
+            <input type="button" name="name" value="Formalizar Denuncia" class="btn btn-sm btn-primary" />
+        </div>
+    </div>    
+    <ul class="nav nav-tabs">
+        <li class="active"><a data-toggle="tab" href="#home">Datos Generales</a></li>
+        <li><a data-toggle="tab" href="#menu1">Denunciantes</a></li>
+        <li><a data-toggle="tab" href="#menu2">Datos Coprec</a></li>
+        <li><a data-toggle="tab" href="#menu3">Previsiones</a></li>
+    </ul>
+
+    <div class="tab-content">
+        <br />
+        <div id="home" class="tab-pane fade in active">
+            
+            <div display="flex" id="ParentContainer" class="col-xs-12">
+
+
+                @*<h4 style="padding-bottom:10px;color:dodgerblue">Gestión de Denuncia</h4>*@
+                <div class="row">
+                    @*<input type="button" class="btn-info" value="Visualizar Modificaciones" />
+                        <input type="button" class="btn-info" value="Formalizar Denuncia" />*@
+
+                </div>
+
+                @*<div class="row borde">*@
+                @*<input type="button" class="btn-primary" value="Datos Generales" />
+                    <input type="button" class="btn-primary" value="Documentos" />
+                    <input type="button" class="btn-primary" value="Previsiones" />
+                    <input type="button" class="btn-primary" value="Datos Adicionales" />*@
+
+                @*</div>*@
+
+                <div class="borde">
+                    <div class="row">
+                        <label class="col-xs-3">Etapa Procesal : </label>
+                        <div class="dropdown col-xs-3">
+                            <button class="btn btn-xs dropdown-toggle col-xs-3" type="button" id="comboEtapaProcesal" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <span class="caret"></span>
+                            </button>
+                            <ul class="dropdown-menu col-xs-3" @*aria-labelledby="about-us"*@>
+                                <li><a href="#">Conciliación</a></li>
+                                <li><a href="#">Imputación</a></li>
+                                <li><a href="#">Sanción</a></li>
+                            </ul>
+                        </div>
+
+                        <label class="col-xs-3">Número de Denuncia : </label>
+                        <text class="col-xs-3">NroDenuncia  </text>
+                    </div>
+                    <div class="row">
+                        <label class="col-xs-3">Tipo de Proceso : </label>
+                        <div class="dropdown col-xs-3">
+                            <button class="btn btn-xs dropdown-toggle col-xs-3" type="button" id="comboEtapaProcesal" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <span class="caret"></span>
+                            </button>
+                            <ul class="dropdown-menu col-xs-3" @*aria-labelledby="about-us"*@>
+                                <li><a href="#"></a></li>
+                                <li><a href="#"></a></li>
+                                <li><a href="#"></a></li>
+                            </ul>
+                        </div>
+                        <label class="col-xs-3">Usuario Creador : </label>
+                        <text class="col-xs-3">Usuario-Creador</text>
+                    </div>
+                    <div class="row">
+                        <label class="col-xs-3">Denuncia Preventiva : </label>
+                        <label class="col-xs-3"></label>
+                        <label class="col-xs-3">Denuncia Formal : </label>
+                        <label class="col-xs-3"></label>
+                    </div>
+                </div>
+
+                @*<div class="tab-content">
+                    <div id="home" class="tab-pane fade in active">*@
+
+                <div class="borde">
+                    <div class="row">
+                        <label class="col-xs-3">Denunciante : </label>
+                        <div style="color:dodgerblue;" id="denuncianteResult"></div>
+
+                    </div>
+                    <br />
+
+                    <div class="row">
+                        <label class="col-xs-3">Dni Denunciante : </label>
+                        <input type="text" class="form-control col-xs-3" placeholder="DNI Denunciante" id="dni" />
+                        <button class="btn btn-info btn-sm" id="Buscador" type="submit"><i class="glyphicon glyphicon-search"></i></button>
+
+                        <input type="checkbox" />
+                        <label>Denunciante Individual</label>
+                    </div>
+                    <div class="row">
+                        <label class="col-xs-3">Nombre : </label>
+                        <input type="text" class="form-control col-xs-3" placeholder="Nombre Denunciante" id="nombre" />
+                        <button class="btn btn-info btn-sm" id="Cleaner"><i class="glyphicon glyphicon-remove"></i></button>
+                    </div>
+                    <div class="row">
+                        <label class="col-xs-3">Apellido : </label>
+                        <input type="text" class="form-control col-xs-3" placeholder="Apellido Denunciante" id="apellido" />
+                        <button class="btn btn-primary btn-sm" id="alta"><i class="glyphicon glyphicon-export"></i></button>
+                    </div>
+
+
+                </div>
+
+                <div class="borde">
+                    <div class="row">
+                        <label class="col-xs-3">Tramite CRM : </label>
+                        <input type="text" class="form-control col-xs-3" placeholder="Tramite CRM" />
+                        <label class="col-xs-3">Número de Línea : </label>
+                        <input type="text" class="form-control col-xs-3" placeholder="Nro de Linea" />
+                    </div>
+                    <div class="row">
+                        <label class="col-xs-3">Nro de Cliente/Contrato : </label>
+                        <input type="text" class="form-control col-xs-3" placeholder="Nro de Cliente/Contrato" />
+                    </div>
+                </div>
+                <div class="borde">
+                    <div class="row">
+                        <label class="col-xs-3">Fecha de Notificacion : </label>
+                        <input id="fechaNotificacion" type="date" class="form-control col-xs-3" placeholder="Fecha de Notificacion" />
+                        <label class="col-xs-3">Fecha de Notificacion Gcia: </label>
+                        <input id="fechaNotificacionGcia" type="date" class="form-control col-xs-3" placeholder="Fecha de Notificacion Gcia" />
+                    </div>
+
+                    <div class="row">
+                        <label class="col-xs-3">Nro de Expediente : </label>
+                        <input type="text" class="form-control col-xs-3" placeholder="Nro de Expediente" />
+                        <label class="col-xs-3">Responsable Interno : </label>
+                        <text class="col-xs-3">Responsable-Interno</text>
+                    </div>
+                </div>
+
+                <div class="borde">
+                    <div class="row">
+                        <label class="col-xs-3">Organismo : </label>
+                        <div class="dropdown col-xs-3">
+                            <button class="btn btn-xs dropdown-toggle col-xs-3" type="button" id="comboOrganismos" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <span class="caret"></span>
+                            </button>
+                            <ul class="dropdown-menu col-xs-3" aria-labelledby="about-us">
+                                <li><a href="#">Omic</a></li>
+                                <li><a href="#">Coprec</a></li>
+                                <li @*class="disabled"*@><a href="#">Acuda</a></li>
+                            </ul>
+                        </div>
+
+                        <label class="col-xs-3">Estudio Jurídico : </label>
+                        <div class="dropdown col-xs-3">
+                            <button class="btn btn-xs dropdown-toggle col-xs-3" type="button" id="comboEstudios" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <span class="caret"></span>
+                            </button>
+                            <ul class="dropdown-menu col-xs-3" aria-labelledby="about-us">
+                                <li><a href="#">Estudio 1</a></li>
+                                <li><a href="#">Estudio 2</a></li>
+                                <li @*class="disabled"*@><a href="#">Estudio 3</a></li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <label class="col-xs-3">Modalidad de Gestión : </label>
+                        <div class="dropdown col-xs-3">
+                            <button class="btn btn-xs dropdown-toggle col-xs-3" type="button" id="comboModalidadGestion" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <span class="caret"></span>
+                            </button>
+                            <ul class="dropdown-menu col-xs-3" aria-labelledby="about-us">
+                                <li><a href="#"></a></li>
+                                <li><a href="#"></a></li>
+                                <li><a href="#"></a></li>
+                            </ul>
+                        </div>
+
+                        <label class="col-xs-3">SubTipo Proceso : </label>
+                        <div class="dropdown col-xs-3">
+                            <button class="btn btn-xs dropdown-toggle col-xs-3" type="button" id="comboSubTipoProceso" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <span class="caret"></span>
+                            </button>
+                            <ul class="dropdown-menu col-xs-3" aria-labelledby="about-us">
+                                <li><a href="#"></a></li>
+                                <li><a href="#"></a></li>
+                                <li><a href="#"></a></li>
+                            </ul>
+                        </div>
+
+                    </div>
+
+                    <div class="row">
+                        <label class="col-xs-3">Mediador : </label>
+                        <div class="dropdown col-xs-3">
+                            <button class="btn btn-xs dropdown-toggle col-xs-3" type="button" id="comboMediador" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <span class="caret"></span>
+                            </button>
+                            <ul class="dropdown-menu col-xs-3" aria-labelledby="about-us">
+                                <li><a href="#"></a></li>
+                                <li><a href="#"></a></li>
+                                <li><a href="#"></a></li>
+                            </ul>
+                        </div>
+
+                        <label class="col-xs-3">Domicilio del Mediador : </label>
+                        <div class="dropdown col-xs-3">
+                            <button class="btn btn-xs dropdown-toggle col-xs-3" type="button" id="comboDomicilioMediador" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <span class="caret"></span>
+                            </button>
+                            <ul class="dropdown-menu col-xs-3" aria-labelledby="about-us">
+                                <li><a href="#"></a></li>
+                                <li><a href="#"></a></li>
+                                <li><a href="#"></a></li>
+                            </ul>
+                        </div>
+
+                        @*<input type="text" class="form-control col-xs-3" placeholder="Domicilio del Mediador" />*@
+                    </div>
+                    <div class="row">
+                        <label class="col-xs-3">Reclamo Relacionado : </label>
+                        <input type="text" class="form-control col-xs-3" placeholder="Reclamo Relacionado" />
+
+                    </div>
+                </div>
+
+                <div class="borde">
+                    <div class="row">
+                        <label class="col-xs-3">Servicio Denunciado : </label>
+                        <div class="dropdown col-xs-3">
+                            <button class="btn btn-xs dropdown-toggle col-xs-3" type="button" id="comboServicioDenunciado" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <span class="caret"></span>
+                            </button>
+                            <ul class="dropdown-menu col-xs-3" aria-labelledby="about-us">
+                                <li><a href="#"></a></li>
+                                <li><a href="#"></a></li>
+                                <li><a href="#"></a></li>
+                            </ul>
+                        </div>
+
+                        <label class="col-xs-3">Motivo de Reclamo : </label>
+                        <div class="dropdown col-xs-3">
+                            <button class="btn btn-xs dropdown-toggle col-xs-3" type="button" id="comboMotivoReclamo" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <span class="caret"></span>
+                            </button>
+                            <ul class="dropdown-menu col-xs-3" aria-labelledby="about-us">
+                                <li><a href="#"></a></li>
+                                <li><a href="#"></a></li>
+                                <li><a href="#"></a></li>
+                            </ul>
+                        </div>
+
+                    </div>
+
+                    <div class="row">
+                        <label class="col-xs-3">Estado Conciliación : </label>
+                        <div class="dropdown col-xs-3">
+                            <button class="btn btn-xs dropdown-toggle col-xs-3" type="button" id="comboEstadoConciliacion" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <span class="caret"></span>
+                            </button>
+                            <ul class="dropdown-menu col-xs-3" aria-labelledby="about-us">
+                                <li><a href="#"></a></li>
+                                <li><a href="#"></a></li>
+                                <li><a href="#"></a></li>
+                            </ul>
+                        </div>
+
+                        <label class="col-xs-3">Fecha de Resultado : </label>
+                        <input type="date" class="form-control col-xs-3" placeholder="Fecha de Resultado" />
+                    </div>
+                    
+
+                </div>
+                <div class="borde">
+                    <div class="row">
+                        <label class="col-xs-3">Tipo de Evento</label>
+                        <div class="dropdown col-xs-3">
+                            <button class="btn btn-xs dropdown-toggle col-xs-3" type="button" id="comboTipoEvento" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <span class="caret"></span>
+                            </button>
+                            <ul class="dropdown-menu col-xs-3" aria-labelledby="about-us">
+                                <li><a href="#"></a></li>
+                                <li><a href="#"></a></li>
+                                <li><a href="#"></a></li>
+                            </ul>
+                        </div>
+
+                        <label class="col-xs-3">Requerimiento de Informe : </label>
+                        <div class="dropdown col-xs-3">
+                            <button class="btn btn-xs dropdown-toggle col-xs-3" type="button" id="comboReqInforme" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <span class="caret"></span>
+                            </button>
+                            <ul class="dropdown-menu col-xs-3" aria-labelledby="about-us">
+                                <li><a href="#"></a></li>
+                                <li><a href="#"></a></li>
+                                <li><a href="#"></a></li>
+                            </ul>
+                        </div>
+
+                    </div>
+
+                    <div class="row">
+                        <label class="col-xs-3">Fecha Vencimiento : </label>
+                        <input type="date" class="form-control col-xs-3" />
+                        <label class="col-xs-3">Hora Vencimiento : </label>
+                        <input type="time" class="form-control col-xs-3" />
+                    </div>
+                    @*<div class="row">
+                                <label class="col-xs-3">Solucionado : </label>
+                                <input type="checkbox" class="checkbox-inline" />
+                            </div>
+                            <div class="row">
+                                <label class="col-xs-3">Contestado :</label>
+                                <input type="checkbox" class="checkbox-inline" />
+                            </div>
+                        <div class="row">
+                            <label class="col-xs-3">Observaciones: </label>
+                            <textarea class="form-control col-xs-3"></textarea>
+
+                        </div>*@
+                </div>
+                @*</div>
+                    </div>*@
+                <div class="bordeBotonera">
+                    <div class="row">
+                        <div>
+                            <input type="button" class="btn btn-primary btn-sm btnGuardar" value="Guardar" />
+                        </div>
+                    </div>
+                </div>
+                <div class="borde" style="padding-top:10px;padding-bottom:10px;">
+
+                    <div class="row">
+                        <h4 style="padding-left:30px;">Eventos</h4>
+                        <div class="dropdown col-xs-3">
+                            <button class="btn btn-xs dropdown-toggle col-xs-3" type="button" id="comboListaTipoEvento" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <span class="caret"></span>
+                            </button>
+                            <ul class="dropdown-menu col-xs-3" aria-labelledby="about-us">
+                                <li><a href="#"></a></li>
+                                <li><a href="#"></a></li>
+                                <li><a href="#"></a></li>
+                            </ul>
+                        </div>
+                        <input type="button" value="Nuevo" class="btn btn-default btn-sm" style="margin-left:-60px;" />
+                    </div>
+                </div>
+                <div class="borde">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th class="thCentrado">Fecha de Vencimiento</th>
+                                <th>Tipo de Evento</th>
+                                <th>Observaciones</th>
+                                <th>Contestado</th>
+                                <th>Solucionado</th>
+                                <th>Requerimiento de Informe</th>
+                                <th>Editar</th>
+                                <th>Eliminar</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>28-06-2019</td>
+                                <td>Audiencia</td>
+                                <td></td>
+                                <td>si</td>
+                                <td>si</td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>29-06-2019</td>
+                                <td>Acta</td>
+                                <td></td>
+                                <td>No</td>
+                                <td>No</td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>30-06-2019</td>
+                                <td>Audiencia</td>
+                                <td></td>
+                                <td>No</td>
+                                <td>No</td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+
+        </div>
+        <div id="menu1" class="tab-pane fade">
+
+            <br />
+            <div id="grupoDenunciantesContainer">
+                <div class="borde">
+                    <div class="list-group-item">
+                        <div class="row">
+                            <label class="col-xs-1">Agregar </label>
+                            <input id="cantidadDenunciantes" class="form-control input-sm col-xs-1" />
+                            <label class="col-xs-1">Quitar </label>
+                            <input id="cantidadDenunciantesASacar" class="form-control input-sm col-xs-1" />
+                        </div>
+                    </div>
+                    <br />
+
+                    <table id="lista" class="table">
+                        <thead>
+                            <tr>
+                                <th></th>
+                                <th>Nombre</th>
+                                <th>Apellido</th>
+                                <th>Dni</th>
+                                <th></th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tr id="PrimeraFila">
+                            <td>1</td>
+                            <td><input type="text" class="form-control" /></td>
+                            <td><input type="text" class="form-control" /></td>
+                            <td><input type="text" class="form-control" /></td>
+                            @*<td><button type="button" class="btn btn-toolbar btn-sm button_agregar"><i class="glyphicon glyphicon-plus"></i> </button></td>
+                            <td><button type="button" class="btn btn-toolbar btn-sm button_eliminar"><i class="glyphicon glyphicon-remove"></i></button></td>*@
+                        </tr>
+                    </table>
+                    <div class="navbar-right" >
+                        <button class="btn btn-sm btn-primary right" style="margin-right:140px;">Validar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div id="menu2" class="tab-pane fade">
+            <h3>Menu 2</h3>
+            <p>Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam.</p>
+        </div>
+        <div id="menu3" class="tab-pane fade">
+            <h3>Menu 3</h3>
+            <p>Eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo.</p>
+        </div>
+    </div>
+</div>
+
+@section scripts{
+    @Scripts.Render("~/bundles/jqueryval")
+
+    <script type="text/javascript">
+        var orden = 1;
+       
+
+        $(document).ready(function () {
+
+            var tbody = $('#lista tbody');
+            var fila_contenido = tbody.find('tr').first().html();
+            //Agregar fila nueva.
+            $('#lista .button_agregar').click(function () {
+                var fila_nueva = $('<tr></tr>');
+                fila_nueva.append(fila_contenido);
+                orden++;
+                fila_nueva.find('td').first().replaceWith(orden);
+                tbody.append(fila_nueva);
+            });
+
+            //Eliminar fila.
+            $('#lista').on('click', '.button_eliminar', function () {
+                    $(this).parents('tr').eq(0).remove();
+                
+            });
+
+            
+            var cantidadFilas;
+            function generarNFilas(cantidadFilas) {
+                var tbody = $('#lista tbody');
+                var fila_contenido = tbody.find('tr').first().html();
+                
+                for (i = 0; i < cantidadFilas; i++) {
+                                        
+                    var filaNueva = $('<tr></tr>');
+                    filaNueva.append(fila_contenido);
+                    console.log(filaNueva);
+                        orden++;
+                        filaNueva.find('td').first().replaceWith(orden);
+                        tbody.append(filaNueva);
+                   
+                }
+            }
+
+            var nFilasABorrar;
+            function removerNFilas(nFilasABorrar) {
+                var tbody = $('#lista tbody');
+                var cantidadFilasTabla = document.querySelector("#lista").rows.length - 1;
+                console.log(cantidadFilasTabla );
+                //for (i = cantidadFilasTabla; ; i--) {
+                //    console.log($("#lista").last());
+                //}
+               
+                var cantidad = 0;
+                var n = cantidadFilasTabla;
+                //console.log("n : " + n)
+                //console.log("nFilasABorrar : " + nFilasABorrar)
+                while (n > 1 && (nFilasABorrar > cantidad)) {
+                    //console.log($("#lista").find("tr").last());
+                    $("#lista").find("tr").last().remove();
+                    n--;
+                    cantidad++;
+                    //console.log("n--" + n);
+                    //console.log("cantidad++ : " + cantidad);
+                }
+                orden = $("#lista").find("tr").last().find("td").eq(0).val();
+                console.log(orden);
+
+            }
+
+                    $("#cantidadDenunciantes").keypress(function (e) {
+                        if (e.which == 13) {
+                            e.preventDefault();
+                            generarNFilas($(this).val());
+                            $(this).val = 0;
+                        }
+                    });
+
+                      $("#cantidadDenunciantesASacar").keypress(function (e) {
+                        if (e.which == 13) {
+                            e.preventDefault();
+                            removerNFilas($(this).val());
+                            $(this).val = 0;
+                }
+            });    
+
+                //$("#cantidadDenunciantes").keypress("enter", "#lista", generarNFilas($(this).val()));
+                
+
+            //function productos() {
+            //    var tbody = $('#lista tbody');
+            //    var fila_contenido = tbody.find('tr').first().html();
+            //    //Agregar fila nueva.
+            //    $('#lista .button_agregar').click(function () {
+            //        var fila_nueva = $('<tr></tr>');
+            //        fila_nueva.append(fila_contenido);
+            //        tbody.append(fila_nueva);
+            //    });
+            //    //Eliminar fila.
+            //    $('#lista').on('click', '.button_eliminar', function () {
+            //        $(this).parents('tr').eq(0).remove();
+            //    });
+            
+
+            $("#lista").on('click', '.button_agregar', function () {
+                $('#lista .button_agregar').click(function () {
+                    var fila_nueva = $('<tr></tr>');
+                    fila_nueva.append(fila_contenido);
+                    orden++;
+                    fila_nueva.find('td').first().replaceWith(orden);
+                    tbody.append(fila_nueva);
+                });
+            });
+
+
+        });
+
+        //function agregarFila() {
+        //    $('#lista .button_agregar').click(function () {
+        //        var fila_nueva = $('<tr></tr>');
+        //        fila_nueva.append(fila_contenido);
+        //        orden++;
+        //        fila_nueva.find('td').first().replaceWith(orden);
+        //        tbody.append(fila_nueva);
+        //    });
+        //};
+
+        //$(document).on('click', '.button_agregar', function () {
+        //        $('#lista .button_agregar').click(function () {
+        //            var fila_nueva = $('<tr></tr>');
+        //            fila_nueva.append(fila_contenido);
+        //            orden++;
+        //            fila_nueva.find('td').first().replaceWith(orden);
+        //            tbody.append(fila_nueva);
+        //        });
+        //    });
+        
+    </script>
+    <script>
+        $("#fechaNotificacion").change(function () {
+            $("#fechaNotificacionGcia").val($(this).val());
+        });
+
+        $('#Cleaner').click(function () {
+            $('#dni').val("");
+            $('#nombre').val("");
+            $('#apellido').val("");
+        });
+
+
+        $("#dni").keypress(function (e) {
+            if (e.which == 13) {
+                e.preventDefault();
+                GetDenunciante();
+            }
+        });
+
+        $("#apellido").keypress(function (e) {
+            if (e.which == 13) {
+                e.preventDefault();
+                GetDenunciante();
+            }
+        });
+
+        $("#nombre").keypress(function (e) {
+            if (e.which == 13) {
+                e.preventDefault();
+                GetDenunciante();
+            }
+        });
+
+
+
+        $("#Buscador").click(function () {
+            $.ajax({
+                url: "/Home/GetDenunciante",
+                type: "Post",
+                data: {
+                    dni: $('#dni').val(),
+                    nombre: $('#nombre').val(),
+                    apellido: $('#apellido').val()
+                },
+                success: function (response) {
+                    $('#denuncianteResult').html(response);
+
+                },
+                error: function (response) {
+                    alert(response);
+                }
+            });
+        });
+
+        function GetDenunciante() {
+            $.ajax({
+                url: "/Home/GetDenunciante",
+                type: "Post",
+                data: {
+                    dni: $('#dni').val(),
+                    nombre: $('#nombre').val(),
+                    apellido: $('#apellido').val()
+                },
+                success: function (response) {
+                    $('#denuncianteResult').html(response);
+                },
+                error: function (response) {
+                    alert(response);
+                }
+            });
+
+        };
+
+
+        $("#alta").click(function () {
+            $.ajax({
+                url: "/Home/Guardar",
+                type: "Post",
+                data: {
+                    dni: $('#dni').val(),
+                    nombre: $('#nombre').val(),
+                    apellido: $('#apellido').val()
+                },
+                success: function (response) {
+                    alert(response);
+                },
+                error: function (response) {
+                    alert(response);
+                }
+            });
+
+        });
+
+    </script>
+}

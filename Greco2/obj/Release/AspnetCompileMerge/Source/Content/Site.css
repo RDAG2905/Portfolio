@@ -1,0 +1,208 @@
+﻿body {
+    padding-top: 50px;
+    padding-bottom: 20px;
+}
+
+/* Set padding to keep content from hitting the edges */
+.body-content {
+    padding-left: 15px;
+    padding-right: 15px;
+}
+
+/* Override the default bootstrap behavior where horizontal description lists 
+   will truncate terms that are too long to fit in the left column 
+*/
+.dl-horizontal dt {
+    white-space: normal;
+}
+
+/* Set width on the form input elements since they're 100% wide by default */
+/*input,
+select,
+textarea {
+    max-width: 280px;
+}*/
+
+/*Mis estilos*/
+
+.completar {
+    border-color: orangered;
+}
+
+/*input[type=text], input[type=date], input[type=time], label {
+    max-width: 220px;
+    
+    height: 25px;
+    margin-right: 50px;
+}*/
+
+
+
+text {
+    color: dodgerblue;
+    margin-left: 10px;
+    /*margin-top: 15px;*/
+    max-width: 220px;
+    /*background-color:lightgray;*/
+}
+
+.leftText {
+    text-align: left;
+}
+
+input[type=checkbox] {
+    margin-left: 80px;
+    margin-right: 1px;
+}
+
+/*#comboOrganismos, #comboEstudios, #comboModalidadGestion, #comboSubTipoProceso, #comboMediador, #comboDomicilioMediador,
+#comboMotivoReclamo, #comboServicioDenunciado, #comboEstadoConciliacion, #comboTipoEvento, #comboReqInforme,
+#comboListaTipoEvento {
+    width: 180px;
+}*/
+
+input[type=button] {
+    border-radius: 4px;
+}
+
+.h-divider {
+    margin-top: 25px;
+    /*margin-bottom: 5px;*/
+    height: 1px;
+    width: 100%;
+    border-top: 1px solid #0066ff;
+}
+
+.borde {
+    /*display:flex;*/
+    /*border-style: solid;*/
+    background-color: white;
+    /*background-color: #f2f2f2;*/
+    /*border-color: #cccccc;*/
+    /*border-color: #808080;*/
+    border-color: #999999;
+    border-color: lightgray;
+    border-width: 1px;
+    border-radius: 4px;
+    margin-top: 5px;
+    margin-bottom: 5px;
+    /*margin-left: -25px;*/
+    padding-left: 40px;
+    padding-right: 20px;
+    padding-top: 30px;
+    padding-bottom: 30px;
+}
+
+#ParentContainer, #grupoDenunciantesContainer {
+    
+    /*background-color: #e6e6e6;*/
+    border-radius: 4px;
+    padding-top: 10px;
+    /*margin-left: -10px auto;
+        margin-right: -10px auto;*/
+    /*width:1200px;*/
+}
+
+#grupoDenunciantesContainer {
+    padding-left: 30px;
+    padding-right: 30px;
+    padding-bottom: 30px;
+    display: flex;
+    justify-content: center;
+}
+
+#Buscador, #Cleaner, #alta {
+    margin-left: -30px;
+    height: 25px;
+    /*width:25px;*/
+    justify-content: center;
+    padding-left: 7px;
+    padding-right: 7px;
+}
+
+#checkEvento {
+    margin-left: 10PX;
+}
+
+.bordeBotonera {
+    border-radius: 4px;
+    padding-left: 25px;
+    padding-top: 6px;
+    padding-bottom: 6px;
+    text-align: center;
+    background-color: white;
+    height: 42px;
+}
+
+.btnGuardar {
+    padding-left: 50px;
+    padding-right: 50px;
+}
+
+.container-fluid {
+    margin: 0 auto;
+}
+
+th {
+    max-width: 200px;
+    padding: 5px 5px 5px 5px;
+}
+
+table {
+    text-align: center;
+}
+
+.menu {
+    /*background-color: #00547E;*/
+    /*background-color: #002966;*/
+    background-color: #337ab7; /*#0066ff #0047b3 #262626 #666666 #d9d9d9 #bfbfbf #337ab7*/
+    /*background:linear-gradient(#002966,#0047b3);*/
+    /*border-bottom: 8px solid #04A3ED;*/
+    border-bottom: 4px solid #04A3ED;
+    /*border-bottom: 4px solid #d9d9d9;*/
+    border-radius: 4px;
+    width: 120%;
+    height: 40px;
+    /*padding: 10px 10px;*/
+    position: static;
+    margin-top: -20px;
+    /*margin: 0px;*/
+    margin-left: -110px;
+    /*margin-right: -50px;*/
+    z-index: 1;
+    /*height: 35px;*/
+    /*opacity: 0.9;*/
+}
+
+    .menu .navbar-nav > .active > a {
+        background-color: #04A3ED;
+        color: white;
+        font-weight: bold;
+    }
+
+    .menu .navbar-nav > li > a {
+        font-size: 13px;
+        color: white;
+        padding: 10px 35px;
+    }
+
+        .menu .navbar-nav > li > a:hover {
+            background-color: #04A3ED;
+        }
+
+.navbar-header > a {
+    font-family: 'Ubuntu Condensed', sans-serif;
+    padding: 0px;
+    margin: 0px;
+    text-decoration: none;
+    color: white;
+    font-size: 25px;
+    /*font-size: 20px;*/
+    padding: 5px 30px;
+}
+
+    .navbar-header > a:hover {
+        text-decoration: none;
+        color: #04A3ED;
+    }
+

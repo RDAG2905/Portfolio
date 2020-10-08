@@ -1,0 +1,127 @@
+﻿@using Greco2.Models.Denuncia
+@model IEnumerable<ListaSabanaSP>
+
+<style>
+    td {
+        /*background-image: linear-gradient(white 80%,#f2f2f2);*/
+        font-size: 9px;
+    }
+
+    thead {
+        /*background-image: linear-gradient(white 30%,#e6e6e6);*/
+        background-color:#f9f9f9;
+    }
+
+    tr:hover {
+        /*background-color:aqua;*/
+    }
+
+    .seleccionable {
+    width:40px;
+
+    }
+
+    footer {
+        padding-top: 10px;
+        padding-bottom: 10px;
+        background-color: #f2f2f2;
+    }
+</style>
+
+@if (Model.Any())
+{
+<div style="height:300px;overflow:auto;">
+    <table class="table table-bordered" id="tablalistaSabana" style="max-width:1300px;background-color:white;border:1px solid lightgray;border-radius:4px;padding:10px 10px 10px 10px;">
+
+        <thead>
+
+            <tr class="text-primary">
+                <th style="padding-left:20px;">DenunciaId</th>
+                <th style="width:30px;" class="seleccionable"></th>
+                <th nowrap>Nro Expediente</th>
+                <th>Fecha</th>
+                <th>Organismo</th>
+                <th>Servicio</th>
+                <th>Estudio</th>
+                <th>Denunciante</th>
+                <th>Responsable</th>
+                <th>Estado Actual</th>
+                <th>Tipo Proceso</th>
+
+
+            </tr>
+        </thead>
+        <tbody style="text-align:left;">
+
+
+            @foreach (var item in @Model)
+            {
+            <tr>
+
+
+                <td class="text-primary" style="width:60px;text-align:center;">
+                    @Html.DisplayFor(modelItem => item.DenunciaId)
+                    @*@Html.ActionLink(@item.DenunciaId.ToString(), "GetDenunciaById", "Denuncias", new { id = @item.DenunciaId }, null)*@
+                </td>
+                <td style="width:30px;" class="seleccionable"><input type="checkbox" style="width:35px;margin-left:10px;" /></td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Expediente)
+                </td>
+                <td style="max-width:250px;" nowrap>
+                    @Convert.ToString(string.Format("{0:dd/MM/yyyy}", item.Fecha_Creacion))
+                    @*@Html.DisplayFor(modelItem => item.Fecha_Creacion)*@
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Organismo)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Servicio)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Estudio)
+                </td>
+                @{
+                    var denunciante = item.Apellido + ',' + item.Nombre;
+                    <td>
+                        @denunciante
+                    </td>
+                }
+                @{
+                    var responsable = item.ResponsableApellido + ',' + item.ResponsableNombre;
+                    <td>
+                        @responsable
+                    </td>
+                }
+
+                <td>
+                    @Html.DisplayFor(modelItem => item.Estado_Actual)
+                </td>
+                <td nowrap>
+                    @Html.DisplayFor(modelItem => item.Tipo_Proceso)
+                </td>
+
+
+
+
+
+            </tr>
+
+            }
+
+        </tbody>
+    </table>
+</div>
+    <footer id="TotalRegistrosMM" class="text-center text-primary">Total: @Model.Count()</footer>
+
+
+}
+else
+{
+
+    <div>
+        <h5 class="text-primary text-center">No se encontraron coincidencias</h5>
+    </div>
+
+}
+
+

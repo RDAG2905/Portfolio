@@ -1,0 +1,27 @@
+﻿@using Greco2.Models.Denuncia
+@model IEnumerable<Object>
+
+<div class="row">
+    <div class="col-xs-12">
+        @foreach (var item in Model)
+        {
+
+
+            <ul class="list-group">
+                <li class="list-group-item " style="margin-bottom:-15px;">
+                    @item.ToString()
+                    @*<span class="col-xs-1"></span>*@
+                    @*<select class="col-xs-3">
+            <option value="value">Agregar Evento</option>
+            <option value="value">Subir Archivo</option>
+        </select>*@
+                    <span class="col-xs-2"> <a>Agregar Evento</a> </span>
+                    <span class="col-xs-2"> <a>Subir Archivo</a> </span>
+                    <span class="col-xs-2"> <a>Ver Eventos</a> </span>
+                </li>
+            </ul>
+
+        }
+    </div>
+    @*<div class="col-xs-9 jumbotron"></div>*@
+</div>

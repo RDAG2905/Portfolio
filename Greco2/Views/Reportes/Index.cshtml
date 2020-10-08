@@ -1,0 +1,564 @@
+﻿@using Greco2.Models.Reportes
+@model ReporteEstadosModelView
+
+<style>
+    @@keyframes lds-dual-ring {
+        0% {
+            transform: rotate(0deg);
+        }
+
+        100% {
+            transform: rotate(360deg);
+        }
+    }
+
+    .loader-container {
+        width: 40px;
+        height: 40px;
+        /*margin-left:48%;*/
+    }
+
+        .loader-container .loader {
+            width: 100%;
+            height: 100%;
+            /*position: absolute;
+            z-index: 1002;
+            top: 50%;
+            left: 50%;*/
+            /*z-index:10000;*/
+            /*padding-bottom:500px;*/
+            /*position:absolute;*/
+            border: solid 8px transparent;
+            border-top-color: #337ab7;
+            border-bottom-color: #337ab7;
+            border-left-color: white;
+            /*border-right-color: #337ab7;*/
+            background-color: white;
+            border-radius: 50%;
+            animation: lds-dual-ring 1.2s linear infinite;
+            margin-left: 490px;
+    }
+
+    .clear {
+        color: black;
+    }
+
+    .wrapper {
+        display: grid;
+        grid-gap: 20px;
+        grid-template-areas: "header" "izquierda" "derecha" "botonera" "resultados";
+        background-color: white;
+    }
+
+        .wrapper select, .form-control, label {
+            max-height: 26px;
+            max-width: 220px;
+            font-size: 11px;
+        }
+
+    .header {
+        grid-area: header;
+        /*background-color:white;*/
+        border-radius: 8px;
+        height: 60px;
+        padding-top: 10px;
+        /*margin-top:1px;*/
+        margin-bottom: -10px;
+        font-family: 'Berlin Sans FB';
+    }
+
+    .derecha {
+        grid-area: derecha;
+        background-color: #f5f5f5;
+        padding-top: 15px;
+        border-radius: 8px;
+        padding-left: 40px;
+        padding-right: 20px;
+    }
+
+    .izquierda {
+        grid-area: izquierda;
+        background-color: #f5f5f5;
+        padding-top: 15px;
+        border-radius: 8px;
+        padding-left: 40px;
+        padding-right: 20px;
+    }
+
+
+    .botonera {
+        grid-area: botonera;
+    }
+
+    .resultados {
+        grid-area: resultados;
+    }
+
+    input[type=button]:hover, button:hover {
+        -webkit-box-shadow: 0px 1px 10px 0px rgba(0,0,0,0.25);
+        -moz-box-shadow: 0px 1px 10px 0px rgba(0,0,0,0.25);
+        box-shadow: 0px 1px 10px 0px rgba(0,0,0,0.25);
+    }
+
+    .btn-toolbar {
+        margin-left: 300px;
+        margin-top: -40px;
+    }
+
+    /*@@media(min-width: 765px) {
+        #fechaDesdeRE {
+        margin-left:-50px;
+        }
+    }*/
+
+    @@media(min-width: 990px) {
+        body {
+            background-image: linear-gradient(#f2f2f2,white);
+        }
+
+        #fechaDesdeRE {
+            margin-left: 0px;
+        }
+
+        .wrapper {
+            /*grid-template-columns: 3fr 3fr;*/
+            grid-template-areas: "header  header" "izquierda  derecha" "botonera botonera" "resultados resultados";
+            margin-left: -50px;
+            margin-right: -50px;
+            -webkit-box-shadow: 10px 10px 5px 0px rgba(209,202,209,1);
+            -moz-box-shadow: 10px 10px 5px 0px rgba(209,202,209,1);
+            box-shadow: 10px 10px 5px 0px rgba(209,202,209,1);
+            padding-left: 20px;
+            padding-right: 20px;
+            border: 1px solid #f5f5f5;
+            border-radius: 8px;
+            width: 1200px;
+        }
+
+        nav ul {
+            display: flex;
+            justify-content: space-between;
+        }
+        /*.navbar-header {
+        height:80px;
+        }*/
+        .izquierda {
+            margin-left: 10px;
+            padding-top: 20px;
+            padding-left: 25px;
+            padding-right: 20px;
+        }
+
+        .derecha {
+            margin-right: 10px;
+            padding-top: 20px;
+            padding-left: 25px;
+            padding-right: 20px;
+        }
+
+        .resultados {
+            max-height: 300px;
+            overflow: auto;
+        }
+
+        .header > h4 {
+            margin-left: 180px;
+        }
+
+
+        label {
+            margin-left: 10px;
+        }
+
+        .botonera {
+            padding-bottom: -15px;
+            height: 30px;
+            margin-left: 850px;
+        }
+
+        #btnVolverReporteEstados {
+            margin-top: 10px;
+            margin-left: 230px;
+        }
+
+        h4 {
+            margin-left: 180px;
+        }
+    }
+
+    
+</style>
+<button id="btnVolverReporteEstados" style="margin-bottom:-55px;margin-left:830px;width:120px;" class="btn btn-sm btn-toolbar" onclick="Volver()"><i style="margin-right:15px;" class="glyphicon glyphicon-arrow-left"></i>Volver</button>
+<form>
+    <div class="wrapper" style="margin-top:-10px;">
+        <header class="header">
+            <div class="row">
+                <div class="col-xs-12 col-md-6">
+                    <h4 class="text-primary">Reporte de Estados</h4>
+                </div>
+                @*<div class="col-xs-12 col-md-6">
+                        <button id="btnVolverReporteEstados"  class="btn btn-sm btn-toolbar" onclick="Volver()"><i style="margin-right:15px;" class="glyphicon glyphicon-arrow-left"></i>Volver</button>
+                    </div>*@
+            </div>
+        </header>
+
+        @Html.AntiForgeryToken()
+        <div class="izquierda">
+            <div class="row">
+                <div class="col-md-6 col-xs-6 col-sm-6">
+                    <label>Fecha Desde:</label>
+                </div>
+                <div class="col-md-6 col-xs-6 col-sm-6">
+                    <input class="form-control" type="date" name="fechaDesdeRE" id="fechaDesdeRE" value="@Model.fechaNotifDesde" />
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6 col-xs-6">
+                    <label>Fecha Hasta:</label>
+                </div>
+                <div class="col-md-6 col-xs-6">
+                    <input class="form-control" type="date" id="fechaHastaRE" value="@Model.fechaNotifHasta" />
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6 col-xs-6">
+                    <label>Organismo</label>
+                </div>
+                <div class="col-md-6 col-xs-6">
+                    @Html.DropDownList("comboOrganismosRE", Model.Organismos, "", new { @class = "form-control", style = "margin-right:50px" })
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6 col-xs-6">
+                    <label>Provincia</label>
+                </div>
+                <div class="col-md-6 col-xs-6">
+                    @Html.DropDownList("comboProvinciasRE", Model.Provincias, "", new { @class = "form-control", style = "margin-right:50px" })
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6 col-xs-6">
+                    <label>Estudio Jurídico</label>
+                </div>
+                <div class="col-md-6 col-xs-6">
+                    @Html.DropDownList("comboEstudiosRE", Model.Estudios, "", new { @class = "form-control", style = "margin-right:50px" })
+                </div>
+            </div>
+            <br />
+        </div>
+        <div class="derecha">
+
+            <div class="row">
+                <div class="col-md-6 col-xs-6">
+                    <label>Fecha Notif.Gcia desde:</label>
+                </div>
+                <div class="col-md-6 col-xs-6">
+                    <input class="form-control" type="date" id="fechaGciaDesdeRE" value="@Model.fechaNotifGciaDesde" />
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6 col-xs-6">
+                    <label>Fecha Notif.Gcia hasta:</label>
+                </div>
+                <div class="col-md-6 col-xs-6">
+                    <input class="form-control" type="date" id="fechaGciaHastaRE" value="@Model.fechaNotifGciaHasta" />
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6 col-xs-6">
+                    <label>Responsable:</label>
+                </div>
+                <div class="col-md-6 col-xs-6">
+                    @Html.DropDownList("comboResponsableInterno", Model.Responsables, "", new { @class = "form-control", style = "margin-right:50px" })
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6 col-xs-6">
+                    <label>Estado Inicial</label>
+                </div>
+                <div class="col-md-6 col-xs-6">
+                    @Html.DropDownList("comboEstadosInicialesRE", Model.estadosDeConciliacion, "", new { @class = "form-control", style = "margin-right:50px" })
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6 col-xs-6">
+                    <label>Estado Final</label>
+                </div>
+                <div class="col-md-6 col-xs-6">
+                    @Html.DropDownList("comboEstadosFinalesRE", Model.estadosDeConciliacion, "", new { @class = "form-control", style = "margin-right:50px" })
+                </div>
+            </div>
+
+
+
+        </div>
+
+        <div class="botonera">
+            <div class="row" style="margin-top:10px;">
+
+                <div class="col-md-3 col-xs-12" style="margin-right:20px;">
+                    <input class="btn btn-sm btn-primary" type="button" value="Limpiar Filtros" id=btnLimpiarFiltros onclick="limpiarFiltrosReporte()" />
+                </div>
+                <div class="col-md-3 col-xs-12">
+                    <input class="btn btn-sm btn-primary" type="button" value="Generar Excel" id=btnGenerarExcel onclick="generarReporte()" />
+                </div>
+                @*<div class="col-md-3 col-xs-5">
+                        <label class="text-success" id="labelGenerandoExcel" style="display:none;">Generando Excel...</label>
+                    </div>*@
+
+            </div>
+
+        </div>
+    </div>
+</form>
+<div id="divLoadingReportes" style="display:none">
+    <div class="loader-container">
+        <div class="loader"></div>
+    </div>
+</div>
+
+
+@section scripts{
+    <script>
+
+    $(window).on('load', function () {
+        laCuentaRegresivaContinua = true,
+            valorInicial = 300,
+            tiempo = 0,
+           
+            verificarTiempoRestante(),
+            toastr.options = {
+                "closeButton": true,
+                "debug": false,
+                "newestOnTop": false,
+                "progressBar": false,
+                "positionClass": "toast-top-right",
+                "preventDuplicates": false,
+                "onclick": null,
+                "showDuration": "300",
+                "hideDuration": "1000",
+                "timeOut": "5000",
+                "extendedTimeOut": "1000",
+                "showEasing": "swing",
+                "hideEasing": "linear",
+                "showMethod": "fadeIn",
+                "hideMethod": "fadeOut"
+            }
+
+
+    });
+
+
+  function renovar() {
+        laCuentaRegresivaContinua = false;
+        elModalEstaCerrado = true;
+
+    $.ajax({
+        url: '@Url.Action("Renovar", "Checker")',
+        type: "POST",
+        data: {
+
+        },
+        success: function (response) {
+            toastr.success(response);
+            toastr.clear();
+            toastr.remove();
+            horario = Date.now();
+            setHorarioInicial(horario);
+            initIntervalo();
+            toastr.options = {
+                "closeButton": true,
+                "debug": false,
+                "newestOnTop": false,
+                "progressBar": false,
+                "positionClass": "toast-top-right",
+                "preventDuplicates": false,
+                "onclick": null,
+                "showDuration": "300",
+                "hideDuration": "1000",
+                "timeOut": "5000",
+                "extendedTimeOut": "1000",
+                "showEasing": "swing",
+                "hideEasing": "linear",
+                "showMethod": "fadeIn",
+                "hideMethod": "fadeOut"
+            }
+
+        },
+        error: function (response) {
+            toastr.error(response.responseText + ' ' + response.status);
+        }
+    });
+
+}
+
+   function BackToLogin() {
+        toastr.clear();
+        toastr.remove();
+        window.location.href = "@Url.Action("CerrarSesion", "User" )";
+    }
+
+
+
+            function laSolicitudEsValida() {
+
+                flag = false;
+                if ($('#fechaDesdeRE').val().trim().length > 0
+                    || $('#fechaHastaRE').val().trim().length > 0
+                    || $('#fechaGciaDesdeRE').val().trim().length > 0
+                    || $('#fechaGciaHastaRE').val().trim().length > 0
+                    || $('#comboOrganismosRE')[0].selectedIndex > 0
+                    || $('#comboProvinciasRE')[0].selectedIndex > 0
+                    || $('#comboEstudiosRE')[0].selectedIndex > 0
+                    || $('#comboEstadosInicialesRE')[0].selectedIndex > 0
+                    || $('#comboEstadosFinalesRE')[0].selectedIndex > 0) {
+                    flag = true
+                }
+                return flag;
+        }
+
+            function generarReporte() {
+                $('#divLoadingReportes').css("display","inline-block");
+                if (laSolicitudEsValida) {
+                    var token = '@Html.AntiForgeryToken()';
+                    var repEstToken = $(token).val();
+                    var btn = $('#btnGenerarExcel');
+                    btn.prop('disabled', true);
+                    var legend = $('#labelGenerandoExcel');
+                    legend.css('display', 'block');
+                    $.ajax({
+                        url: '@Url.Action("GenerarReporte", "Reportes")',
+                        type: "Post",
+                        data: {
+                            fechaNotifDesde: $('#fechaDesdeRE').val(),
+                            fechaNotifHasta: $('#fechaHastaRE').val(),
+                            fechaNotifGciaDesde: $('#fechaGciaDesdeRE').val(),
+                            fechaNotifGciaHasta: $('#fechaGciaHastaRE').val(),
+                            organismoSeleccionado: $('#comboOrganismosRE option:selected').val(),
+                            provinciaSeleccionada: $('#comboProvinciasRE option:selected').val(),
+                            estudioSeleccionado: $('#comboEstudiosRE option:selected').val(),
+                            estadoInicialSeleccionado: $('#comboEstadosInicialesRE option:selected').val(),
+                            estadoFinalSeleccionado: $('#comboEstadosFinalesRE option:selected').val(),
+                            responsableSeleccionado: $('#comboResponsableInterno option:selected').val(),
+                            __RequestVerificationToken: repEstToken
+
+                        },
+                        success: function (data) {
+                            if (data != null && (data.errorMessage == null || data.errorMessage === "")) {
+                                legend.css('display', 'none');
+
+                                if (data.fileName != "" && data.fileName != "isEmpty") {
+
+                                    window.location.href = "Reportes/DownloadSpreadsheet/?file=" + data.fileName;
+                                    btn.prop('disabled', false);
+                                } else
+                                    if (data.fileName == "isEmpty") {
+                                        toastr.options.positionClass = "toast-bottom-right";
+                                        toastr.warning("No existen datos a Exportar");
+                                        btn.prop('disabled', false);
+
+                                    }
+                            } else {
+                                toastr.error("Error en la Descarga </br>", data.errorMessage);
+                                legend.css('display', 'none');
+                                btn.prop('disabled', false);
+                            }
+                        },
+                        error: function (data) {
+
+                            toastr.error(data.responseText);
+                            legend.css('display', 'none');
+                            btn.prop('disabled', false);
+
+                        }
+                    });
+                }
+                else {
+                        toastr.warning('Seleccione alguno de los filtros');
+                }
+                $('#divLoadingReportes').css("display", "none");
+            }
+
+            function downloadSpreadsheet() {
+                $('#labelGenerandoExcel').css('display', 'block');
+                $('#btnExportarAExcel').attr("disabled","disabled");
+                $.ajax({
+                    type: "Post",
+                    @*url: '@Url.Action("ExportListToExcel", "FiltroDenuncias")',*@
+                    url: '@Url.Action("GenerateSpreadsheet_old", "Home")',
+                    data: {
+                        fechaNotifDesde: $('#fechaDesde').val(),
+                        fechaNotifHasta: $('#fechaHasta').val(),
+                        fechaNotifGciaDesde: $('#fechaGciaDesde').val(),
+                        fechaNOtifGciaHasta: $('#fechaGciaHasta').val(),
+                        nroExpediente: $('#nroExpediente').val(),
+                        etapaProcesalSeleccionada: $('#comboEtapaProcesal option:selected').val(),
+                        organismoSeleccionado: $('#comboOrganismos option:selected').val(),
+                        regionSeleccionada: $('#comboRegiones option:selected').val(),
+                        provinciaSeleccionada: $('#comboProvincias option:selected').val(),
+                        localidadSeleccionada: $('#comboLocalidades option:selected').val(),
+                        servicioSeleccionado: $('#comboServicios option:selected').val(),
+                        idDenuncia: $('#idDenuncia').val(),
+                        estudioSeleccionado: $('#comboEstudios option:selected').val(),
+                        verDenunciasEliminadas: $('#verDenunciasEliminadas').prop('checked'),
+                        apellidoDenunciante: $('#apellidoDenunciante').val().toUpperCase(),
+                        nombreDenunciante: $('#nombreDenunciante').val().toUpperCase(),
+                        //tipoDocumento: $('#tipoDocumento').val(),
+                        dniDenunciante: $('#dniDenunciante').val(),
+                        estadoSeleccionado: $('#comboEstados option:selected').val(),
+                        nroLinea: $('#nroLinea').val(),
+                        tramiteCRM: $('#tramiteCRM').val(),
+                        motivoDeReclamoSeleccionado: $('#comboMotivosDeReclamo option:selected').val(),
+                        responsableInterno: $('#responsableInterno').val(),
+                        idDenunciaOriginal: $('#idDenunciaOriginal').val(),
+                        exportarAExcel: true
+                    },
+                    success: function (data) {
+                        if (data != null && (data.errorMessage == null || data.errorMessage === "")) {
+                            $('#labelGenerandoExcel').css('display', 'none');
+
+                            if (data.fileName != "" && data.fileName != "isEmpty") {
+
+                                window.location.href = "DownloadSpreadsheet/?file=" + data.fileName;
+                                $('#btnExportarAExcel').removeAttr('disabled');
+                            } else
+                                if (data.fileName == "isEmpty") {
+                                    toastr.options.positionClass = "toast-bottom-right";
+                                    toastr.warning("No existen datos a Exportar");
+                                    $('#btnExportarAExcel').removeAttr('disabled');
+
+                                }
+                            } else {
+                            alert("An error ocurred", data.errorMessage);
+                            $('#labelGenerandoExcel').css('display', 'none');
+                            $('#btnExportarAExcel').removeAttr('disabled');
+                        }
+                    }, error(data) {
+                        toastr.error(data.responseText);
+                        $('#labelGenerandoExcel').css('display', 'none');
+                        $('#btnExportarAExcel').removeAttr('disabled');
+                    }
+                });
+            }
+
+            function limpiarFiltrosReporte() {
+                    $('#fechaDesdeRE').val('');
+                    $('#fechaHastaRE').val('');
+                    $('#fechaGciaDesdeRE').val('');
+                    $('#fechaGciaHastaRE').val('');
+                    $('#comboOrganismosRE')[0].selectedIndex = 0;
+                    $('#comboProvinciasRE')[0].selectedIndex = 0;
+                    $('#comboEstudiosRE')[0].selectedIndex = 0;
+                    $('#comboEstadosInicialesRE')[0].selectedIndex = 0;
+                    $('#comboEstadosFinalesRE')[0].selectedIndex = 0;
+                    $('#comboResponsableInterno')[0].selectedIndex = 0;
+                }
+                function Volver() {
+                    history.back();
+                }
+
+    </script>
+
+}
+
+

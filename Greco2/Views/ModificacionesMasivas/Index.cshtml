@@ -1,0 +1,1026 @@
+﻿
+@{
+    ViewBag.Title = "ModificacionesMasivas";
+}
+<style>
+
+    .clear {
+        color: black;
+    }
+    /*body {
+        background-image: linear-gradient(#f9f9f9,white);
+    }*/
+
+    .row {
+        margin-left: 100px;
+    }
+
+    #Container select, input, .form-control,button {
+        max-height: 28px;
+        max-width: 220px;
+        font-size: 12px;
+    }
+
+    .btn {
+        background-image: linear-gradient(#2e6da4,#337ab7);
+        /*#1c4263*/
+    }
+
+    td {
+        font-size: 11px;
+    }
+    
+    #ContainerMM {
+        -webkit-box-shadow: 10px 10px 5px -5px rgba(209,202,209,1);
+        -moz-box-shadow: 10px 10px 5px -5px rgba(209,202,209,1);
+        box-shadow: 10px 10px 5px -5px rgba(209,202,209,1);
+        border-color:#f2f2f2;
+    }
+
+    #ContainerFiltrosMM {
+    border-color:white;
+    }
+
+    
+    button:hover {
+        /*-webkit-box-shadow: 0px 3px 8px 0px rgba(12,79,130,1);
+        -moz-box-shadow: 0px 3px 8px 0px rgba(12,79,130,1);
+        box-shadow: 0px 3px 8px 0px rgba(12,79,130,1);*/
+        /*-webkit-box-shadow: 0px 1px 10px 0px rgba(12,79,130,1);
+        -moz-box-shadow: 0px 1px 10px 0px rgba(12,79,130,1);
+        box-shadow: 0px 1px 10px 0px rgba(12,79,130,1);*/
+        -webkit-box-shadow: 0px 1px 10px 0px rgba(0,0,0,0.25);
+        -moz-box-shadow: 0px 1px 10px 0px rgba(0,0,0,0.25);
+        box-shadow: 0px 1px 10px 0px rgba(0,0,0,0.25);
+    }
+
+    #tablaCambiosPropuestos {
+    max-height:400px;
+    overflow:auto;
+    }
+
+    body {
+        background-image: linear-gradient(#f2f2f2,white);      
+    }
+
+    @@keyframes lds-dual-ring {
+        0% {
+            transform: rotate(0deg);
+        }
+
+        100% {
+            transform: rotate(360deg);
+        }
+    }
+
+    .loader-container {
+        width: 40px;
+        height: 40px;
+        margin-left:48%;
+    }
+
+        .loader-container .loader {
+            width: 100%;
+            height: 100%;
+            /*position: absolute;
+            z-index: 1002;
+            top: 50%;
+            left: 50%;*/
+            /*z-index:10000;*/
+            /*padding-bottom:500px;*/
+            /*position:absolute;*/
+            border: solid 8px transparent;
+            border-top-color: #337ab7;
+            border-bottom-color: #337ab7;
+            border-left-color: white;
+            /*border-right-color: #337ab7;*/
+            background-color: white;
+            border-radius: 50%;
+            animation: lds-dual-ring 1.2s linear infinite;
+            /*margin-left: 490px;*/
+        }
+
+
+</style>
+
+
+<form>
+    @Html.AntiForgeryToken()
+</form>
+<div id="ContainerMM" class="panel panel-default" style="font-size:12px;margin-left:-90px;margin-right:-85px;border-color:none;">
+
+    <div class="panel-heading" style="padding-bottom:-30px;border-bottom-color:#f5f5f5;background-color:#f9f9f9;">
+
+        <span style="margin-left:80px;font-size:16px;" class="text-primary">Modificaciones Masivas</span>
+        <button style="margin-left:820px;width:150px;" class="btn btn-sm btn-primary" onclick="Volver()">
+            <i style="margin-right:15px;" class="glyphicon glyphicon-arrow-left"></i>Volver
+        </button>
+    </div>
+    <br />
+    
+            <div class="row">
+                <div class="col-sm-5 col-md-4">
+                    <label style="font-size:13px;margin-left:50px;color:#4d4d4d">Seleccione el campo a modificar: </label>
+                </div>
+                <div class="col-sm-5 col-md-2" style="margin-right:-15px;">
+                    <select class="form-control " id="CamposAModificar">
+                        <option value="0"></option>
+                        <option value="1">Estudio Externo</option>
+                        <option value="2">Responsable Interno</option>
+                        <option value="3">Estado Conciliación</option>
+                        <option value="4">Modalidad de Gestión</option>
+                        <option value="5">Región</option>
+                    </select>
+                </div>
+                <div class="col-sm-5 col-md-2">
+                    <select class="form-control" id="CriteriosDeModificacion" style="display:none;">
+                        <option value="0"></option>
+                    </select>
+                </div>
+                <div class="col-sm-5 col-md-2">
+                    <button class="btn btn-primary btn-sm" id="btnAplicarCambios" onclick="aplicarCambios(this)" style="display:none;width:150px;">Aplicar Cambios</button>
+                </div>
+
+            </div>
+            <hr />
+            <div class="row">
+                <button id="btnSeleccionarDenuncias" class="btn btn-primary btn-sm" onclick="seleccionarDenunciasCambio()">Seleccionar Denuncias</button>
+                <button id="btnSeleccionarEventos" class="btn btn-primary btn-sm" onclick="seleccionarEventosCambio()" style="width:150px">Seleccionar Eventos</button>
+            </div>
+            <div class="text-center" style="display:none;" id="divLoading">
+                <div class="loader-container">
+                    <div class="loader"></div>
+                </div>
+                @*<img src="@Url.Content("~/Images/4.gif")" />*@
+            </div> 
+        
+        <br />
+        
+    
+    <div id="tablaCambiosPropuestos">
+
+    </div>
+</div>
+<div id="ContainerFiltrosMM" class="panel panel-default" style="font-size:12px;border-color:none;">
+
+</div>
+
+@section scripts{
+    <script>
+
+       $(window).on('load', function () {
+        laCuentaRegresivaContinua = true,
+            valorInicial = 300,
+            tiempo = 0,
+
+            verificarTiempoRestante(),
+            toastr.options = {
+                "closeButton": true,
+                "debug": false,
+                "newestOnTop": false,
+                "progressBar": false,
+                "positionClass": "toast-top-right",
+                "preventDuplicates": false,
+                "onclick": null,
+                "showDuration": "300",
+                "hideDuration": "1000",
+                "timeOut": "5000",
+                "extendedTimeOut": "1000",
+                "showEasing": "swing",
+                "hideEasing": "linear",
+                "showMethod": "fadeIn",
+                "hideMethod": "fadeOut"
+            }
+
+             
+       });
+
+    
+
+  function renovar() {
+        laCuentaRegresivaContinua = false;
+        elModalEstaCerrado = true;
+
+    $.ajax({
+        url: '@Url.Action("Renovar", "Checker")',
+        type: "POST",
+        data: {
+
+        },
+        success: function (response) {
+            toastr.success(response);  
+            toastr.clear();
+            toastr.remove();            
+            horario = Date.now();
+            setHorarioInicial(horario);
+            initIntervalo();
+            toastr.options = {
+                "closeButton": true,
+                "debug": false,
+                "newestOnTop": false,
+                "progressBar": false,
+                "positionClass": "toast-top-right",
+                "preventDuplicates": false,
+                "onclick": null,
+                "showDuration": "300",
+                "hideDuration": "1000",
+                "timeOut": "5000",
+                "extendedTimeOut": "1000",
+                "showEasing": "swing",
+                "hideEasing": "linear",
+                "showMethod": "fadeIn",
+                "hideMethod": "fadeOut"
+            };
+        },
+        error: function (response) {
+            toastr.error(response.responseText + ' ' + response.status);
+        }
+    });
+
+  }
+
+
+   function BackToLogin() {
+        toastr.clear();
+        toastr.remove();
+        window.location.href = "@Url.Action("CerrarSesion", "User" )";
+    }
+
+        function onEnter(e) {
+            if (e.which == 13) {
+                e.preventDefault();
+                listarDenuncias();
+            }
+        }
+
+        function onEnterAgenda(e) {
+            if (e.which == 13) {
+                e.preventDefault();
+                BuscarListAgenda();
+            }
+        }
+
+        function desHabilitar(elem) {
+            $(elem).prop("disabled",true);
+        }
+
+        function habilitar(elem) {
+            $(elem).prop("disabled",false);
+        }
+        function aplicarCambios(elem) {
+            var btn = elem;
+            if ($('#tablaCambiosPropuestos').children().length == 0) {
+                toastr.warning("No hay los elementos en la Lista");
+            } else {
+                
+                 var token = '@Html.AntiForgeryToken()';
+                 var cmmtoken = $(token).val();
+                if (cambianLasDenuncias) {
+                    desHabilitar(btn);
+                    $('#divLoading').css("display", "inline-block");
+                    $.ajax({
+                        type: "Post",
+                        url: getUrl(),
+                        data: {
+                            criterio: getCriterioDeModificacion(),
+                            lista: generarListaAModificar(),
+                            __RequestVerificationToken: cmmtoken
+                        },
+                        success(response) {
+                            $('#tablaCambiosPropuestos').html(response);
+                            $('#divLoading').css("display", "none");
+                            //toastr.success('Cambios aplicados correctamente');
+                            habilitar(btn);
+                        }, error(response) {
+                            $('#divLoading').css("display", "none");
+                            toastr.error('Ocurrió un error inesperado.</br> No se concretaron los cambios');
+                            habilitar(btn);
+                        }
+                    });
+                } else {
+                    enviarIdEventos();
+                }
+            }
+            $('#divLoading').css("display", "none");
+        }
+
+        function enviarIdEventos() {
+            $('#divLoading').css("display", "block");
+            var token = '@Html.AntiForgeryToken()';
+            var cmmEtoken = $(token).val();
+            $.ajax({
+                type: "Post",
+                url: '@Url.Action("UpdateResponsableEventos","ModificacionesMasivas")',
+                data: {
+                    criterio: getCriterioDeModificacion(),
+                    lista: generarListaAModificar(),
+                    __RequestVerificationToken: cmmEtoken
+                },
+                success(response) {
+                    $('#tablaCambiosPropuestos').html(response);
+                    toastr.success('Cambios aplicados correctamente');
+                    $('#divLoading').css("display", "none");
+                }, error(response) {
+                    $('#divLoading').css("display", "none");
+                    toastr.error('No se concretaron los cambios.</br>Registre la hora del Incidente</br>Informe al Administrador del Sistema');
+                }
+            });
+        }
+
+        function generarListaAModificar() {
+            var filasLista = [];
+            $('#tablaCambiosPropuestos tbody tr').each(function (i, valor) {
+                filasLista.push(parseInt($(valor).children().eq(0).text().trim()));
+            });
+            console.log(filasLista);
+            return filasLista;
+        }
+
+        var cambiaElEstudio;
+        var cambiaElResponsable;
+        var cambiaElEstadoDeConciliacion;
+        var cambiaLaModalidadGestion;
+        var cambiaLaRegion;
+        var valorNuevo;
+        var cambianLasDenuncias = false;
+        var cambianLosEventos = false;
+
+        function initVariables() {
+            cambiaElEstudio = false;
+            cambiaElResponsable = false;
+            cambiaElEstadoDeConciliacion = false;
+            cambiaLaModalidadGestion = false;
+            cambiaLaRegion = false;
+        }
+
+        function getCriterioDeModificacion() {
+            if (cambiaElEstadoDeConciliacion) {
+                return $('#CriteriosDeModificacion option:selected').text();
+            } else {
+                return  $('#CriteriosDeModificacion option:selected').val();
+            }
+            
+        }
+
+        function getUrl() {
+            var url = "setUrlInicial";
+        
+            if (cambiaElEstudio) {
+                url = '@Url.Action("UpdateEstudios","ModificacionesMasivas")'; 
+            } else
+            if (cambiaElResponsable) {
+                url = '@Url.Action("UpdateResponsables","ModificacionesMasivas")';
+            } else
+            if (cambiaElEstadoDeConciliacion) {
+                url = '@Url.Action("UpdateEstadosConciliacion","ModificacionesMasivas")';
+            } else
+            if (cambiaLaModalidadGestion) {
+                url = '@Url.Action("UpdateModalidadesGestion","ModificacionesMasivas")';
+            } else
+            if (cambiaLaRegion) {
+                url = '@Url.Action("UpdateRegiones","ModificacionesMasivas")';
+            }
+            return url;
+        }
+        
+        $('#CamposAModificar').change(function () {
+            if ($(this)[0].selectedIndex != 0) {
+                initVariables();
+                if ($(this)[0].selectedIndex == 1) {
+                    GetEstudios();
+                    cambiaElEstudio = true;
+                } else
+                    if ($(this)[0].selectedIndex == 2) {
+                        GetResponsables();
+                        cambiaElResponsable = true;
+                    } else
+                        if ($(this)[0].selectedIndex == 3) {
+                            GetEstadosConciliacion();
+                            cambiaElEstadoDeConciliacion = true;
+                        } else
+                            if ($(this)[0].selectedIndex == 4) {
+                                GetModalidadesDeGestion();
+                                cambiaLaModalidadGestion = true;
+                            } else
+                                if ($(this)[0].selectedIndex == 5) {
+                                    GetRegiones();
+                                    cambiaLaRegion = true;
+                                }
+            } else {
+                ocultarComboCriterios();
+                ocultarBtnAplicarCambios();
+            }
+        });
+
+        $('#CriteriosDeModificacion').change(function () {
+            if ($(this)[0].selectedIndex != 0) {
+                $('#btnAplicarCambios').css("display", "block");
+            } else {
+                $('#btnAplicarCambios').css("display", "none");
+            }
+        });
+
+        var comboCriterios = $('#CriteriosDeModificacion');
+
+        function displayComboCriterios() {
+            comboCriterios.css("display","block");
+        }
+
+        function ocultarComboCriterios() {
+            comboCriterios.css("display", "none");
+        }
+
+        function displayBtnAplicarCambios() {
+            $('#btnAplicarCambios').css("display", "block");
+        }
+        function ocultarBtnAplicarCambios() {
+            $('#btnAplicarCambios').css("display", "none");
+        }
+        function GetEstudios() {
+            var token = '@Html.AntiForgeryToken()';
+            var cmmEtoken = $(token).val();
+            $.ajax({
+                    url: '@Url.Action("GetEstudios", "ModificacionesMasivas")',
+                type: "Post",
+                data: {
+                    __RequestVerificationToken: cmmEtoken
+                },
+                    success: function (response) {
+                        comboCriterios.empty();
+                        displayComboCriterios();
+                        comboCriterios.append('<option value=0/>');
+                        $(response).each(function () {
+                            comboCriterios.append(
+                                $('<option/>', { value: this.Id }).html(this.Nombre)
+                            );
+                        });
+                    },
+                    error: function (response) {
+                        toastr.error(response);
+                    }
+            });
+        }
+
+        function GetResponsables() {
+             var token = '@Html.AntiForgeryToken()';
+             var cmmEtoken = $(token).val();
+            $.ajax({
+                url: '@Url.Action("GetResponsables", "ModificacionesMasivas")',
+                type: "Post",
+                data: {
+                    __RequestVerificationToken: cmmEtoken
+                },
+                    success: function (response) {
+                        comboCriterios.empty();
+                        displayComboCriterios();
+                        comboCriterios.append('<option value=0/>'); 
+                        $(response).each(function () {
+                            comboCriterios.append(
+                                $('<option/>', { value: this.Id }).html(this.Apellido + ',' + this.Nombre)
+                                //$('<option/>', { value: this.Id }).html(this.Apellido + ',' + this.Nombre + '(' + this.UmeId + ')')
+                            );
+                        });
+                    },
+                    error: function (response) {
+                        toastr.error(response);
+                    }
+            });
+        }
+
+        //function GetResponsables() {
+        //    comboCriterios.empty();
+        //    displayComboCriterios();
+        //    comboCriterios.append('<option value=0/>');
+        //    comboCriterios.append('<option value=1>Quiroga,Marcela Alejandra (u194486)</option>');
+        //    comboCriterios.append('<option value=2>Aguirre Zanardi,Mario Matias (u551212)</option>');
+        //    comboCriterios.append('<option value=3>Centurion,Sandra (u597852)</option>');
+        //    comboCriterios.append('<option value=4>Delgado,Paola (u597856)</option>');  
+        //}
+
+        function GetEstadosConciliacion() {
+             var token = '@Html.AntiForgeryToken()';
+             var cmmEtoken = $(token).val();
+            $.ajax({
+                    url: '@Url.Action("GetEstadosConciliacion", "ModificacionesMasivas")',
+                type: "Post",
+                data: {
+                    __RequestVerificationToken: cmmEtoken
+                },
+                    success: function (response) {
+                        comboCriterios.empty();
+                        displayComboCriterios();
+                        comboCriterios.append('<option value=0/>');
+                        $(response).each(function () {
+                            comboCriterios.append(
+                                $('<option/>').html(this.Text)
+                            );
+                        });
+                    },
+                    error: function (response) {
+                        toastr.error(response);
+                    }
+            });
+        }
+
+        function GetModalidadesDeGestion() {
+             var token = '@Html.AntiForgeryToken()';
+             var cmmEtoken = $(token).val();
+            $.ajax({
+                    url: '@Url.Action("GetModalidadesDeGestion", "ModificacionesMasivas")',
+                type: "Post",
+                data: {
+                    __RequestVerificationToken: cmmEtoken
+                },
+                    success: function (response) {
+                        comboCriterios.empty();
+                        displayComboCriterios();
+                        comboCriterios.append('<option value=0/>');
+                        $(response).each(function () {
+                            comboCriterios.append(
+                                $('<option/>', { value: this.Id }).html(this.Nombre)
+                            );
+                        });
+                    },
+                    error: function (response) {
+                        toastr.error(response);
+                    }
+            });
+        }
+
+        function GetRegiones() {
+             var token = '@Html.AntiForgeryToken()';
+             var cmmEtoken = $(token).val();
+            $.ajax({
+                    url: '@Url.Action("GetRegiones", "ModificacionesMasivas")',
+                type: "Post",
+                data: {
+                    __RequestVerificationToken: cmmEtoken
+                },
+                    success: function (response) {
+                        comboCriterios.empty();
+                        displayComboCriterios();
+                        comboCriterios.append('<option value=0/>');
+                        $(response).each(function () {
+                            comboCriterios.append(
+                                $('<option/>', { value: this.Id }).html(this.Nombre)
+                            );
+                        });
+                    },
+                    error: function (response) {
+                        toastr.error(response);
+                    }
+            });
+        }
+
+        
+        function seleccionarEventosCambio() {
+            $('#btnSeleccionarEventos').prop("disabled", true);
+            $('#divLoading').css("display", "block");
+            cambianLasDenuncias = false;
+            cambianLosEventos = true;
+            $.ajax({
+                type: "POST",
+                url: '@Url.Action("GetFiltroAgenda","ModificacionesMasivas")',
+
+                success: function (response) {
+                    $('#ContainerFiltrosMM').html(response);
+                    $('#ContainerMM').css("display", "none");
+                    $('#ContainerFiltrosMM').css("display", "block");
+                    $('#divLoading').css("display", "none");
+                    $('#btnSeleccionarEventos').prop("disabled",false);
+                },
+                error: function (response) {
+                    toastr.error(response);
+                    $('#btnSeleccionarEventos').prop("disabled", false);
+                }
+            });
+        };
+
+        function seleccionarDenunciasCambio() {
+            $('#btnSeleccionarDenuncias').prop("disabled",true);
+            $('#divLoading').css("display", "block");
+            cambianLasDenuncias = true;
+            cambianLosEventos = false;
+            $.ajax({
+                type: "POST",
+                url: '@Url.Action("GetFiltroDenuncias","ModificacionesMasivas")',
+
+                success: function (response) {
+                    $('#ContainerFiltrosMM').html(response);
+                    $('#ContainerMM').css("display", "none");
+                    $('#ContainerFiltrosMM').css("display", "block");
+                    $('#divLoading').css("display", "none");
+                    $('#btnSeleccionarDenuncias').prop("disabled",false);
+                },
+                error: function (response) {
+                    toastr.error(response);
+                    $('#btnSeleccionarDenuncias').prop("disabled",false);
+                }
+            });
+        };
+
+        function cancelarSeleccion() {
+            $('#divLoadingDenunciasMM').css("display", "inline-block");
+            $('#ContainerMM').css("display", "block");
+            $('#ContainerFiltrosMM').css("display", "none");
+            $('#CamposAModificar').prop("disabled", false);
+            $('#divLoadingDenunciasMM').css("display", "none");
+        };
+
+        function aceptarSelección() {
+            $('#divLoadingDenunciasMM').css("display", "inline-block");
+            $('#tablaCambiosPropuestos').empty();
+            $('#tablalistaSabana').find('tr').each(function (i, valor) {
+                if (!$(valor).children().eq(1).children().is(':checked')) {
+                    if (i > 0) { 
+                        $(valor).remove();
+                    }
+                }
+            });
+            $('#tablaCambiosPropuestos').html($('#tablalistaSabana'));
+            $('#ContainerFiltrosMM').css("display", "none");
+            $('#ContainerMM').css("display", "block");
+            $('.seleccionable').css("display", "none");
+            $('#CamposAModificar').prop("disabled", false);
+            $('#divLoadingDenunciasMM').css("display", "none");
+        };
+        function checkAllItems() {
+            $('#divLoadingDenunciasMM').css("display","inline-block");
+            $('body table tbody tr').each(function (i, valor) {
+                $(valor).children().eq(1).children().prop("checked", true);
+            });
+            $('#divLoadingDenunciasMM').css("display", "none");
+        }
+
+        function unCheckAllItems() {
+            $('#divLoadingDenunciasMM').css("display", "inline-block");
+            $('body table tbody tr').each(function (i, valor) {
+                $(valor).children().eq(1).children().prop("checked", false);
+            });
+            $('#divLoadingDenunciasMM').css("display", "none");
+        }
+
+        
+
+        function aceptarSeleccionDeEventos() {
+            $('#divLoadingAgendaMM').css("display","inline-block");
+            $('#tablaCambiosPropuestos').empty();
+            $('#listaAgenda tbody').find('tr').each(function (i, valor) {
+                if (!$(valor).children().eq(3).children().is(':checked')) {                   
+                        $(valor).remove();                                        
+                }
+            });
+            $('#tablaCambiosPropuestos').html($('#listaAgenda'));
+            $('#ContainerFiltrosMM').css("display", "none");
+            $('#ContainerMM').css("display", "block");
+            $('.seleccionable').css("display", "none");
+            $('#CamposAModificar')[0].selectedIndex = 2;
+            $('#CamposAModificar').prop("disabled", true);
+            $('#divLoadingAgendaMM').css("display", "none");
+            GetResponsables();
+        };
+
+        function unCheckAllItemsAgenda() {
+            $('#divLoadingAgendaMM').css("display", "inline-block");
+            $('body table tbody tr').each(function (i, valor) {
+                $(valor).children().eq(3).children().prop("checked", false);
+            });
+            $('#divLoadingAgendaMM').css("display", "none");
+        }
+
+        function checkAllItemsAgenda() {
+            $('#divLoadingAgendaMM').css("display", "inline-block");
+            $('body table tbody tr').each(function (i, valor) {
+                $(valor).children().eq(3).children().prop("checked", true);
+            });
+            $('#divLoadingAgendaMM').css("display", "none");
+        }
+        function limpiarFiltrosDenunciaMM() {
+                $('#fechaDesde').val('');
+                $('#fechaHasta').val('');
+                $('#fechaGciaDesde').val('');
+                $('#fechaGciaHasta').val('');
+                $('#nroExpediente').val('');
+                $('#comboEtapaProcesal')[0].selectedIndex = 0;
+                $('#comboOrganismos')[0].selectedIndex = 0;
+                $('#comboRegiones')[0].selectedIndex = 0;
+                $('#comboProvincias')[0].selectedIndex = 0;
+                $('#comboLocalidades')[0].selectedIndex = 0;
+                $('#comboServicios')[0].selectedIndex = 0;
+                $('#comboEtapaProcesal')[0].selectedIndex = 0;
+                $('#idDenuncia').val('');
+                $('#comboEstudios')[0].selectedIndex = 0;
+                $('#verDenunciasEliminadas').prop('checked', false);
+                $('#apellidoDenunciante').val('');
+                $('#nombreDenunciante').val('');
+                //$('#tipoDocumento').val('');
+                $('#dniDenunciante').val('');
+                $('#comboEstados')[0].selectedIndex = 0;
+                $('#nroLinea').val('');
+                $('#tramiteCRM').val('');
+                $('#comboMotivosDeReclamo')[0].selectedIndex = 0;
+                $('#responsableInterno')[0].selectedIndex = 0;
+                $('#idDenunciaOriginal').val('');
+                $('#tableContainer').empty();
+            }
+
+
+            function existeAlgúnFiltroVálido() {
+                var existe = false;
+                if ($('#fechaDesde').val().trim().length > 0) {
+                    existe = true;
+                }
+                if ($('#fechaHasta').val().trim().length > 0) {
+                    existe = true;
+                }
+                if ($('#fechaGciaDesde').val().trim().length > 0) {
+                    existe = true;
+                }
+                if ($('#fechaGciaHasta').val().trim().length > 0) {
+                    existe = true;
+                }
+                if ($('#nroExpediente').val().trim().length > 0) {
+                    existe = true;
+                }
+                if ($('#comboEtapaProcesal')[0].selectedIndex != 0) {
+                    existe = true;
+                }
+                if ($('#comboOrganismos')[0].selectedIndex != 0) {
+                    existe = true;
+                }
+                if ($('#comboRegiones')[0].selectedIndex != 0) {
+                    existe = true;
+                }
+                if ($('#comboProvincias')[0].selectedIndex != 0) {
+                    existe = true;
+                }
+                if ($('#comboLocalidades')[0].selectedIndex != 0) {
+                    existe = true;
+                }
+                if ($('#comboServicios')[0].selectedIndex != 0) {
+                    existe = true;
+                }
+                if ($('#idDenuncia').val().trim().length > 0) {
+                    existe = true;
+                }
+                if ($('#comboEstudios')[0].selectedIndex != 0) {
+                    existe = true;
+                }
+                if ($('#verDenunciasEliminadas').is(':checked')) {
+                    existe = true;
+                }
+                if ($('#apellidoDenunciante').val().trim().length > 0) {
+                    existe = true;
+                }
+                if ($('#nombreDenunciante').val().trim().length > 0) {
+                    existe = true;
+                }
+                if ($('#dniDenunciante').val().trim().length > 0) {
+                    existe = true;
+                }
+                if ($('#comboEstados')[0].selectedIndex != 0) {
+                    existe = true;
+                }
+                if ($('#nroLinea').val().trim().length > 0) {
+                    existe = true;
+                }
+                if ($('#tramiteCRM').val().trim().length > 0) {
+                    existe = true;
+                }
+                if ($('#comboMotivosDeReclamo')[0].selectedIndex != 0) {
+                    existe = true;
+                }
+                if ($('#responsableInterno')[0].selectedIndex != 0) {
+                    existe = true;
+                }
+                //if ($('#idDenunciaOriginal').val().trim().length > 0) {
+                //    existe = true;
+                //}
+                return existe;
+
+            }
+
+            function listarDenuncias() {
+                if (existeAlgúnFiltroVálido()) {
+                    $('#btnListarDenunciasMM').prop("disabled", true); 
+                    $('#divLoadingDenunciasMM').css("display", "inline-block");
+                     var token = '@Html.AntiForgeryToken()';
+                     var listarDenMMtoken = $(token).val();
+                    $.ajax({
+                        @*url: '@Url.Action("GetDenuncias","Denuncias")', /*"/Home/GetDenuncias"*/*@
+                        url: '@Url.Action("GetDenuncias","FiltroDenuncias")', /*"/Home/GetDenuncias"*/
+                        type: "Post",
+                        data: {
+                            fechaNotifDesde: $('#fechaDesde').val(),
+                            fechaNotifHasta: $('#fechaHasta').val(),
+                            fechaNotifGciaDesde: $('#fechaGciaDesde').val(),
+                            fechaNOtifGciaHasta: $('#fechaGciaHasta').val(),
+                            nroExpediente: $('#nroExpediente').val(),
+                            etapaProcesalSeleccionada: $('#comboEtapaProcesal option:selected').val(),
+                            organismoSeleccionado: $('#comboOrganismos option:selected').val(),
+                            regionSeleccionada: $('#comboRegiones option:selected').val(),
+                            provinciaSeleccionada: $('#comboProvincias option:selected').val(),
+                            localidadSeleccionada: $('#comboLocalidades option:selected').val(),
+                            servicioSeleccionado: $('#comboServicios option:selected').val(),
+                            idDenuncia: $('#idDenuncia').val(),
+                            estudioSeleccionado: $('#comboEstudios option:selected').val(),
+                            verDenunciasEliminadas: $('#verDenunciasEliminadas').prop('checked'),
+                            apellidoDenunciante: $('#apellidoDenunciante').val().toUpperCase(),
+                            nombreDenunciante: $('#nombreDenunciante').val().toUpperCase(),
+                            //tipoDocumento: $('#tipoDocumento').val(),
+                            dniDenunciante: $('#dniDenunciante').val(),
+                            //estadoSeleccionado: $('#comboEstados option:selected').val(),
+                            estadoSeleccionado: $('#comboEstados option:selected').text(),
+                            nroLinea: $('#nroLinea').val(),
+                            tramiteCRM: $('#tramiteCRM').val(),
+                            motivoDeReclamoSeleccionado: $('#comboMotivosDeReclamo option:selected').val(),
+                            responsableInterno: $('#responsableInterno').val(),
+                            idDenunciaOriginal: $('#idDenunciaOriginal').val(),
+                            exportarAExcel: false,
+                            esUnCambioMasivo: true,
+                            seAgregaUnEvento: false,
+                            __RequestVerificationToken: listarDenMMtoken
+                        },
+                        success: function (response) {
+                            $('#tableContainer').html(response);
+                            $('#btnListarDenunciasMM').prop("disabled", false);
+                            $('#divLoadingDenunciasMM').css("display", "none");
+                            //excelReport();
+
+                        },
+                        error: function (response) {
+                            toastr.error(response);
+                            $('#btnListarDenunciasMM').prop("disabled", false);
+                            $('#divLoadingDenunciasMM').css("display", "none");
+                        }
+                    });
+                } else {
+                    toastr.warning('Seleccione alguno de los Filtros');
+                }
+            }
+
+
+
+
+        window.addEventListener("keyup", function (e) {
+            if (e.keyCode ==
+                27) {
+                document.getElementById("divFildivos").style.display = "none";
+
+            }
+        });
+
+        
+
+      
+            function Volver() {
+                history.back();
+            }
+
+            $("#comboProvincias").change(function () {
+
+                if ($(this)[0].selectedIndex != 0) {
+
+                    $.ajax({
+                        url: '@Url.Action("GetLocalidadesPorProvincia", "FiltroDenuncias")',
+                        type: "Post",
+                        data: {
+                            idProvincia: $('#comboProvincias option:selected').val()
+                        },
+                        success: function (response) {
+                            $('#comboLocalidades').empty();
+                            $('#comboLocalidades').append('<option value=0/>');
+                            $(response).each(function () {
+                                $('#comboLocalidades').append(
+                                    $('<option/>', { value: this.Id }).html(this.Nombre)
+                                );
+                            });
+                            //$('#comboDomiciliosMediadores').attr("disabled",false);
+
+                        },
+                        error: function (response) {
+                            toastr.error(response);
+                        }
+                    });
+                }
+            });
+
+        // Cambios Masivos Agenda
+
+        function BuscarListAgenda() {
+            $('#divLoadingAgendaMM').css('display', 'block');
+            $('#divListAgenda').css('display', 'block');
+
+            var fechaDesde = $('#fechaDesde');
+            var fechaHasta = $('#fechaHasta');
+            var fechaInicial;
+            var fechaFinal;
+            if (fechaDesde.val().trim().length > 0 || fechaHasta.val().trim().length > 0) {
+                if ($('#filtroPorFechaVencimiento').prop('checked')) {
+                    fechaInicial = (fechaDesde.val().trim().length > 0) ? fechaDesde.val() + ' ' + '00:00:00' : '';
+                    fechaFinal = (fechaHasta.val().trim().length > 0) ? fechaHasta.val() + ' ' + '00:00:00' : '';
+
+                } else {
+                    fechaInicial = fechaDesde.val();
+                    fechaFinal = fechaHasta.val();
+
+                }
+                //var fechaInicial;
+                //var fechaFinal;
+                //if ($('#filtroPorFechaVencimiento').prop('checked')) {
+                //    fechaInicial = $('#fechaDesde').val() + ' ' + '00:00:00';
+                //    fechaFinal = $('#fechaHasta').val() + ' ' + '23:59:59';
+                //} else {
+                //    fechaInicial = $('#fechaDesde').val();
+                //    fechaFinal = $('#fechaHasta').val();
+                //}
+                var token = '@Html.AntiForgeryToken()';
+                var listarAgendaMMtoken = $(token).val();
+                $.ajax({
+                    url: '@Url.Action("BuscarListAgenda","Agenda")',
+                    type: "Post",
+                    data: {
+                        fechaDesde: fechaInicial,/*$('#fechaDesde').val() + ' ' + '00:00:00',*/
+                        fechaHasta: fechaFinal,/*$('#fechaHasta').val() + ' ' + '23:59:59',*/
+                        soloFechas: $('#checkboxSoloFechas').prop('checked'),
+                        tipoEventoSeleccionado: $('#tipoEventos option:selected').val(),
+                        estudioSeleccionado: $('#estudios option:selected').val(),
+                        provinciaSeleccionada: $('#provincias option:selected').val(),
+                        reqInformeSeleccionado: $('#reqInformes option:selected').val(),
+                        organismoSeleccionado: $('#organismos option:selected').val(),
+                        solucionadoSeleccionado: $('#solucionados option:selected').val(),
+                        responsableSeleccionado: $('#responsable option:selected').val(),
+                        dniDenunciante: $('#dniDenunciante').val(),
+                        idDenuncia: $('#idDenuncia').val(),
+                        //contestado: contestadoValue,
+                        contestado: $('#checkboxContestado').prop('checked'),
+                        currentPageIndex: $('#hfCurrentPageIndex').val(),
+                        filtrarPorFechaVencimiento: $('#filtroPorFechaVencimiento').prop('checked'),
+                        filtrarPorFechaDenuncia: $('#filtroPorFechaDenuncia').prop('checked'),
+                        filtrarPorFechaNotificacion: $('#filtroPorFechaNotificacion').prop('checked'),
+                        filtrarPorFechaNotificacionGcia: $('#filtroPorFechaNotificacionGcia').prop('checked'),
+                        esUnCambioMasivo: true,
+                        __RequestVerificationToken: listarAgendaMMtoken
+                    },
+                    success(response) {
+                        //$('#divListAgenda').empty();
+                        $('#divListAgenda').html(response);
+                        $('#divListAgenda').css('border', 'inherit');
+                        $('#divLoadingAgendaMM').css('display', 'none');
+                    },
+                    error(response) {
+                        toastr.error(response.responseText);
+                        $('#divLoadingAgendaMM').css('display', 'none');
+                    }
+                });
+            } else {
+                toastr.warning("Debe seleccionar una fecha");
+            }
+        }
+
+        function limpiarFiltrosAgendaMM() {
+            $('#tipoEventos')[0].selectedIndex = 0;
+            $('#estudios')[0].selectedIndex = 0;
+            $('#provincias')[0].selectedIndex = 0;
+            $('#reqInformes')[0].selectedIndex = 0;
+            $('#organismos')[0].selectedIndex = 0;
+            $('#solucionados')[0].selectedIndex = 0;
+            $('#dniDenunciante').val('');
+            $('#idDenuncia').val('');
+            $('#responsable')[0].selectedIndex = 0;
+            $('#checkboxContestado').prop('checked', false);
+            $('#divListAgenda').empty();
+            $('#fechaDesde').val($('#fechaDesdeOculta').val());
+            $('#fechaHasta').val('');
+        }
+
+          $('#provincias').change(function () {
+
+             $.ajax({
+                    url: '@Url.Action("GetOrganismosPorProvincia", "Agenda")',
+                    type: "Post",
+                    data: {
+                        idProvincia: $('#provincias option:selected').val()
+                    },
+                    success: function (response) {
+                        $('#organismos').empty();
+                        $('#organismos').append('<option value=0/>');
+                        $(response).each(function () {
+                            $('#organismos').append(
+                                $('<option/>', { value: this.Id }).html(this.Nombre)
+                            );
+                        });
+                      
+                    },
+                    error: function (response) {
+                        toastr.error(response);
+                    }
+             });
+          });   
+            
+        function clonarFecha(elem) {
+            $('#fechaHasta').val($(elem).val());
+        }
+
+    </script>
+}

@@ -1,0 +1,13 @@
+﻿@{
+    ViewBag.Title = "Acceso Denegado";
+}
+
+<div class="text-center">
+    <h2>El Usuario no cuenta con un Estudio Jurídico Asociado</h2>
+    <p>Si este no es el caso verifique si la Sesión sigue active</p>
+    <p>de lo contrario Ingrese nuevamente al Sistema</p>
+
+
+    @Html.ActionLink("Volver", "Index", "Home", null, new { @class = "btn btn-info" })
+
+</div>

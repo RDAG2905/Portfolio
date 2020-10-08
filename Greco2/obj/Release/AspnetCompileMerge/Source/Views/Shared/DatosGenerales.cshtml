@@ -1,0 +1,421 @@
+﻿@model Greco2.Models.Denuncia.DenunciaModelView
+
+
+
+<div display="flex" id="ParentContainer" class="col-xs-12">
+    <div class="borde">
+        <div class="row">
+            <label class="col-xs-2">Etapa Procesal: </label>
+            @Html.DropDownListFor(m => m.estadoSeleccionado, Model.Estados, "", new { @class = "col-xs-1 form-control", id = "comboEtapaProcesal", style = "margin-left:-30px;margin-right:40px;" })
+
+            <label class="col-xs-2">Número Denuncia: </label>
+            <text id="nroDenuncia" class="col-xs-1">@Model.denuncia.DenunciaId</text>
+        </div>
+        <div class="row">
+            <label class="col-xs-2">Tipo Proceso: </label>
+
+            @Html.DropDownListFor(m => m.tipoProcesoSeleccionado, Model.tiposProceso, "", new { @class = "col-xs-1 form-control", id = "comboTiposProceso", style = "margin-left:-30px;margin-right:40px;" })
+
+            <label class="col-xs-2">Usuario Creador: </label>
+            <text class="col-xs-2">Usuario-Creador</text>
+        </div>
+        <div class="row">
+            <label class="col-xs-2">Denuncia Preventiva: </label>
+            <label class="col-xs-3"></label>
+            <label class="col-xs-2" style="margin-left:-30px;">Denuncia Formal: </label>
+            <label class="col-xs-3"></label>
+        </div>
+    </div>
+    @*<div class="tab-content">
+        <div id="home" class="tab-pane fade in active">*@
+
+    <div class="borde">
+        <div class="row">
+            <label class="col-xs-3">Denunciante : </label>
+            <img src="@Url.Content("~/Images/4.gif")" id="loading" style="display:none;" />
+            <div style="color:dodgerblue;font-family: 'Times New Roman', Times, serif"
+                 id="denuncianteResult">@Model.datosDenunciante</div>
+
+            </div>
+
+            <input type="hidden" id="denuncianteId" />
+            <input type="hidden" id="creationDate" value="@DateTime.Now" />
+            <br />
+
+            <div class="row">
+                <label class="col-xs-3">Dni Denunciante : </label>
+                <input type="text" class="form-control col-xs-3" placeholder="DNI Denunciante" id="dni" />
+                <button class="btn btn-info btn-sm" id="Buscador" type="submit"><i class="glyphicon glyphicon-search"></i></button>
+
+                <input type="checkbox" />
+                <label>Denunciante Individual</label>
+            </div>
+            <div class="row">
+                <label class="col-xs-3">Nombre : </label>
+                <input type="text" class="form-control col-xs-3" placeholder="Nombre Denunciante" id="nombre" />
+                <button class="btn btn-info btn-sm" id="Cleaner"><i class="glyphicon glyphicon-remove"></i></button>
+            </div>
+            <div class="row">
+                <label class="col-xs-3">Apellido : </label>
+                <input type="text" class="form-control col-xs-3" placeholder="Apellido Denunciante" id="apellido" />
+                <button class="btn btn-primary btn-sm" id="alta"><i class="glyphicon glyphicon-export"></i></button>
+            </div>
+
+
+        </div>
+
+        <div class="borde">
+            <div class="row">
+                <label class="col-xs-3">Tramite CRM : </label>
+                <input type="text" id="tramiteCrm" class="form-control col-xs-3" placeholder="Tramite CRM" style="margin-left: -120px;" value="@Model.denuncia.TRAMITECRM" />
+                <label class="col-xs-3">Número de Línea : </label>
+                <input type="text" id="numeroLinea" class="form-control col-xs-3" placeholder="Nro de Linea" style="margin-left: -120px;" value="@Model.denuncia.OBJETORECLAMO" />
+            </div>
+            <div class="row">
+                <label class="col-xs-3">Nro de Cliente/Contrato : </label>
+                <input type="text" id="numeroClienteContrato" class="form-control col-xs-3" placeholder="Nro de Cliente/Contrato" style="margin-left: -120px;" />
+            </div>
+        </div>
+
+        <div class="borde">
+            <div class="row">
+                <label class="col-xs-3">Fecha de Notificacion: </label>
+                @*@Html.TextBoxFor(m => m.denuncia.FSELLOCIA , "{0:yyyy-MM-dd}", new { @type = "date" })*@@*value="@Model.denuncia.FSELLOCIA.ToString("yyyy-MM-dd")"*@
+                <input id="fechaNotificacion" type="date" class="form-control col-xs-1" placeholder="Fecha de Notificacion" style="margin-left:-120px;" value="@Model.denuncia.FSELLOCIA.Date.ToString("yyyy-MM-dd")" />
+                <label class="col-xs-3">Fecha Notificacion Gcia: </label>
+                <input id="fechaNotificacionGcia" type="date" class="form-control col-xs-1" placeholder="Fecha de Notificacion Gcia" style="margin-left:-120px;" value="@Model.denuncia.FSELLOGCIADC.Date.ToString("yyyy-MM-dd")" />
+            </div>
+
+            <div class="row">
+                <label class="col-xs-2" style="margin-right:140px;">Nro Expediente: </label>
+                <input type="text" id="numeroExpediente" class="form-control col-xs-1" placeholder="Nro de Expediente" style="margin-left: -120px;" value="@Model.denuncia.EXPEDIENTE_ID" />
+                <label class="col-xs-3">Responsable Interno: </label>
+                <text class="col-xs-3">Responsable-Interno</text>
+            </div>
+        </div>
+
+
+        <div class="borde">
+            <div class="row">
+                <label class="col-xs-2">Organismo: </label>
+                @Html.DropDownListFor(m => m.organismoSeleccionado, Model.Organismos, "", new { @class = "col-xs-1 form-control", id = "comboOrganismo", style = "margin-left:-30px;margin-right:40px;" })
+
+                <label class="col-xs-2">Estudio Jurídico: </label>
+                @*<input type="text" class="col-xs-1 form-control" value="@Model.estudioSeleccionado" />*@
+                @Html.DropDownListFor(m => m.estudioSeleccionado, Model.Estudios, "", new { @class = "col-xs-1 form-control", id = "comboEstudioEdicion", style = "margin-left:-30px;margin-right:40px;", disabled = "disabled" })
+            </div>
+
+            <div class="row">
+                <label class="col-xs-2">Modalidad Gestión: </label>
+                @Html.DropDownListFor(m => m.modalidadGestionSeleccionada, Model.modalidadesDeGestion, "", new { @class = "col-xs-1 form-control", id = "comboModalidadesGestionEdicion", style = "margin-left:-30px;margin-right:40px;" })
+
+                <label class="col-xs-2">SubTipo Proceso: </label>
+                @Html.DropDownListFor(m => m.subTipoProcesoSeleccionado, Model.subTiposProceso, "", new { @class = "col-xs-1 form-control", id = "comboSubTiposProceso", style = "margin-left:-30px;margin-right:40px;" })
+
+            </div>
+
+            <div class="row">
+                <label class="col-xs-2">Mediador : </label>
+                <input type="text" class="form-control col-xs-1" id="mediador" style="margin-left:-30px" placeholder="Mediador" />
+
+                <label class="col-xs-3" style="margin-left:-10px;">Domicilio del Mediador : </label>
+                @*<input type="text" class="col-xs-2" id="domicilioMediador" />*@
+            </div>
+            <div class="row">
+                <label class="col-xs-3">Reclamo Relacionado : </label>
+                <input type="text" class="form-control col-xs-3" id="reclamoRelacionado" placeholder="Reclamo Relacionado" style="margin-left: -120px;" />
+
+            </div>
+        </div>
+
+        <div class="borde">
+            <div class="row">
+                <label class="col-xs-2">Servicio Denunciado: </label>
+                @Html.DropDownListFor(m => m.servicioSeleccionado, Model.Servicios, "", new { @class = "col-xs-1 form-control", id = "comboServicios", style = "margin-left:-30px;margin-right:40px;" })
+
+                <label class="col-xs-2">Motivo Reclamo: </label>
+                @Html.DropDownListFor(m => m.motivoReclamoSeleccionado, Model.motivosDeReclamo, "", new { @class = "col-xs-1 form-control", id = "comboMotivosReclamo", style = "margin-left:-30px;margin-right:40px;", disabled = "disabled" })
+
+            </div>
+
+            <div class="row">
+                <label class="col-xs-2">Estado Conciliación: </label>
+                @Html.DropDownListFor(m => m.subEstadoSeleccionado, Model.SubEstados, "", new { @class = "col-xs-1 form-control", id = "comboSubEstados", style = "margin-left:-30px;margin-right:40px;" })
+
+                <label class="col-xs-2">Fecha  Resultado:</label>
+                <input type="date" class="form-control col-xs-1" id="fechaResultado" placeholder="Fecha de Resultado" style="margin-left:-30px;" value="@Model.denuncia.FECHARESULTADO" />
+            </div>
+
+
+        </div>
+
+
+        <div class="bordeBotonera">
+            <div class="row">
+                <div>
+                    <input type="button" class="btn btn-primary btn-sm btnGuardar" value="Guardar" id="GuardarDenunciaEdicion" onclick="editarDenuncia()"/>
+                </div>
+            </div>
+        </div>
+
+        <div class="borde" style="padding-top:10px;padding-bottom:10px;">
+
+            <div class="row">
+                <h4 style="padding-left:30px;" class="col-xs-2">Eventos</h4>
+            </div>
+            <div class="row">
+                @Html.DropDownListFor(m => m.tipoEventoSeleccionado, Model.tipoEventos, "", new { @class = "col-xs-1 form-control", id = "comboTipoEventoNuevo", style = "margin-right:20px;" })
+                <input type="button" value="Nuevo" id="nuevoEvento" class="btn btn-info btn-sm col-xs-1" onclick="validarTipoEvento()" data-toggle="modal" data-target="#nuevoEventoModal" @*disabled*@ />
+            </div>
+
+            <div id="divlistaEventos" class="borde">
+
+                @Html.Partial("Eventos", Model.eventos)
+
+            </div>
+
+            @*inicio Popup Nuevo*@
+            <div class="modal fade" id="nuevoEventoModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="border-radius:4px;">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header" style="background-color:#337ab7;color:whitesmoke">
+                            @*#337ab7*@
+
+                            <button type="button" class="close" data-dismiss="modal">×</button>
+
+                            <h4 class="modal-title text-center" id="myModalLabel">Nuevo Hito</h4>
+
+
+                        </div>
+                        <div class="modal-body center-block" @*style="background-color:#f2f2f2;"*@>
+                            <div id="BodyContent">
+                                <br />
+                                @using (Html.BeginForm())
+                                {
+                                    @Html.AntiForgeryToken()
+
+                                    <input type="text" id="idTipoEventoSeleccionado" hidden />
+
+                                    <div class="form-horizontal" style="margin-left:70px;">
+
+                                        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+                                        @Html.HiddenFor(model => model.evento.DenunciaId)
+
+                                        <div class="row">
+                                            @Html.LabelFor(model => model.evento.CONTESTADO, htmlAttributes: new { @class = "col-xs-4" })
+
+                                            @Html.CheckBoxFor(model => model.evento.CONTESTADO, new { @class = "col-xs-1", style = "margin-left:-45px;", id = "contestado" })
+                                            @Html.ValidationMessageFor(model => model.evento.CONTESTADO, "", new { @class = "text-danger" })
+                                        </div>
+
+
+                                        <div class="row">
+                                            @Html.LabelFor(model => model.evento.tipoEvento, htmlAttributes: new { @class = "col-xs-4", style = "margin-right:20px;" })
+                                            <input type="text" id="tipoEventoSeleccionado" class="form-control" readonly />
+
+                                            @*@Html.DropDownListFor(model => model.evento.tipoEvento, Model.tipoEventos, "", new { htmlAttributes = new { @class = "form-control col-xs-1", @id = "tipoEventoNuevo", style = "margin-left:-60px;" } })
+                                                @Html.ValidationMessageFor(model => model.tipoEvento, "", new { @class = "text-danger" })*@
+
+                                        </div>
+
+                                        <div class="row">
+
+                                            @Html.LabelFor(model => model.evento.Fecha, htmlAttributes: new { @class = "col-xs-4" })
+
+                                            @Html.EditorFor(model => model.evento.Fecha, new { htmlAttributes = new { @class = "form-control col-xs-1", type = "date", id = "fechaVencimiento", style = "margin-left:-30px;" } })
+                                            @Html.ValidationMessageFor(model => model.evento.Fecha, "", new { @class = "text-danger" })
+
+                                        </div>
+
+                                        <div class="row">
+                                            <label class="col-xs-4">Hora Vencimiento:</label>
+                                            <input type="time" id="horaVencimiento" class="form-control col-xs-1" style="margin-left:-30px;" />
+
+                                        </div>
+
+                                        <div class="row">
+                                            @Html.LabelFor(model => model.evento.REQUERIMIENTOINFORME, htmlAttributes: new { @class = "col-xs-4", style = "margin-right:20px;" })
+
+                                            @Html.DropDownListFor(model => model.evento.REQUERIMIENTOINFORME, Model.reqsInforme, "", new { htmlAttributes = new { @class = "form-control col-xs-1", id = "requerimientoInforme", style = "margin-left:-30px;" } })
+                                            @Html.ValidationMessageFor(model => model.evento.REQUERIMIENTOINFORME, "", new { @class = "text-danger" })
+
+                                        </div>
+
+                                        <div class="row">
+                                            @Html.LabelFor(model => model.evento.SOLUCIONADO, htmlAttributes: new { @class = "col-xs-4" })
+
+                                            @Html.DropDownListFor(model => model.solucionadoSeleccionado, Model.solucionados, "", new { htmlAttributes = new { @class = "form-control col-xs-1", id = "comboSolucionado", style = "margin-left:-50px;" } })
+                                            @Html.ValidationMessageFor(model => model.evento.SOLUCIONADO, "", new { @class = "text-danger" })
+                                            @*@Html.CheckBoxFor(model => model.evento.SOLUCIONADO, new { @class = "col-xs-1", style = "margin-left:-45px;", id = "solucionado" })
+                                                @Html.ValidationMessageFor(model => model.evento.SOLUCIONADO, "", new { @class = "text-danger" })*@
+
+
+                                        </div>
+
+
+
+                                        <div class="row">
+                                            @Html.LabelFor(model => model.evento.Observacion, htmlAttributes: new { @class = "col-xs-4", style = "margin-right:20px;" })
+                                            @Html.TextAreaFor(model => model.evento.Observacion, new { htmlAttributes = new { @class = " form-control col-xs-3", @rows = "8", @cols = "50", id = "observaciones", style = "margin-left:-30px;" } })
+                                            @Html.ValidationMessageFor(model => model.evento.Observacion, "", new { @class = "text-danger" })
+
+                                        </div>
+
+
+                                    </div>
+                                }
+                                <br />
+                            </div>
+                            <div class="modal-footer" style="background-color:#f2f2f2;">
+                                <div class="row">
+
+                                    <input id="guardarNuevoEvento" type="button" class="btn btn-sm btn-primary col-xs-3" value="Guardar" onclick="guardarNuevoEvento()" data-dismiss="modal" style="margin-left:150px;" />@*background-color:#00b8e6;color:white;*@
+                                    <input type="button" class="btn btn-sm btn-toolbar col-xs-3" style="background-color:#cccccc;" value="Cancelar" data-dismiss='modal' />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                @*----------- Fin Popup Nuevo ----------*@
+
+                @*inicio Popup Edición*@
+                <div class="modal fade" id="editEventoModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="border-radius:4px;">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header" style="background-color:#337ab7;color:whitesmoke">
+                                @*#337ab7*@
+
+                                <button type="button" class="close" data-dismiss="modal">×</button>
+
+                                <h4 class="modal-title text-center" id="myModalLabel">Nuevo Hito</h4>
+
+
+                            </div>
+                            <div class="modal-body center-block" @*style="background-color:#f2f2f2;"*@>
+                                <div id="BodyContent">
+                                    <br />
+                                    @using (Html.BeginForm())
+                                    {
+                                        @Html.AntiForgeryToken()
+
+
+
+                                        <div class="form-horizontal" style="margin-left:70px;">
+
+
+                                            <input type="text" id="eventoEdicionDenunciaId" hidden />
+
+                                            <div class="row">
+
+                                                <label class="col-xs-4">Contestado</label>
+                                                <input type="checkbox" id="eventoEdicionContestado" class="col-xs-1" , style="margin-left:-45px;" />
+                                            </div>
+
+
+                                            <div class="row">
+                                                @Html.LabelFor(model => model.evento.tipoEvento, htmlAttributes: new { @class = "col-xs-4", style = "margin-right:20px;" })
+                                                @*<label class = "col-xs-4", style = "margin-right:20px;">Tipo Evento</label>
+                                                    <select class="form-control col-xs-1" id="combotipoEventoEdicion" style="margin-left:-60px;"> </select>*@
+
+                                                @Html.DropDownListFor(model => model.evento.tipoEvento, Model.tipoEventos, "", new { htmlAttributes = new { @class = "form-control col-xs-1", @id = "tipoEventoNuevo", style = "margin-left:-60px;" } })
+                                                @Html.ValidationMessageFor(model => model.tipoEvento, "", new { @class = "text-danger" })
+
+                                            </div>
+
+                                            <div class="row">
+
+                                                @*@Html.LabelFor(model => model.evento.Fecha, htmlAttributes: new { @class = "col-xs-4" })
+
+                                                    @Html.EditorFor(model => model.evento.Fecha, new { htmlAttributes = new { @class = "form-control col-xs-1", type = "date", id = "fechaVencimiento", style = "margin-left:-30px;" } })
+                                                    @Html.ValidationMessageFor(model => model.evento.Fecha, "", new { @class = "text-danger" })*@
+                                                <label class="col-xs-4">Fecha Vencimiento:</label>
+                                                <input type="date" id="eventofechaEdicion" />
+                                            </div>
+
+                                            <div class="row">
+                                                <label class="col-xs-4">Hora Vencimiento:</label>
+                                                <input type="time" id="horaVencimientoEdicion" class="form-control col-xs-1" style="margin-left:-30px;" />
+
+                                            </div>
+
+                                            <div class="row">
+                                                @Html.LabelFor(model => model.evento.REQUERIMIENTOINFORME, htmlAttributes: new { @class = "col-xs-4", style = "margin-right:20px;" })
+
+
+                                                @Html.DropDownListFor(model => model.evento.REQUERIMIENTOINFORME, Model.reqsInforme, "", new { htmlAttributes = new { @class = "form-control col-xs-1", id = "requerimientoInforme", style = "margin-left:-30px;" } })
+                                                @Html.ValidationMessageFor(model => model.evento.REQUERIMIENTOINFORME, "", new { @class = "text-danger" })
+                                                @*<label class="col-xs-4" , style="margin-right:20px;">Req. Informe</label>
+                                                    <select class = "form-control col-xs-1" id ="comboRequerimientoInformeEventoEdicion", style = "margin-left:-30px;">
+
+                                                    </select>*@
+
+                                            </div>
+
+                                            <div class="row">
+                                                @Html.LabelFor(model => model.evento.SOLUCIONADO, htmlAttributes: new { @class = "col-xs-4" })
+
+                                                @Html.DropDownListFor(model => model.solucionadoSeleccionado, Model.solucionados, "", new { htmlAttributes = new { @class = "form-control col-xs-1", id = "comboSolucionado", style = "margin-left:-50px;" } })
+                                                @Html.ValidationMessageFor(model => model.evento.SOLUCIONADO, "", new { @class = "text-danger" })
+                                                @*@Html.CheckBoxFor(model => model.evento.SOLUCIONADO, new { @class = "col-xs-1", style = "margin-left:-45px;", id = "solucionado" })
+                                                    @Html.ValidationMessageFor(model => model.evento.SOLUCIONADO, "", new { @class = "text-danger" })*@
+                                                @*<label class = "form-control col-xs-1", id = "comboSolucionadoEventoEdicion" style = "margin-left:-50px;">Solucionado</label>
+                                                    <select class = "form-control col-xs-1" id ="comboSolucionadoEventoEdicion", style = "margin-left:-30px;">
+
+                                                    </select>*@
+                                            </div>
+
+
+
+                                            <div class="row">
+                                                @*@Html.LabelFor(model => model.evento.Observacion, htmlAttributes: new { @class = "col-xs-4", style = "margin-right:20px;" })
+                                                    @Html.TextAreaFor(model => model.evento.Observacion, new { htmlAttributes = new { @class = " form-control col-xs-3", @rows = "8", @cols = "50", id = "observaciones", style = "margin-left:-30px;" } })
+                                                    @Html.ValidationMessageFor(model => model.evento.Observacion, "", new { @class = "text-danger" })*@
+                                                <label class="col-xs-4" , style="margin-right:20px;">Observación</label>
+                                                <textarea class=" form-control col-xs-3" rows=8 cols=50 id="observacionesEventoEdicion" , style="margin-left:-30px;"></textarea>
+                                            </div>
+
+
+                                        </div>
+                                    }
+                                    <br />
+                                </div>
+                                <div class="modal-footer" style="background-color:#f2f2f2;">
+                                    <div class="row">
+
+                                        <input id="guardarNuevoEvento" type="button" class="btn btn-sm btn-primary col-xs-3" value="Guardar" onclick="guardarNuevoEvento()" data-dismiss="modal" style="margin-left:150px;" />@*background-color:#00b8e6;color:white;*@
+                                        <input type="button" class="btn btn-sm btn-toolbar col-xs-3" style="background-color:#cccccc;" value="Cancelar" data-dismiss='modal' />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    @*----------- Fin Popup Edición ----------*@
+
+
+
+                    
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+
+@section scripts{
+<script>
+    $('#comboTipoEventoNuevo').change(function () {
+        $('#idTipoEventoSeleccionado').val($('#comboTipoEventoNuevo option:selected').val());
+        $('#tipoEventoSeleccionado').val($('#comboTipoEventoNuevo option:selected').text());
+        if ($(this)[0].selectedIndex != 0) {
+            $('#nuevoEvento').attr("disabled", false);
+        } else {
+            $('#nuevoEvento').attr("disabled", true);
+        }
+
+    });
+
+</script>   
+    }

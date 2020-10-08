@@ -1,0 +1,173 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Google.Apis.Webfonts.v1</name>
+    </assembly>
+    <members>
+        <member name="T:Google.Apis.Webfonts.v1.WebfontsService">
+            <summary>The Webfonts Service.</summary>
+        </member>
+        <member name="F:Google.Apis.Webfonts.v1.WebfontsService.Version">
+            <summary>The API version.</summary>
+        </member>
+        <member name="F:Google.Apis.Webfonts.v1.WebfontsService.DiscoveryVersionUsed">
+            <summary>The discovery version used to generate this service.</summary>
+        </member>
+        <member name="M:Google.Apis.Webfonts.v1.WebfontsService.#ctor">
+            <summary>Constructs a new service.</summary>
+        </member>
+        <member name="M:Google.Apis.Webfonts.v1.WebfontsService.#ctor(Google.Apis.Services.BaseClientService.Initializer)">
+            <summary>Constructs a new service.</summary>
+            <param name="initializer">The service initializer.</param>
+        </member>
+        <member name="P:Google.Apis.Webfonts.v1.WebfontsService.Features">
+            <summary>Gets the service supported features.</summary>
+        </member>
+        <member name="P:Google.Apis.Webfonts.v1.WebfontsService.Name">
+            <summary>Gets the service name.</summary>
+        </member>
+        <member name="P:Google.Apis.Webfonts.v1.WebfontsService.BaseUri">
+            <summary>Gets the service base URI.</summary>
+        </member>
+        <member name="P:Google.Apis.Webfonts.v1.WebfontsService.BasePath">
+            <summary>Gets the service base path.</summary>
+        </member>
+        <member name="P:Google.Apis.Webfonts.v1.WebfontsService.BatchUri">
+            <summary>Gets the batch base URI; <c>null</c> if unspecified.</summary>
+        </member>
+        <member name="P:Google.Apis.Webfonts.v1.WebfontsService.BatchPath">
+            <summary>Gets the batch base path; <c>null</c> if unspecified.</summary>
+        </member>
+        <member name="P:Google.Apis.Webfonts.v1.WebfontsService.Webfonts">
+            <summary>Gets the Webfonts resource.</summary>
+        </member>
+        <member name="T:Google.Apis.Webfonts.v1.WebfontsBaseServiceRequest`1">
+            <summary>A base abstract class for Webfonts requests.</summary>
+        </member>
+        <member name="M:Google.Apis.Webfonts.v1.WebfontsBaseServiceRequest`1.#ctor(Google.Apis.Services.IClientService)">
+            <summary>Constructs a new WebfontsBaseServiceRequest instance.</summary>
+        </member>
+        <member name="P:Google.Apis.Webfonts.v1.WebfontsBaseServiceRequest`1.Alt">
+            <summary>Data format for the response.</summary>
+            [default: json]
+        </member>
+        <member name="T:Google.Apis.Webfonts.v1.WebfontsBaseServiceRequest`1.AltEnum">
+            <summary>Data format for the response.</summary>
+        </member>
+        <member name="F:Google.Apis.Webfonts.v1.WebfontsBaseServiceRequest`1.AltEnum.Json">
+            <summary>Responses with Content-Type of application/json</summary>
+        </member>
+        <member name="P:Google.Apis.Webfonts.v1.WebfontsBaseServiceRequest`1.Fields">
+            <summary>Selector specifying which fields to include in a partial response.</summary>
+        </member>
+        <member name="P:Google.Apis.Webfonts.v1.WebfontsBaseServiceRequest`1.Key">
+            <summary>API key. Your API key identifies your project and provides you with API access, quota, and reports.
+            Required unless you provide an OAuth 2.0 token.</summary>
+        </member>
+        <member name="P:Google.Apis.Webfonts.v1.WebfontsBaseServiceRequest`1.OauthToken">
+            <summary>OAuth 2.0 token for the current user.</summary>
+        </member>
+        <member name="P:Google.Apis.Webfonts.v1.WebfontsBaseServiceRequest`1.PrettyPrint">
+            <summary>Returns response with indentations and line breaks.</summary>
+            [default: true]
+        </member>
+        <member name="P:Google.Apis.Webfonts.v1.WebfontsBaseServiceRequest`1.QuotaUser">
+            <summary>An opaque string that represents a user for quota purposes. Must not exceed 40
+            characters.</summary>
+        </member>
+        <member name="P:Google.Apis.Webfonts.v1.WebfontsBaseServiceRequest`1.UserIp">
+            <summary>Deprecated. Please use quotaUser instead.</summary>
+        </member>
+        <member name="M:Google.Apis.Webfonts.v1.WebfontsBaseServiceRequest`1.InitParameters">
+            <summary>Initializes Webfonts parameter list.</summary>
+        </member>
+        <member name="T:Google.Apis.Webfonts.v1.WebfontsResource">
+            <summary>The "webfonts" collection of methods.</summary>
+        </member>
+        <member name="F:Google.Apis.Webfonts.v1.WebfontsResource.service">
+            <summary>The service which this resource belongs to.</summary>
+        </member>
+        <member name="M:Google.Apis.Webfonts.v1.WebfontsResource.#ctor(Google.Apis.Services.IClientService)">
+            <summary>Constructs a new resource.</summary>
+        </member>
+        <member name="M:Google.Apis.Webfonts.v1.WebfontsResource.List">
+            <summary>Retrieves the list of fonts currently served by the Google Fonts Developer API</summary>
+        </member>
+        <member name="T:Google.Apis.Webfonts.v1.WebfontsResource.ListRequest">
+            <summary>Retrieves the list of fonts currently served by the Google Fonts Developer API</summary>
+        </member>
+        <member name="M:Google.Apis.Webfonts.v1.WebfontsResource.ListRequest.#ctor(Google.Apis.Services.IClientService)">
+            <summary>Constructs a new List request.</summary>
+        </member>
+        <member name="P:Google.Apis.Webfonts.v1.WebfontsResource.ListRequest.Sort">
+            <summary>Enables sorting of the list</summary>
+        </member>
+        <member name="T:Google.Apis.Webfonts.v1.WebfontsResource.ListRequest.SortEnum">
+            <summary>Enables sorting of the list</summary>
+        </member>
+        <member name="F:Google.Apis.Webfonts.v1.WebfontsResource.ListRequest.SortEnum.Alpha">
+            <summary>Sort alphabetically</summary>
+        </member>
+        <member name="F:Google.Apis.Webfonts.v1.WebfontsResource.ListRequest.SortEnum.Date">
+            <summary>Sort by date added</summary>
+        </member>
+        <member name="F:Google.Apis.Webfonts.v1.WebfontsResource.ListRequest.SortEnum.Popularity">
+            <summary>Sort by popularity</summary>
+        </member>
+        <member name="F:Google.Apis.Webfonts.v1.WebfontsResource.ListRequest.SortEnum.Style">
+            <summary>Sort by number of styles</summary>
+        </member>
+        <member name="F:Google.Apis.Webfonts.v1.WebfontsResource.ListRequest.SortEnum.Trending">
+            <summary>Sort by trending</summary>
+        </member>
+        <member name="P:Google.Apis.Webfonts.v1.WebfontsResource.ListRequest.MethodName">
+            <summary>Gets the method name.</summary>
+        </member>
+        <member name="P:Google.Apis.Webfonts.v1.WebfontsResource.ListRequest.HttpMethod">
+            <summary>Gets the HTTP method.</summary>
+        </member>
+        <member name="P:Google.Apis.Webfonts.v1.WebfontsResource.ListRequest.RestPath">
+            <summary>Gets the REST path.</summary>
+        </member>
+        <member name="M:Google.Apis.Webfonts.v1.WebfontsResource.ListRequest.InitParameters">
+            <summary>Initializes List parameter list.</summary>
+        </member>
+        <member name="P:Google.Apis.Webfonts.v1.Data.Webfont.Category">
+            <summary>The category of the font.</summary>
+        </member>
+        <member name="P:Google.Apis.Webfonts.v1.Data.Webfont.Family">
+            <summary>The name of the font.</summary>
+        </member>
+        <member name="P:Google.Apis.Webfonts.v1.Data.Webfont.Files">
+            <summary>The font files (with all supported scripts) for each one of the available variants, as a key :
+            value map.</summary>
+        </member>
+        <member name="P:Google.Apis.Webfonts.v1.Data.Webfont.Kind">
+            <summary>This kind represents a webfont object in the webfonts service.</summary>
+        </member>
+        <member name="P:Google.Apis.Webfonts.v1.Data.Webfont.LastModified">
+            <summary>The date (format "yyyy-MM-dd") the font was modified for the last time.</summary>
+        </member>
+        <member name="P:Google.Apis.Webfonts.v1.Data.Webfont.Subsets">
+            <summary>The scripts supported by the font.</summary>
+        </member>
+        <member name="P:Google.Apis.Webfonts.v1.Data.Webfont.Variants">
+            <summary>The available variants for the font.</summary>
+        </member>
+        <member name="P:Google.Apis.Webfonts.v1.Data.Webfont.Version">
+            <summary>The font version.</summary>
+        </member>
+        <member name="P:Google.Apis.Webfonts.v1.Data.Webfont.ETag">
+            <summary>The ETag of the item.</summary>
+        </member>
+        <member name="P:Google.Apis.Webfonts.v1.Data.WebfontList.Items">
+            <summary>The list of fonts currently served by the Google Fonts API.</summary>
+        </member>
+        <member name="P:Google.Apis.Webfonts.v1.Data.WebfontList.Kind">
+            <summary>This kind represents a list of webfont objects in the webfonts service.</summary>
+        </member>
+        <member name="P:Google.Apis.Webfonts.v1.Data.WebfontList.ETag">
+            <summary>The ETag of the item.</summary>
+        </member>
+    </members>
+</doc>

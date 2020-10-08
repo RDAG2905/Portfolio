@@ -1,0 +1,2119 @@
+﻿@using Greco2.Models.DatosCoprec
+@using Greco2.Models.Evento
+@model Greco2.Models.Denuncia.DenunciaModelView
+
+<style>
+
+    .completar {
+        border-color: orangered;
+    }
+
+    input[type=text], input[type=date], input[type=time], label {
+        max-width: 280px;
+        height: 30px;
+        margin-right: 50px;
+    }
+
+    text {
+        color: dodgerblue;
+        margin-left: 10px;
+        /*margin-top: 15px;*/
+        max-width: 220px;
+        /*background-color:lightgray;*/
+    }
+
+    .leftText {
+        text-align: left;
+    }
+
+    input[type=checkbox] {
+        margin-left: 80px;
+        margin-right: 1px;
+    }
+
+    /*#comboOrganismos, #comboEstudios, #comboModalidadGestion, #comboSubTipoProceso, #comboMediador, #comboDomicilioMediador,
+    #comboMotivoReclamo, #comboServicioDenunciado, #comboEstadoConciliacion, #comboTipoEvento, #comboReqInforme,
+    #comboListaTipoEvento {
+        width: 180px;
+    }*/
+
+    input[type=button] {
+        border-radius: 4px;
+    }
+
+    .h-divider {
+        margin-top: 25px;
+        /*margin-bottom: 5px;*/
+        height: 1px;
+        width: 100%;
+        border-top: 1px solid #0066ff;
+    }
+
+    .borde {
+        /*display:flex;*/
+        /*border-style: solid;*/
+        background-color: white;
+        /*border-color: #cccccc;*/
+        /*border-color: #808080;*/
+        border-color: #999999;
+        border-color: lightgray;
+        border-width: 1px;
+        border-radius: 4px;
+        margin-top: 5px;
+        margin-bottom: 5px;
+        /*margin-left: -25px;*/
+        padding-left: 40px;
+        padding-right: 20px;
+        padding-top: 30px;
+        padding-bottom: 30px;
+    }
+
+    #ParentContainer, #grupoDenunciantesContainer {
+        /*background-color: #f2f2f2;*/
+        background-color: #e6e6e6;
+        border-radius: 4px;
+        padding-top: 10px;
+        /*margin-left: -10px auto;
+        margin-right: -10px auto;*/
+        /*width:1200px;*/
+    }
+
+    #grupoDenunciantesContainer {
+        padding-left: 30px;
+        padding-right: 30px;
+        padding-bottom: 30px;
+        display: flex;
+        justify-content: center;
+    }
+
+    #Buscador, #Cleaner, #alta {
+        margin-left: -30px;
+        height: 25px;
+        /*width:25px;*/
+        justify-content: center;
+        padding-left: 7px;
+        padding-right: 7px;
+    }
+
+    #checkEvento {
+        margin-left: 10PX;
+    }
+
+    .bordeBotonera {
+        border-radius: 4px;
+        padding-left: 25px;
+        padding-top: 6px;
+        padding-bottom: 6px;
+        text-align: center;
+        background-color: white;
+        height: 42px;
+    }
+
+    .btnGuardar {
+        padding-left: 50px;
+        padding-right: 50px;
+    }
+
+    .container-fluid {
+        margin: 0 auto;
+    }
+
+    th {
+        max-width: 200px;
+        padding: 5px 5px 5px 5px;
+    }
+
+    table {
+        text-align: center;
+    }
+
+    .menu {
+        /*background-color: #00547E;*/
+        /*background-color: #002966;*/
+        background-color: #337ab7; /*#0066ff #0047b3 #262626 #666666 #d9d9d9 #bfbfbf #337ab7*/
+        /*background:linear-gradient(#002966,#0047b3);*/
+        /*border-bottom: 8px solid #04A3ED;*/
+        border-bottom: 4px solid #04A3ED;
+        /*border-bottom: 4px solid #d9d9d9;*/
+        border-radius: 4px;
+        width: 120%;
+        height: 40px;
+        /*padding: 10px 10px;*/
+        position: static;
+        margin-top: -20px;
+        /*margin: 0px;*/
+        margin-left: -110px;
+        /*margin-right: -50px;*/
+        z-index: 1;
+        /*height: 35px;*/
+        /*opacity: 0.9;*/
+    }
+
+        .menu .navbar-nav > .active > a {
+            background-color: #04A3ED;
+            color: white;
+            font-weight: bold;
+        }
+
+        .menu .navbar-nav > li > a {
+            font-size: 13px;
+            color: white;
+            padding: 10px 35px;
+        }
+
+            .menu .navbar-nav > li > a:hover {
+                background-color: #04A3ED;
+            }
+
+    .navbar-header > a {
+        font-family: 'Ubuntu Condensed', sans-serif;
+        padding: 0px;
+        margin: 0px;
+        text-decoration: none;
+        color: white;
+        font-size: 25px;
+        /*font-size: 20px;*/
+        padding: 5px 30px;
+    }
+
+        .navbar-header > a:hover {
+            text-decoration: none;
+            color: #04A3ED;
+        }
+
+    .form-control {
+        max-height: 30px;
+    }
+
+    .row {
+        max-height: 55px;
+    }
+
+
+    /*a:active {
+        background-color: #e6e6e6;
+    }*/
+
+</style>@*background-color: #f2f2f2;*@
+
+
+<div class="container">
+    <div id="navHeader" class="navbar navbar-default navbar-header" style="height:20px;width:120%;margin-left:-120px;margin-bottom:-5px;">
+        <div class="row">
+            <input style="margin-left:150px;" type="button" name="name" value="Visualizar Modificaciones" class="btn btn-sm btn-primary" />
+            <input type="button" name="name" value="Formalizar Denuncia" class="btn btn-sm btn-primary" />
+            <input type="hidden" id="idCoprec"/>
+        </div>
+    </div>
+    <ul class="nav nav-tabs">
+        <li class="active"><a data-toggle="tab" href="#home" onmouseover="copiarIdCoprec()">Datos Generales</a></li>
+        <li id="solapaDenunciantes" style="display:none;" onclick="traerGrupoDenunciantes()"><a data-toggle="tab" href="#menu1">Denunciantes</a></li>
+        <li id="solapaDatosCoprec" onclick="traerDatosCoprec()"><a data-toggle="tab" href="#menu2" @*style="display:none;"*@>Datos Coprec</a></li>
+        <li style="display:none;"><a data-toggle="tab" href="#menu3">Previsiones</a></li>
+        <li id="linkDocuments"><a data-toggle="tab" href="#menu4">Documentos</a></li>
+    </ul>
+
+    <div class="tab-content">
+        <br />
+        <div id="home" class="tab-pane fade in active">
+
+            <div display="flex" id="ParentContainer" class="col-xs-12">
+                <div class="borde">
+                    <input type="hidden" value="@Model.tipoProcesoSeleccionado" id="tipoProcesoSeleccionado" />
+                    <div class="row">
+                        <label class="col-xs-2">Etapa Procesal: </label>
+                        @Html.DropDownListFor(m => m.estadoSeleccionado, Model.Estados, "", new { @class = "col-xs-1 form-control", id = "comboEtapaProcesal", style = "margin-left:-30px;margin-right:40px;" })
+
+                        <label class="col-xs-2">Número Denuncia: </label>
+                        <text id="nroDenuncia" class="col-xs-1">@Model.denuncia.DenunciaId</text>
+                        <input type="hidden" id="idDatosCoprec" class="col-xs-1" value="@Model.denuncia.idDatosCoprec" />
+                    </div>
+                    <div class="row">
+                        <label class="col-xs-2">Tipo Proceso: </label>
+
+                        @Html.DropDownListFor(m => m.tipoProcesoSeleccionado, Model.tiposProceso, "", new { @class = "col-xs-1 form-control", id = "comboTiposProceso", style = "margin-left:-30px;margin-right:40px;" })
+
+                        <label class="col-xs-2">Usuario Creador: </label>
+                        <text class="col-xs-2">Usuario-Creador</text>
+                        <input type="hidden" name="coprecValues" value="@Model.denuncia.idDatosCoprec" />
+                    </div>
+                    <div class="row">
+                        <label class="col-xs-2">Denuncia Preventiva: </label>
+                        <label class="col-xs-3"></label>
+                        <label class="col-xs-2" style="margin-left:-30px;">Denuncia Formal: </label>
+                        <label class="col-xs-3"></label>
+                    </div>
+                </div>
+                @*<div class="tab-content">
+        <div id="home" class="tab-pane fade in active">*@
+
+                <div class="borde">
+                    <div class="row">
+                        <label class="col-xs-3">Denunciante : </label>
+                        <img src="@Url.Content("~/Images/4.gif")" id="loading" style="display:none;" />
+
+                        <text id="denuncianteResult">@Model.datosDenunciante</text><text id="denuncianteBuscado"></text>
+                        @*<input type="text" id="inputdatosDenunciante" value="@Model.datosDenunciante" style="border-style:none;"/>*@
+                    </div>
+
+                        <input type="hidden" id="denuncianteId" value="@Model.denuncia.DENUNCIANTE_ID" />
+                        <input type="hidden" id="creationDate" value="@DateTime.Now" />
+                        <input type="hidden" id="grupoIdDenunciantes" value="@Model.denuncia.grupoId" />
+                        <input type="hidden" id="datosCoprecId" value="@Model.denuncia.idDatosCoprec" />
+                        <br />
+
+                        <div class="row">
+                            <label class="col-xs-3">Dni Denunciante : </label>
+                            <input type="text" class="form-control col-xs-3" placeholder="DNI Denunciante" id="dni" />
+                            <button class="btn btn-info btn-sm" id="Buscador" type="submit"><i class="glyphicon glyphicon-search"></i></button>
+
+                            <input type="checkbox" checked="@Model.denuncianteIndividual" id="checkboxDenuncianteIndividual" onchange="habilitarSolapaDenunciantes(this)" />
+                            <label>Denunciante Individual</label>
+                        </div>
+                        <div class="row">
+                            <label class="col-xs-3">Nombre : </label>
+                            <input type="text" class="form-control col-xs-3" placeholder="Nombre Denunciante" id="nombre" />
+                            <button class="btn btn-info btn-sm" id="Cleaner"><i class="glyphicon glyphicon-backward"></i></button>
+                        </div>
+                        <div class="row">
+                            <label class="col-xs-3">Apellido : </label>
+                            <input type="text" class="form-control col-xs-3" placeholder="Apellido Denunciante" id="apellido" />
+                            <button class="btn btn-primary btn-sm" id="alta"><i class="glyphicon glyphicon-export"></i></button>
+                        </div>
+
+
+                    </div>
+
+                    <div class="borde">
+                        <div class="row">
+                            <label class="col-xs-3">Tramite CRM : </label>
+                            <input type="text" id="tramiteCrm" class="form-control col-xs-3" placeholder="Tramite CRM" style="margin-left: -120px;" value="@Model.denuncia.TRAMITECRM" />
+                            <label class="col-xs-3">Número de Línea : </label>
+                            <input type="text" id="numeroLinea" class="form-control col-xs-3" placeholder="Nro de Linea" style="margin-left: -120px;" value="@Model.denuncia.OBJETORECLAMO" />
+                        </div>
+                        <div class="row">
+                            <label class="col-xs-3">Nro de Cliente/Contrato : </label>
+                            <input type="text" id="nroClienteContrato" class="form-control col-xs-3" placeholder="Nro de Cliente/Contrato" style="margin-left: -120px;" value="@Model.denuncia.nroClienteContrato" />
+                        </div>
+                    </div>
+
+                    <div class="borde">
+                        <div class="row">
+                            <label class="col-xs-3">Fecha de Notificacion: </label>
+                            @*@Html.TextBoxFor(m => m.denuncia.FSELLOCIA , "{0:yyyy-MM-dd}", new { @type = "date" })*@@*value="@Model.denuncia.FSELLOCIA.ToString("yyyy-MM-dd")"*@
+                            @*@Html.TextBoxFor(model => model.denuncia.FSELLOCIA,new { @type = "date", @Value = Model.denuncia.FSELLOCIA.ToString("yyyy-MM-dd"), id = "fechaNotificacion" })*@
+                            @if (Model.denuncia.DenunciaId > 0)
+                            {
+                                <input id="fechaNotificacion" type="date" class="form-control col-xs-1" placeholder="Fecha de Notificacion" style="margin-left:-120px;" value="@Model.denuncia.FSELLOCIA.Date.ToString("yyyy-MM-dd")" />
+                            }
+                            else
+                            {
+                                <input id="fechaNotificacion" type="date" class="form-control col-xs-1" placeholder="Fecha de Notificacion" style="margin-left:-120px;" value="@Model.denuncia.FSELLOCIA" />
+                            }
+                            <label class="col-xs-3">Fecha Notificacion Gcia: </label>
+
+                            @if (Model.denuncia.DenunciaId > 0)
+                            {
+                                <input id="fechaNotificacionGcia" type="date" class="form-control col-xs-1" placeholder="Fecha de Notificacion Gcia" style="margin-left:-120px;" value="@Model.denuncia.FSELLOGCIADC.Date.ToString("yyyy-MM-dd")" />
+                            }
+                            else
+                            {
+                                <input id="fechaNotificacionGcia" type="date" class="form-control col-xs-1" placeholder="Fecha de Notificacion Gcia" style="margin-left:-120px;" value="@Model.denuncia.FSELLOGCIADC" />
+                            }
+                        </div>
+
+                        <div class="row">
+                            <label class="col-xs-2" style="margin-right:140px;">Nro Expediente: </label>
+                            <input type="text" id="numeroExpediente" class="form-control col-xs-1" placeholder="Nro de Expediente" style="margin-left: -120px;" value="@Model.denuncia.EXPEDIENTE_ID" />
+                            <label class="col-xs-3">Responsable Interno: </label>
+                            <text class="col-xs-3">Responsable-Interno</text>
+                        </div>
+                    </div>
+
+
+                    <div class="borde">
+                        <div class="row">
+                            <label class="col-xs-2">Organismo: </label>
+                            @Html.DropDownListFor(m => m.organismoSeleccionado, Model.Organismos, "", new { @class = "col-xs-1 form-control", id = "comboOrganismo", style = "margin-left:-30px;margin-right:40px;" })
+
+                            <label class="col-xs-2">Estudio Jurídico: </label>
+                            @*<input type="text" class="col-xs-1 form-control" value="@Model.estudioSeleccionado" />*@
+                            @Html.DropDownListFor(m => m.estudioSeleccionado, Model.Estudios, "", new { @class = "col-xs-1 form-control", id = "comboEstudioEdicion", style = "margin-left:-30px;margin-right:40px;"@*, disabled = "disabled"*@ })
+                        </div>
+
+                        <div class="row">
+                            <label class="col-xs-2">Modalidad Gestión: </label>
+                            @Html.DropDownListFor(m => m.modalidadGestionSeleccionada, Model.modalidadesDeGestion, "", new { @class = "col-xs-1 form-control", id = "comboModalidadesGestionEdicion", style = "margin-left:-30px;margin-right:40px;" })
+
+                            <label class="col-xs-2">SubTipo Proceso: </label>
+                            @Html.DropDownListFor(m => m.subTipoProcesoSeleccionado, Model.subTiposProceso, "", new { @class = "col-xs-1 form-control", id = "comboSubTiposProceso", style = "margin-left:-30px;margin-right:40px;" })
+
+                        </div>
+                        <div id="bloqueCamposCoprec" @*style="display:none;"*@>
+                            @*<div class="row">
+                    <label class="col-xs-2">Mediador : </label>*@
+                            @*<input type="text" class="form-control col-xs-1" id="mediador" style="margin-left:-30px" placeholder="Mediador" />*@
+                            @*@Html.DropDownListFor(m => m.mediadorSeleccionado, Model.mediadores, "", new { @class = "col-xs-1 form-control", id = "comboMediadores", style = "margin-left:-30px;margin-right:40px;" })
+
+                    <label class="col-xs-3" style="margin-left:-10px;">Domicilio del Mediador : </label>
+                    @Html.DropDownListFor(m => m.domicilioMediadorSeleccionado, Model.domiciliosMediadores, "", new { @class = "col-xs-1 form-control", id = "comboDomiciliosMediadores", style = "margin-left:-30px;margin-right:40px;" })*@
+                            @*<input type="text" class="col-xs-2" id="domicilioMediador" />*@
+                            @*</div>*@
+                            <div class="row">
+                                <label class="col-xs-2">Mediador : </label>
+                                @Html.DropDownListFor(m => m.mediadorSeleccionado, Model.mediadores, "", new { @class = "col-xs-1 form-control", id = "comboMediadores", style = "margin-left:-30px;margin-right:40px;" })
+                                @*<input type="text" class="form-control col-xs-1" id="mediador" style="margin-left:-30px" placeholder="Mediador" />*@
+
+                                <label class="col-xs-2" @*style="margin-left:-10px;"*@>Domicilio Mediador: </label>
+                                @Html.DropDownListFor(m => m.domicilioMediadorSeleccionado, Model.domiciliosMediadores, "", new { @class = "col-xs-1 form-control", id = "comboDomiciliosMediadores", style = "margin-left:-30px;margin-right:40px;"@*, disabled = "disabled"*@ })
+                                @*<input type="text" class="col-xs-2" id="domicilioMediador" />*@
+                            </div>
+                            <div class="row">
+                                <label class="col-xs-3">Reclamo Relacionado : </label>
+                                <input type="text" class="form-control col-xs-3" id="reclamoRelacionado" placeholder="Reclamo Relacionado" style="margin-left: -120px;" value="@Model.denuncia.reclamoRelacionado"/>
+
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="borde">
+                        <div class="row">
+                            <label class="col-xs-2">Servicio Denunciado: </label>
+                            @Html.DropDownListFor(m => m.servicioSeleccionado, Model.Servicios, "", new { @class = "col-xs-1 form-control", id = "comboServicios", style = "margin-left:-30px;margin-right:40px;" })
+
+                            <label class="col-xs-2">Motivo Reclamo: </label>
+                            @Html.DropDownListFor(m => m.motivoReclamoSeleccionado, Model.motivosDeReclamo, "", new { @class = "col-xs-1 form-control", id = "comboMotivosReclamo", style = "margin-left:-30px;margin-right:40px;"@*, disabled = "disabled"*@ })
+
+                        </div>
+
+                        <div class="row">
+                            <label class="col-xs-2">Estado Conciliación: </label>
+                            @Html.DropDownListFor(m => m.subEstadoSeleccionado, Model.SubEstados, "", new { @class = "col-xs-1 form-control", id = "comboSubEstados", style = "margin-left:-30px;margin-right:40px;" })
+
+                            <label class="col-xs-2">Fecha  Resultado:</label>
+                            <input type="date" class="form-control col-xs-1" id="fechaResultado" placeholder="Fecha de Resultado" style="margin-left:-30px;" value="@Model.denuncia.FECHARESULTADO" />
+                        </div>
+
+
+                    </div>
+
+                    @if (!Model.eventos.Any())
+                    {
+                        <div class="borde">
+                            <div class="row">
+                                <input type="hidden" id="tipoEvento" value="3" />
+                                <label class="col-xs-2">Tipo Evento</label>
+                                @Html.DropDownListFor(m => m.tipoEventoSeleccionado, Model.tipoEventos, "", new { @class = "col-xs-1 form-control", id = "comboTipoEventos", style = "margin-left:-30px;margin-right:40px;" })
+
+                                @*<input type="hidden" id="reqInforme" value="2" />*@
+                                <label class="col-xs-2">Req.Informe:</label>
+                                @Html.DropDownListFor(m => m.reqInformeSeleccionado, Model.reqsInforme, "", new { @class = "col-xs-1 form-control", id = "comboReqsInforme", style = "margin-left:-30px;margin-right:40px;" })
+
+                            </div>
+
+                            <div class="row">
+                                <label class="col-xs-2">Fecha Vencimiento: </label>
+                                <input id="fechaVencimiento" type="date" class="form-control col-xs-1" style="margin-left:-30px;" />
+                                <label class="col-xs-2" style="margin-left: -10px;">Hora Vencimiento: </label>
+                                <input type="time" id="horaVencimiento" class="form-control col-xs-1" style="margin-left:-30px;" />
+                            </div>
+                        </div>
+                    }
+
+                    @if (Model.denuncia.DenunciaId > 0)
+                    {
+                        <div class="bordeBotonera">
+                            <div class="row">
+
+                                <input type="button" class="btn btn-primary btn-sm btnGuardar" value="Editar" id="EditarDenuncia" onclick="editarDenuncia(this)" />
+
+                            </div>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="bordeBotonera">
+                            <div class="row">
+
+                                <input type="button" class="btn btn-primary btn-sm btnGuardar" value="Guardar" id="GuardarDenuncia" />
+
+                            </div>
+                        </div>
+
+                    }
+                    <div class="borde" style="padding-top:10px;padding-bottom:10px;">
+
+                        @if (Model.denuncia.DenunciaId > 0)
+                        {
+                            <div class="row">
+                                <h4 style="padding-left:30px;" class="col-xs-2">Eventos</h4>
+                            </div>
+                            <div class="row">
+                                @Html.DropDownListFor(m => m.tipoEventoSeleccionado, Model.tipoEventos, "", new { @class = "col-xs-1 form-control", id = "comboTipoEventoNuevo", style = "margin-right:20px;" })
+                                <input type="button" value="Nuevo" id="nuevoEvento" class="btn btn-info btn-sm col-xs-1" onclick="cleanNuevoModal()" data-toggle="modal" data-target="#nuevoEventoModal" disabled />
+                            </div>
+                        }
+                        @*<div id="divlistaEventos" class="borde" style="margin-left:-20px;margin-right:-20px;">
+
+                    @Html.Partial("EventosSP", Model.eventos)
+
+                </div>*@
+
+                        @*inicio Popup Nuevo*@
+                        <div class="modal fade" id="nuevoEventoModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="border-radius:4px;">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header" style="background-color:#337ab7;color:whitesmoke">
+                                        @*#337ab7*@
+
+                                        <button type="button" class="close" data-dismiss="modal">×</button>
+
+                                        <h4 class="modal-title text-center" id="myModalLabel">Nuevo Hito</h4>
+
+
+                                    </div>
+                                    <div class="modal-body center-block" @*style="background-color:#f2f2f2;"*@>
+                                        <div id="BodyContent">
+                                            <br />
+                                            @using (Html.BeginForm())
+                                            {
+                                                @Html.AntiForgeryToken()
+
+                                                <input type="text" id="idTipoEventoSeleccionado" hidden />
+
+                                                <div class="form-horizontal" style="margin-left:70px;">
+
+                                                    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+                                                    @Html.HiddenFor(model => model.evento.DenunciaId)
+
+                                                    <div class="row">
+                                                        @Html.LabelFor(model => model.evento.CONTESTADO, htmlAttributes: new { @class = "col-xs-4" })
+
+                                                        @Html.CheckBoxFor(model => model.evento.CONTESTADO, new { @class = "col-xs-1", style = "margin-left:-45px;", id = "contestadoEN" })
+                                                        @Html.ValidationMessageFor(model => model.evento.CONTESTADO, "", new { @class = "text-danger" })
+                                                    </div>
+
+
+                                                    <div class="row">
+                                                        @Html.LabelFor(model => model.evento.tipoEvento, htmlAttributes: new { @class = "col-xs-4", style = "margin-right:20px;" })
+                                                        <input type="text" id="tipoEventoSeleccionado" class="form-control" readonly />
+
+
+
+                                                    </div>
+
+                                                    <div class="row">
+
+                                                        @Html.LabelFor(model => model.evento.Fecha, htmlAttributes: new { @class = "col-xs-4" })
+
+                                                        @*@Html.EditorFor(model => model.evento.Fecha,new { @class = "form-control col-xs-1",@type = "date", id = "fechaVencimientoEN", style = "margin-left:-30px;"  })*@
+                                                        <input type="date" class="form-control col-xs-1" id="fechaVencimientoEN" style="margin-left:-30px;" />
+                                                        @Html.ValidationMessageFor(model => model.evento.Fecha, "", new { @class = "text-danger" })
+
+                                                    </div>
+
+                                                    <div class="row">
+                                                        <label class="col-xs-4">Hora Vencimiento:</label>
+                                                        <input type="time" id="horaVencimientoEN" class="form-control col-xs-1" style="margin-left:-30px;" />
+
+                                                    </div>
+
+                                                    <div class="row">
+                                                        @Html.LabelFor(model => model.evento.REQUERIMIENTOINFORME, htmlAttributes: new { @class = "col-xs-4", style = "margin-right:20px;" })
+
+                                                        @Html.DropDownListFor(model => model.evento.REQUERIMIENTOINFORME, Model.reqsInforme, "", new { @class = "form-control col-xs-1",@id = "comboRequerimientoInformeEN", @*style = "margin-left:-30px;"*@})
+                                                        @Html.ValidationMessageFor(model => model.evento.REQUERIMIENTOINFORME, "", new { @class = "text-danger" })
+
+                                                    </div>
+
+                                                    <div class="row">
+                                                        @Html.LabelFor(model => model.evento.SOLUCIONADO, htmlAttributes: new { @class = "col-xs-4" })
+
+                                                        @Html.DropDownListFor(model => model.solucionadoSeleccionado, Model.solucionados, "", new { @class = "form-control col-xs-1", @id = "comboSolucionadoEN", style = "margin-left:-30px;" })
+                                                        @Html.ValidationMessageFor(model => model.evento.SOLUCIONADO, "", new { @class = "text-danger" })
+                                                        @*@Html.CheckBoxFor(model => model.evento.SOLUCIONADO, new { @class = "col-xs-1", style = "margin-left:-45px;", id = "solucionado" })
+                                                @Html.ValidationMessageFor(model => model.evento.SOLUCIONADO, "", new { @class = "text-danger" })*@
+
+
+                                                    </div>
+
+
+
+                                                    <div class="row">
+                                                        @Html.LabelFor(model => model.evento.Observacion, htmlAttributes: new { @class = "col-xs-4", style = "margin-right:20px;" })
+                                                        @*@Html.TextAreaFor(model => model.evento.Observacion, new { htmlAttributes = new { @class = " form-control col-xs-3", @rows = "8", @cols = "50", id = "observaciones", style = "margin-left:-30px;" } })*@
+                                                        <textarea class=" form-control col-xs-3" style="max-height:100px;" id="observacionesEN">@Model.evento.Observacion</textarea>
+                                                        @Html.ValidationMessageFor(model => model.evento.Observacion, "", new { @class = "text-danger" })
+
+                                                    </div>
+
+
+                                                </div>
+                                            }
+                                            <br />
+                                        </div>
+                                        <div class="modal-footer" style="background-color:#f2f2f2;">
+                                            <div class="row">
+
+                                                <input id="guardarNuevoEvento" type="button" class="btn btn-sm btn-primary col-xs-3" value="Guardar" onclick="guardarNuevoEvento()" style="margin-left:150px;" />
+                                                <input type="button" class="btn btn-sm btn-toolbar col-xs-3" style="background-color:#cccccc;" value="Cancelar" data-dismiss='modal' />
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            @*----------- Fin Popup Nuevo ----------*@
+
+                            @*inicio Popup Edición*@
+                            <!-- Modal -->
+                            @*<div class="modal fade" id="editEventModal" role="dialog" data-collapsed="true">
+                    <div class="modal-dialog">*@
+
+                            <!-- Modal content-->
+                            @*<div class="modal-content">
+                                <div class="modal-header"
+                                     style="background-color:#337ab7; color:white;">
+                                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+
+                                    <button type="button" class="close" data-dismiss="modal">×</button>
+
+                                    <h4 class="modal-title" id="myModalLabel" style="margin-left:50px;">Editar Evento</h4>
+
+                                </div>
+
+                                <div class="modal-body">
+
+                                    <div id="divEventoAEditar">
+
+                                    </div>
+
+                                </div>
+
+                                <div class="modal-footer">
+
+                                    <button type="button" class="btn btn-primary" onclick="guardarEventoEditado()" id="btnEditarEvento">Guardar</button>
+                                    <button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    </div>*@
+
+                            @*----------- Fin Popup Edición ----------*@
+                        </div>
+                        @*esto no estaba*@
+                        @*<div >*@
+                        <div id="divlistaEventos" class="borde" style="margin-left:-20px;margin-right:-20px;">
+
+                            @Html.Partial("EventosSP", Model.eventos)
+
+                        </div>
+                        @*</div>*@
+                        @*----*@
+                    </div>
+
+                </div>
+            </div>
+            <div id="menu1" class="tab-pane fade">
+
+                <br />
+                @*@Html.Partial("GrupoDenunciantes")*@
+                <div id="grupoDenunciantesContainer">
+                    <div class="borde" style="padding-right:40px">
+                        <div id="divGrupo"></div>
+                        <div class="list-group-item" style="border:2px inherit;">
+                            <div class="row">
+                                <label style="margin-right:10px;margin-left:80px;" class="col-xs-1">Agregar </label>
+                                <input style="max-width:100px;text-align:center;" id="cantidadDenunciantes" class="form-control input-sm col-xs-1" />
+                                <div class="col-xs-1" style="margin-right:50px;"><i onclick="limpiarInput('cantidadDenunciantes');" style="color:darkgray;" class="glyphicon glyphicon-backward"></i></div>
+
+                                <button class="col-xs-1 btn btn-default" onclick="limpiarGrupoInputs();"><i style="color:darkgray;" class="glyphicon glyphicon-fast-backward"></i></button>
+
+                                <label style="margin-right:10px;margin-left:80px;" class="col-xs-1">Quitar </label>
+                                <input style="max-width:100px;text-align:center;" id="cantidadDenunciantesASacar" class="form-control input-sm col-xs-1" />
+                                <div class="col-xs-1"><i onclick="limpiarInput('cantidadDenunciantesASacar');" style="color:darkgray;" class="glyphicon glyphicon-backward"></i></div>
+                            </div>
+                        </div>
+                        <br />
+                        <div id="divListaDenunciantes">
+                            <table id="lista" class="table" style="width:900px;">
+                                <thead>
+                                    <tr>
+                                        <th></th>
+                                        <th class="text-center">Nombre</th>
+                                        <th class="text-center">Apellido</th>
+                                        <th class="text-center">Dni</th>
+                                        <th></th>
+                                        <th></th>
+                                    </tr>
+                                </thead>
+                                <tbody></tbody>
+
+                            </table>
+                        </div>
+                        
+                        <div class="navbar-right">
+                            <button id="guardarGrupoDenunciantes" class="btn btn-sm btn-primary right" style="margin-right:80px;">Guardar</button>
+                            <button id="editarGrupoDenunciantes" class="btn btn-sm btn-primary right" style="display:none;margin-right:80px;" onclick="agregarNuevosDenunciantes()">GUARDAR NUEVOS</button>
+                        </div>
+                        </div>
+                    </div>
+
+                    </div>
+
+
+                                                
+
+            <div id="menu2" class="tab-pane fade" >
+
+                
+                @*@Html.Partial("DatosCoprec", new DatosCoprecDto())*@
+
+            </div>
+            <div id="menu3" class="tab-pane fade">
+                <h3>Previsiones</h3>
+
+            </div>
+            <div id="menu4" class="tab-pane fade">
+
+                <div class="jumbotron">
+                    <form action="~/Home/SaveDropzoneJsUploadedFiles" class="dropzone" id="dropzoneJsForm"></form>
+                    <br />
+                    <input type="button" id="submit-all" class="btn btn-primary btn-sm" value="Agregar" />
+
+                </div>
+
+                <div id="FileList">
+
+                </div>
+
+
+            </div>
+
+        </div>
+
+
+    </div>
+
+
+    @section scripts{
+        @*@Scripts.Render("~/bundles/jqueryval")*@
+
+        <script>
+
+            $(window).on('load', function () {
+                var proceso = $('#tipoProcesoSeleccionado').val();
+                $("#comboTiposProceso option").each(function (i, valor) {
+                    
+                    if ($(valor).text() == proceso) {
+                        $(valor).prop('selected', true);
+                        
+                    }
+                });
+                $("#comboEtapaProcesal option").each(function (i, valor) {
+                    
+                    if ($(valor).text() == 'Conciliación') {
+                        $(valor).prop('selected', true);
+                       
+                    }
+                });
+
+               
+                if ($('#comboOrganismo option:selected').text().includes('COPREC')) {
+                    //$('#bloqueCamposCoprec').show();
+                    $('#bloqueCamposCoprec').css("display", "block");
+                    $('#solapaDatosCoprec').css("display", "block");
+                    //alert('incluye coprec');
+                    
+                } else {
+                    $('#bloqueCamposCoprec').hide();
+                    $('#solapaDatosCoprec').css("display", "none");
+                    //alert('No incluye coprec. Es otro organismo');
+                }
+
+                if ($('#checkboxDenuncianteIndividual').is(':checked')) {
+                    $('#solapaDenunciantes').css("display", "none");
+                } else {
+                    $('#solapaDenunciantes').css("display", "block");
+                }
+
+
+                //$('#inputdatosDenunciante').removeAttr("hidden");
+            });
+
+           
+
+            function habilitarSolapaDenunciantes(elem) {
+                if (!$(elem).is(':checked')) {
+                    $('#solapaDenunciantes').css('display', 'block');
+                }
+                else {
+                    $('#solapaDenunciantes').css('display', 'none');
+                }
+            }
+
+            
+
+            function traerDatosCoprec() {
+                //alert($('#idCoprec').val());
+                var id = $('#idDatosCoprec').val();    
+                if (id == '' || id == 0) {
+                    id = $('#idCoprec').val();
+                } else {
+                    id = $('#idDatosCoprec').val();
+                }
+                if ($('#nroDenuncia').text() != '0') { 
+                    $.ajax({
+                        url: '@Url.Action("TraerDatosCoprec","Denuncias")',
+                        type: "Get",
+                        //data: { idDatosCoprec: $('#coprecValues').val() },                        
+                        //data: { idDatosCoprec: $('#datosCoprecId').val() },
+                        //data: { idDatosCoprec: $('#idDatosCoprec').val() },  // esta es la anterior y funciona con la edición.
+                        data: { idDatosCoprec: id },
+                        success(response) {
+                            $('#menu2').html(response);
+                        },
+                        error(response) {
+                            toastr.options.positionClass = 'toast-top-full-width';
+                            toastr.error(response.responseText);
+                        }
+                    });
+               }
+            }
+
+     function editarDatosCoprec() {
+                var denunciaId = parseInt($('#nroDenuncia').text());
+                    $.ajax({
+                        url: '@Url.Action("EditarDatosCoprec","Denuncias")',
+                        type: "Get",
+                        data: {
+                            Id: $('#DatosCoprec').val(),
+                            Honorarios: $('#inputHonorarios').val(), 
+                            NroGestion: $('#inputNroGestion').val(), 
+                            FechaGestionHonorarios: $('#inputFechaGestionHonorarios').val(),
+                            MontoAcordado: $('#inputMontoAcordado').val(), 
+                            Arancel: $('#inputArancel').val(), 
+                            FechaGestionArancel: $('#inputFechaGestionArancel').val(),
+                            DenunciaId: denunciaId, 
+                        },
+                        success(response) {
+                            toastr.success('Registro guardado correctamente');
+                            $('#menu2').html(response);
+                        },
+                        error(response) {
+                            toastr.options.positionClass = 'toast-top-full-width';
+                            toastr.error(response.responseText);
+                        }
+                    });
+               
+            }
+
+            function copiarIdCoprec() {
+                $('#idCoprec').val($('#DatosCoprec').val());
+            }
+
+            function guardarDatosCoprec() {
+                var denunciaId = parseInt($('#nroDenuncia').text());
+                    $.ajax({
+                        url: '@Url.Action("GuardarDatosCoprec","Denuncias")',
+                        type: "Get",
+                        data: {
+                            Honorarios: $('#inputHonorarios').val(), 
+                            NroGestion: $('#inputNroGestion').val(), 
+                            FechaGestionHonorarios: $('#inputFechaGestionHonorarios').val(),
+                            MontoAcordado: $('#inputMontoAcordado').val(), 
+                            Arancel: $('#inputArancel').val(), 
+                            FechaGestionArancel: $('#inputFechaGestionArancel').val(),
+                            DenunciaId: denunciaId, 
+                        },
+                        success(response) {
+                            toastr.success('Registro guardado correctamente');
+                            //$('#datosCoprecId').val($('#DatosCoprec').val());
+                            $('#idDatosCoprec').val($('#DatosCoprec').val());
+                            $('#idCoprec').val($('#DatosCoprec').val());
+                            //console.log('idcoprec:');
+                            //console.log($('#idDatosCoprec').val());
+                            //idDatosCoprec = $('#DatosCoprec').val();
+                            //$('#coprecValues').val($('#DatosCoprec').val());
+                            $('#menu2').html(response);
+                        },
+                        error(response) {
+                            toastr.options.positionClass = 'toast-top-full-width';
+                            toastr.error(response.responseText);
+                        }
+                    });
+               
+            }
+
+            var listadoDenunciantes = [];
+                
+                $('#guardarGrupoDenunciantes').click(function () {
+                    var fila = [];
+                    var n = 0;
+                    $('#lista tbody tr').each(function (i, valor) {
+                        
+                        fila.push($(valor).find('td').eq(0).children().val());
+                        fila.push($(valor).find('td').eq(1).children().val());
+                        fila.push($(valor).find('td').eq(2).children().val());
+                        //fila.push($(valor).find('td').eq(3).children().val());
+                        //fila[1] = $(valor).find('td').eq(1).children().val();
+                        //fila[2] = $(valor).find('td').eq(2).children().val();
+                        //fila[3] = $(valor).find('td').eq(3).children().val();
+                        listadoDenunciantes.push(fila);
+                        fila = [];
+                    });
+                    console.log(listadoDenunciantes);
+                    console.log(listadoDenunciantes.length);
+                    if (listadoDenunciantes.length <= 1) {
+                        toastr.options.positionClass = 'toast-bottom-full-width'; /*'toast-bottom-right'*/
+                        toastr.warning('.......................................................................... Para crear un Grupo de Denunciantes se requieren al menos 2 Integrantes');
+                    }
+                    else {
+                        $.ajax({
+                            url: '@Url.Action("CrearGrupo","Denuncias")',
+                            type: 'Post',
+                            data: { lista: listadoDenunciantes },
+                            success(response) {
+                                //console.log(response)
+                                //$('#divListaDenunciantes').html(response);
+                                $('#divGrupo').html(response);
+                                $('#lista tbody').empty();
+                                $('#grupoIdDenunciantes').val($('#grupoDenuncianteId').text())
+                                var nombrePrincipal = $('#nombreDenunciantePrincipal').val();
+                                var apellidoPrincipal = $('#apellidoDenunciantePrincipal').val();
+                                var dniPrincipal = $('#dniDenunciantePrincipal').val();
+                                console.log(nombrePrincipal);
+                                console.log(apellidoPrincipal);
+                                console.log(dniPrincipal);
+                                console.log($('#idDenunciantePrincipal').val());
+                                $('#denuncianteResult').html(nombrePrincipal + " " + apellidoPrincipal + " " + dniPrincipal);
+                                $('#denuncianteId').val($('#idDenunciantePrincipal').val());
+                                
+                                $('#btnClearTable').attr("disabled", true);
+                                $('#guardarGrupoDenunciantes').css("display", "none");
+                                $('#editarGrupoDenunciantes').css("display","block");
+                            },
+                            error(response) {
+                                toastr.error(response.responseText);
+                            }  
+                        });
+                        listadoDenunciantes = [];
+                    }
+            });
+
+            function eliminarFilasGrupo() {
+                var tbody = $('#lista tbody');
+                tbody.empty();
+            }
+
+            function agregarNuevosDenunciantes() {
+                var fila = [];
+                var n = 0;
+                $('#lista tbody tr').each(function (i, valor) {
+
+                    fila.push($(valor).find('td').eq(0).children().val());
+                    fila.push($(valor).find('td').eq(1).children().val());
+                    fila.push($(valor).find('td').eq(2).children().val());
+                    listadoDenunciantes.push(fila);
+                    fila = [];
+                });
+                if (listadoDenunciantes.length < 1) {
+                    toastr.options.positionClass = 'toast-bottom-full-width'; /*'toast-bottom-right'*/
+                    toastr.warning('.......................................................................... No hay denunciantes en la Lista');
+                }
+                else {
+                    listaFinal = [];
+                    $('#listaDenunciantesDB tbody tr').each(function (i, valor) {
+
+                        fila.push($(valor).find('td').eq(1).children().val());
+                        fila.push($(valor).find('td').eq(2).children().val());
+                        fila.push($(valor).find('td').eq(3).children().val());
+                        listaFinal.push(fila);
+                        fila = [];
+                    });
+                    //array1 = array1.concat(array2);
+                    listaFinal = listaFinal.concat(listadoDenunciantes);
+                    $.ajax({
+                        @*url: '@Url.Action("AgregarNuevosDenunciantes","Denuncias")',*@
+                        url: '@Url.Action("CrearGrupo","Denuncias")',
+                        type: 'Post',
+                        data: {
+                            lista: listaFinal,
+                            idGrupo: parseInt($('#grupoDenuncianteId').text())
+                        },
+                        success(response) {
+                            $('#divGrupo').html(response);
+                            $('#grupoIdDenunciantes').val($('#grupoDenuncianteId').text());
+                            $('#denuncianteResult').html(nombrePrincipal + " " + apellidoPrincipal + " " + dniPrincipal);
+                            $('#denuncianteId').val($('#idDenunciantePrincipal').val());
+                            eliminarFilasGrupo();
+                            listaFinal = [];
+                            listadoDenunciantes = [];
+                        },
+                        error(response) {
+                            toastr.error(response.responseText);
+                            listadoDenunciantes = [];
+                            listaFinal = [];
+                        }
+                    });
+                }
+            }
+
+            function quitarDelGrupo(denuncianteId, elem) {
+            var boton = $(elem);
+            console.log(boton);
+            var fila = $(elem).parent().parent();
+            console.log(fila);
+            $.ajax({
+                url: '@Url.Action("QuitarDelGrupo","Denuncias")',
+                type: 'GET',
+                data: {
+                    id: denuncianteId,
+                    grupoId: $('#grupoDenuncianteId').text()
+                },
+                success(response) {
+                    toastr.success(response);
+                    fila.remove();
+                },
+                error(response) {
+                    toastr.error(response.responseText);
+                }
+            });
+
+        }
+
+        @*</script>
+                            <script type="text/javascript">*@
+
+
+
+
+                                //Dropzone.options.dropzoneJsForm = {
+                                //    //prevents Dropzone from uploading dropped files immediately
+                                //    autoProcessQueue: false,
+                                //    addRemoveLinks: true,
+                                //    parallelUploads: 5,
+                                //    maxFilesize: 20,
+                                //    //url:"/Home/SubirArchivo",
+                                //    init: function () {
+
+                                //        var submitButton = document.querySelector("#submit-all");
+                                //        var myDropzone = this; //closure
+                                //        console.log(this);
+                                //        submitButton.addEventListener("click", function () {
+                                //            myDropzone.processQueue(); //tell Dropzone to process all queued files
+
+                                //        });
+
+                                //    }
+                                //};
+
+
+                                
+                                    $("#linkDocuments").click(function () {
+                                        $.ajax({
+                                            url: "/Home/Archivos",
+                                            type: "Get",
+                                            
+                                            success: function (response) {
+                                                $('#FileList').html(response);
+
+                                            },
+                                            error: function (response) {
+                                                alert(response);
+                                            }
+                                        });
+                                    });
+                                    var orden = 1;
+                               
+
+
+                                    var tbody = $('#lista tbody');
+                                    var fila_contenido = tbody.find('tr').first().html();
+                                    //Agregar fila nueva.
+                                    $('#lista .button_agregar').click(function () {
+                                        var fila_nueva = $('<tr></tr>');
+                                        fila_nueva.append(fila_contenido);
+                                        orden++;
+                                        fila_nueva.find('td').first().replaceWith(orden);
+                                        tbody.append(fila_nueva);
+                                    });
+
+                                    //Eliminar fila.
+                                    $('#lista').on('click', '.button_eliminar', function () {
+                                        $(this).parents('tr').eq(0).remove();
+
+                                    });
+
+            
+                                    
+            function limpiarGrupoInputs() {
+                $('#cantidadDenunciantes').val('');
+                $('#cantidadDenunciantesASacar').val('');
+            }
+
+            function generarNFilas(cantidadFilas) {
+                //
+                var i = 0;
+                var tbody = $('#lista tbody');
+                fila = '<tr><td></td><td><input type="text" class="form-control"/></td><td><input type="text" class="form-control"/></td><td><input type="text" class="form-control"/></td></tr>';
+                console.log(tbody.find('tr').length);
+                
+                for (i = 1; i <= cantidadFilas; i++) {
+                    tbody.append(fila);
+                    tbody.find('tr').last().find('td').first().replaceWith(i);
+                }
+               
+            }
+
+
+                                    //var nFilasABorrar;
+                                    function removerNFilas(nFilasABorrar) {
+                                        var tbody = $('#lista tbody');
+                                        var cantidadFilasTabla = document.querySelector("#lista").rows.length; //- 1
+                                        console.log(cantidadFilasTabla);
+
+                                        var cantidad = 0;
+                                        var n = cantidadFilasTabla;
+
+                                        while (n > 1 && (nFilasABorrar > cantidad)) {
+
+                                            $("#lista").find("tr").last().remove();
+                                            n--;
+                                            cantidad++;
+
+                                        }
+                                        orden = $("#lista").find("tr").last().find("td").eq(0).val();
+                                        console.log(orden);
+
+                                    }
+           
+
+
+                                    $("#cantidadDenunciantes").keypress(function (e) {
+                                        console.log(e.which);
+                                        console.log($(this).val());
+                                        if (e.which == 13) {
+                                            //e.preventDefault();
+                                            generarNFilas($(this).val());
+                                            $(this).val = 0;
+                                        }
+                                    });
+
+
+                                    $("#cantidadDenunciantesASacar").keypress(function (e) {
+                                        if (e.which == 13) {
+                                            e.preventDefault();
+                                            removerNFilas($(this).val());
+                                            $(this).val = 0;
+                                        }
+                                    });
+
+
+
+                                    $("#lista").on('click', '.button_agregar', function () {
+                                        $('#lista .button_agregar').click(function () {
+                                            var fila_nueva = $('<tr></tr>');
+                                            fila_nueva.append(fila_contenido);
+                                            orden++;
+                                            fila_nueva.find('td').first().replaceWith(orden);
+                                            tbody.append(fila_nueva);
+                                        });
+                                    });
+
+
+
+
+
+            $("#fechaNotificacion").change(function () {
+                $("#fechaNotificacionGcia").val($(this).val());
+            });
+
+            $('#Cleaner').click(function () {
+                $('#dni').val("");
+                $('#nombre').val("");
+                $('#apellido').val("");
+            });
+
+
+            $("#dni").keypress(function (e) {
+                if (e.which == 13) {
+                    e.preventDefault();
+                    buscarDenunciante();
+                    //GetDenunciante();
+                }
+            });
+
+            $("#apellido").keypress(function (e) {
+                if (e.which == 13) {
+                    e.preventDefault();
+                    buscarDenunciante();
+                    //GetDenunciante();
+                }
+            });
+
+            $("#nombre").keypress(function (e) {
+                if (e.which == 13) {
+                    e.preventDefault();
+                    buscarDenunciante();
+                    //GetDenunciante();
+                }
+            });
+
+            function traerGrupoDenunciantes() {
+                //var id;
+                if ($('#grupoIdDenunciantes').val() != "") {  
+                    $.ajax({
+                        url: '@Url.Action("TraerGrupoDenunciantes","Denuncias")',
+                        type: "GET",
+                        data: { grupoId: $('#grupoIdDenunciantes').val()},
+                        success(response) {
+                            //$('#divListaDenunciantes').html(response);
+                            $('#divGrupo').html(response);
+                            $('#guardarGrupoDenunciantes').css("display", "none");
+                            $('#editarGrupoDenunciantes').css("display", "block");
+                        },
+                        error(response) {
+                            toastr.options.positionClass = 'toast-top-full-width';
+                            toastr.error(response.responseText);
+                        }
+                        });
+                }
+            }
+
+                                function esUnEventoVálido() {
+                                    var control = true;
+                                    var today = new Date();
+                                    var vencimiento = $('#fechaVencimientoEN').val();
+                                    var fechaVencimiento = new Date(vencimiento);
+                                    $('#guardarNuevoEvento').removeAttr("data-dismiss", "modal");
+                                    //toastr.options.positionClass='toast-top-full-width'
+                                    if ($('#fechaVencimientoEN').val().length == 0) {
+                                        console.log($('#fechaVencimientoEN').val().length == 0);
+                                        toastr.warning('Ingrese la Fecha De Vencimiento');
+                                        control = false;
+                                    }
+                                    if ($('#horaVencimientoEN').val().length == 0) {
+                                        console.log($('#horaVencimientoEN').val().length == 0);
+                                        toastr.warning('Ingrese la Hora De Vencimiento');
+                                        control = false;
+                                    }
+                                    if (today > fechaVencimiento) {
+                                        toastr.warning("La fecha de vencimiento debe ser posterior a la fecha de Creación");
+                                    }
+                                    //if ($('#evento_tipoEvento')[0].selectedIndex == 0) {
+                                    //    toastr.warning('Seleccione un Tipo de Evento');
+                                    //    control = false;
+                                    //}
+                                    if (control) {
+                                        $('#guardarNuevoEvento').attr("data-dismiss", "modal");
+                                    }
+
+                                    return control;
+                                }
+
+            function elEventoEditadoEsVálido() {
+                $('#btnGuardarEventoEditado').removeAttr("data-dismiss");
+                var control = true;
+                var creacion = $('#fechaCreacionEE').val();
+                var fechaCreacion = new Date(creacion);
+                var today = new Date();
+                var vencimiento = $('#fechaVencimientoEE').val();
+                var fechaVencimiento = new Date(vencimiento);
+                if ($('#fechaVencimientoEE').val().length == 0) {
+                   
+                    toastr.warning('Ingrese la Fecha De Vencimiento');
+                    control = false;
+                }
+                if ($('#horaVencimientoEE').val().length == 0) {
+                    //console.log($('#horaVencimientoEE').val().length == 0);
+                    toastr.warning('Ingrese la Hora De Vencimiento');
+                    control = false;
+                }
+                if ( fechaVencimiento < fechaCreacion ) {
+                    toastr.warning("La fecha de vencimiento debe ser posterior a la fecha de Creación");
+                    control = false;
+                }
+                if ((today > fechaVencimiento)) {
+                    toastr.warning("La fecha de vencimiento no puede ser anterior a la fecha actual");
+                    control = false;
+
+                }
+
+                if (control) {
+                    console.log(control);
+                    $('#btnGuardarEventoEditado').attr("data-dismiss", "modal");
+                }
+
+                return control;
+            }
+
+            function eliminarEvento(idEvent,idDenuncia) {
+                console.log(idEvent);
+                console.log(idDenuncia);
+                                try {
+                                    $.ajax({
+                                        url: '@Url.Action("EliminarEvento","Denuncias")',
+                                        type: "Post",
+                                        data: {
+                                            id: idEvent,
+                                            idDenuncia: idDenuncia
+                                        },
+                                        success: function (result) {
+                                            $('#divlistaEventos').html(result);
+                                            toastr.options.positionClass = 'toast-bottom-right';
+                                            toastr.info("Se ha eliminado correctamente");
+                                            
+                                        },
+                                        error: function (result) {
+                                            toastr.error(result.responseText);
+                                        }
+                                    });
+                                } catch (error) {
+                                    toastr.error(error)
+                                }
+            }
+
+
+                                @*function guardarNuevoEvento() {
+
+                                    if (esUnEventoVálido()) {
+                                        cleanNuevoModal();
+                                        $.ajax({
+                                            url: '@Url.Action("CrearEvento","Denuncias")',
+                                            type: "Post",
+                                            data: {
+                                                DenunciaId: $('#nroDenuncia').text(),
+                                                Fecha: $('#fechaVencimiento').val() + ' ' + $('#horaVencimiento').val(),
+                                                //horaVencimiento: $('#horaVencimiento').val(),
+                                                //tipoEvento: $('#evento_tipoEvento option:selected').val(),
+                                                tipoEvento: $('#tipoEventoSeleccionado').val(),
+                                                CONTESTADO: $('#contestado').val(),
+                                                SOLUCIONADO: $('#solucionadoSeleccionado option:selected').val(),
+                                                REQUERIMIENTOINFORME: $('#evento_REQUERIMIENTOINFORME option:selected').val(),
+                                                observacion: $('#evento_Observacion').val()
+                                            },
+                                                success(response){
+                                                    toastr.success('Evento guardado correctamente');
+                                                    $('#divlistaEventos').html(response);
+
+                                            },
+                                            error(response) {
+
+                                                toastr.error(response.responseText + ' ' + response.statusText)
+                                                }
+                                        });
+                                    }
+
+                                }*@
+
+             function guardarNuevoEvento() {
+                         
+                                    if (esUnEventoVálido()) {
+                                        $.ajax({
+                                            url: '@Url.Action("CrearEvento","Denuncias")',
+                                            type: "Post",
+                                            data: {
+                                                DenunciaId: $('#nroDenuncia').text(),
+                                                Fecha: $('#fechaVencimientoEN').val() + ' ' + $('#horaVencimientoEN').val(),
+                                                //horaVencimiento: $('#horaVencimiento').val(),
+                                                //tipoEvento: $('#evento_tipoEvento option:selected').val(),
+                                                tipoEvento: $('#comboTipoEventoNuevo option:selected').val(),                          
+                                                contestado: $('#contestadoEN').val(),
+                                                solucionado: $('#comboSolucionadoEN option:selected').val(),
+                                                REQUERIMIENTOINFORME: $('#comboRequerimientoInformeEN option:selected').val(),
+                                                observacion: $('#observacionesEN').val()
+                                            },
+                                                success(response){
+                                                    toastr.success('Evento guardado correctamente');
+                                                    $('#divlistaEventos').html(response);
+                                            },
+                                            error(response) {
+                                                //toastr.options.positionClass = 'top-full-widht';
+                                                toastr.error(response.responseText + ' ' + response.statusText)
+                                                }
+                                        });
+                                    }
+
+             }
+
+            
+            function cleanNuevoModal() {
+                $('#nroDenuncia').val('');
+                $('#fechaVencimientoEN').val('');
+                $('#horaVencimientoEN').val('');
+                //$('#evento_tipoEvento')[0].selectedIndex = 0;
+                $('#contestadoEN').val(0);
+                $('#comboSolucionadoEN')[0].selectedIndex = 0;
+                $('#comboRequerimientoInformeEN')[0].selectedIndex = 0;
+                $('#observacionesEN').val('');
+            }
+
+            function cleanEditModal() {
+                $('#fechaVencimientoEE').val('');
+                $('#horaVencimientoEE').val('');
+                //$('#evento_tipoEventoEE')[0].selectedIndex = 0;
+                //$('#comboTipoEventoEE')[0].selectedIndex = 0;
+                $('#contestadoEE').val(0);
+                $('#comboSolucionadoEE')[0].selectedIndex = 0;
+                $('#comboRequerimientoInformeEE')[0].selectedIndex = 0;
+                $('#observacionesEE').val('');
+            }
+            @*function EditarEvento() {
+
+                                    if (esUnEventoVálido()) {
+                                        $.ajax({
+                                            url: '@Url.Action("EditarEvento","Denuncias")',
+                                            type: "Post",
+                                            data: {
+                                                DenunciaId: $('#nroDenuncia').text(),
+                                                Fecha: $('#fechaVencimiento').val() + ' ' + $('#horaVencimiento').val(),
+                                                //horaVencimiento: $('#horaVencimiento').val(),
+                                                tipoEvento: $('#evento_tipoEvento option:selected').val(),
+                                                contestado: $('#contestado').val(),
+                                                solucionado: $('#solucionado').val(),
+                                                REQUERIMIENTOINFORME: $('#evento_REQUERIMIENTOINFORME option:selected').val(),
+                                                observacion: $('#evento_Observacion').val()
+                                            },
+                                                success(response){
+                                                    toastr.success('Evento guardado correctamente');
+                                                    $('#divlistaEventos').html(response);
+                                            },
+                                            error(response) {
+                                                //toastr.options.positionClass = 'top-full-widht';
+                                                toastr.error(response.responseText + ' ' + response.statusText)
+                                                }
+                                        });
+                                    }
+
+                                }*@
+          
+                                function validarTipoEvento() {
+                                    if ($('#comboTipoEventoNuevo')[0].selectedIndex == 0) {
+                                        toastr.warning("Debe seleccionar un Tipo de Evento");
+                                    }
+                                }
+            //$("#btn-CrearEvento").click(function () {
+            //    $.ajax({
+            //        url: "/Home/NuevoEvento",
+            //        type: "Get",
+            //        data: {
+            //            //dni: $('#dni').val(),
+            //            //nombre: $('#nombre').val(),
+            //            //apellido: $('#apellido').val()
+            //        },
+            //        success: function (response) {
+            //            $('#NewEventContainer').html(response);
+
+            //        },
+            //        error: function (response) {
+            //            alert(response);
+            //        }
+            //    });
+            //});
+
+
+            $('#comboTipoEventoNuevo').change(function () {
+                $('#idTipoEventoSeleccionado').val($('#comboTipoEventoNuevo option:selected').val());
+                $('#tipoEventoSeleccionado').val($('#comboTipoEventoNuevo option:selected').text());
+                if ($(this)[0].selectedIndex != 0) {
+                    $('#nuevoEvento').attr("disabled", false);
+                } else {
+                    $('#nuevoEvento').attr("disabled", true);
+                }
+
+            });
+
+            $("#Buscador").click(function () {
+                buscarDenunciante();
+                @*$.ajax({
+                    url: '@Url.Action("GetDenunciante","Home")'/*"/Home/GetDenunciante"*/,
+                    type: "Post",
+                    data: {
+                        dni: $('#dni').val(),
+                        nombre: $('#nombre').val(),
+                        apellido: $('#apellido').val()
+                    },
+                    success: function (response) {
+                        $('#denuncianteResult').html(response);
+
+                    },
+                    error: function (response) {
+                        alert(response);
+                    }
+                });*@
+            });
+
+            function buscarDenunciante() {
+                $('#inputdatosDenunciante').attr("hidden","hidden");
+                    $.ajax({
+                    url: '@Url.Action("GetDenunciante","Home")'/*"/Home/GetDenunciante"*/,
+                    type: "Post",
+                    data: {
+                        dni: $('#dni').val(),
+                        nombre: $('#nombre').val(),
+                        apellido: $('#apellido').val()
+                    },
+                    success: function (response) {
+                        $('#denuncianteBuscado').html(response);
+                        $('#denuncianteId').val($('#idDenuncianteResult').val());
+                        $('#denuncianteResult').hide();
+                    },
+                        error: function (response) {
+                            toastr.warning("El Denunciante no existe");
+                            //toastr.error(response.responseText);
+                    }
+                });
+
+            }
+
+
+            function mostrarLoading() {
+                $('#denuncianteResult').empty();
+                $('#loading').show();
+            };
+
+            function ocultarLoading() {
+                $('#loading').hide();
+            };
+
+            function GetDenunciante() {
+                //falta deshabilitar los campos durante el envio
+                $('#inputdatosDenunciante').attr("hidden","hidden");
+                var dni = $('#dni').val();
+                if (isEmpty(dni) && faltaCompletarLosDatos()) {
+                    toastr.info("Ingrese un filtro de Búsqueda");
+                }
+                else {
+                    mostrarLoading();
+                    $.ajax({
+                        url: '@Url.Action("Guardar","Home")'/*"/Home/GetDenunciante"*/,
+                        type: "Post",
+                        data: {
+                            dni: $('#dni').val(),
+                            nombre: $('#nombre').val(),
+                            apellido: $('#apellido').val()
+                        },
+                        success: function (response) {
+                            $('#loading').hide();
+                            $('#denuncianteResult').html(response);
+                            $('#denuncianteId').val($('#idDenuncianteResult').val());
+
+
+                        },
+                        error: function (response) {
+                            $('#loading').hide();
+                            toastr.warning("El denunciante no existe");
+                        }
+                    });
+                }
+            };
+
+            function faltaCompletarLosDatos() {
+                var nombre = $('#nombre').val();
+                var apellido = $('#apellido').val();
+                return isEmpty(nombre) || isEmpty(apellido);
+
+                                };
+
+            function validarYGuardarDenunciante() {
+
+                if (faltaCompletarLosDatos()) {
+                    toastr.info("Ingrese nombre y apellido");
+                } else {
+                    guardarDenunciante();
+                }
+            };
+
+            function isEmpty(id) {
+                return id.length == 0
+            }
+
+            function guardarDenunciante() {
+                mostrarLoading();
+                $.ajax({
+                    url: '@Url.Action("Guardar","Home")'/*"/Home/Guardar"*/,
+                    type: "Post",
+                    data: {
+                        dni: $('#dni').val(),
+                        nombre: $('#nombre').val(),
+                        apellido: $('#apellido').val()
+                    },
+                    success: function (response) {
+                        toastr.options.positionClass = 'toast-bottom-right';
+                        ocultarLoading();
+                        $('#denuncianteResult').html(response);
+                        $('#denuncianteId').val($('#idDenuncianteResult').val());
+                        var id = $('#denuncianteId').val();
+                        if (isEmpty(id)) {
+                            toastr.info("Ya existe un Denunciante con esa descripción");
+                        } else {
+                            toastr.success("El denunciante se ha creado correctamente");
+                        }
+
+                    },
+                    error: function (response) {
+                        toastr.error(response.statusCode + ' : ' + response.statusText);
+                    }
+                });
+
+            }
+
+
+            $("#alta").click(function () {
+                $(this).attr("disable", true);
+                validarYGuardarDenunciante();
+                $(this).attr("disable", false);
+            });
+
+            //$("#GuardarDenuncia").click(function () {
+            //    //$(this).attr("disabled", true);
+            //    $("html, body").animate({ scrollTop: $("#navHeader").offset().top }, 500);
+            //    $.ajax({
+            //        url: "/Home/CrearDenuncia",
+            //        type: "Post",
+            //        data: {
+            //            DENUNCIANTE_ID: $('#denuncianteId').val(),
+            //            CREATIONDATE: $('#creationDate').val(),
+            //            FSELLOCIA: $('#fechaNotificacion').val(),
+            //            FSELLOGCIADC: $('#fechaNotificacionGcia').val(),
+            //            tipoEvento: $("#tipoEvento").val(),
+            //            reqInforme: $('#reqInforme').val(),
+            //            fechaVencimiento: $('#fechaVencimiento').val(),
+            //            horaVencimiento: $('#horaVencimiento').val()
+
+            //        },
+            //        success: function (response) {
+            //            toastr.options.positionClass = 'toast-bottom-right';
+            //            toastr.success("Se ha guardado correctamente");
+            //            $("#nroDenuncia").html(response);
+            //            //$(this).attr("disabled", false);
+
+            //        },
+            //        error: function (response) {
+            //            toastr.error("Ocurrió un Error Inesperado. No se ha podido guardar el Registro");
+            //            //$(this).attr("disabled", false);
+            //        }
+            //    });
+
+            //});
+
+             function editarDenuncia(elem) {
+                 var boton = $(elem);
+                 boton.attr("disabled","disabled");
+                 mostrarLoading();
+                 var denunciaId = parseInt($('#nroDenuncia').text());
+            //$("html, body").animate({ scrollTop: $("#navHeader").offset().top }, 500);
+                 if (denunciaEditadaEsVálida()) {
+                     $.ajax({
+                         url: '@Url.Action("EditarDenuncia", "Denuncias")',
+                         type: "POST",
+                         data: {
+                             DenunciaId: denunciaId,
+                             ETAPA_ID: $('#comboEtapaProcesal option:selected').val(),
+                             TIPO_PRO_ID: $('#comboTiposProceso option:selected').val(),
+                             DENUNCIANTE_ID: $('#denuncianteId').val(),
+                             CREATIONDATE: $('#creationDate').val(),
+                             TRAMITECRM: $('#tramiteCrm').val(),
+                             OBJETORECLAMO: $('#numeroLinea').val(),
+                             FSELLOCIA: $('#fechaNotificacion').val(),
+                             FSELLOGCIADC: $('#fechaNotificacionGcia').val(),
+                             EXPEDIENTE_ID: $('#numeroExpediente').val(),
+                             ORGANISMO_ID: $('#comboOrganismo option:selected').val(),
+                             ESTUDIO_ID: $('#comboEstudioEdicion option:selected').val(),
+                             MODALIDADGESTION: $('#comboModalidadesGestionEdicion  option:selected').val(),
+                             SUBTIPO_PRO_ID: $('#comboSubTiposProceso option:selected').val(),
+                             SERV_DEN_ID: $('#comboServicios option:selected').val(),
+                             RECLAMO_ID: $('#comboMotivosReclamo option:selected').val(),
+                             CONCILIACION_ID: $('#comboSubEstados option:selected').val(),
+                             FECHARESULTADO: $('#fechaResultado').val(),
+                             grupoId: $('#grupoIdDenunciantes').val(),
+                             nroClienteContrato: $('#nroClienteContrato').val(),
+                             mediadorId: $('#comboMediadores option:selected').val(),
+                             domicilioMediadorId: $('#comboDomiciliosMediadores option:selected').val(),
+                             reclamoRelacionado: $('#reclamoRelacionado').val(),
+                             idDatosCoprec: $('#datosCoprecId').val()
+                         },
+
+                         success: function (response) {
+                             toastr.options.positionClass = 'toast-bottom-right';
+                             toastr.success("Se ha guardado correctamente");
+
+                             try {
+                                 $('#homeDenuncia').html(response);
+                             } catch (response) {
+                                 ocultarLoading();
+                                 toastr.error(response.responseText + ' ' + response.status);
+                             } finally {
+                                 ocultarLoading();
+                                 boton.removeAttr("disabled");
+                             }
+                         },
+                         error: function (response) {
+                             toastr.error(response.responseText);
+                             ocultarLoading();
+                             boton.removeAttr("disabled");
+                         }
+                     });
+                 }
+                         ocultarLoading();
+                         boton.removeAttr("disabled");
+            }
+
+      $("#GuardarDenuncia").click(function () {
+          if (esVálidaDenuncia()) {
+              mostrarLoading();
+              //$("html, body").animate({ scrollTop: $("#navHeader").offset().top }, 500);
+              $.ajax({
+                  url: '@Url.Action("CrearDenuncia", "Denuncias")',
+                  type: "Post",
+                  data: {
+                      ETAPA_ID: $('#comboEtapaProcesal option:selected').val(),
+                      TIPO_PRO_ID: $('#comboTiposProceso option:selected').val(),
+                      DENUNCIANTE_ID: $('#denuncianteId').val(),
+                      CREATIONDATE: $('#creationDate').val(),
+                      TRAMITECRM: $('#tramiteCrm').val(),
+                      OBJETORECLAMO: $('#numeroLinea').val(),
+                      FSELLOCIA: $('#fechaNotificacion').val(),
+                      FSELLOGCIADC: $('#fechaNotificacionGcia').val(),
+                      EXPEDIENTE_ID: $('#numeroExpediente').val(),
+                      ORGANISMO_ID: $('#comboOrganismo option:selected').val(),
+                      ESTUDIO_ID: $('#comboEstudioEdicion option:selected').val(),
+                      MODALIDADGESTION: $('#comboModalidadesGestionEdicion option:selected').val(),
+                      SUBTIPO_PRO_ID: $('#comboSubTiposProceso option:selected').val(),
+                      SERV_DEN_ID: $('#comboServicios option:selected').val(),
+                      RECLAMO_ID: $('#comboMotivosReclamo option:selected').val(),
+                      CONCILIACION_ID: $('#comboSubEstados option:selected').val(),
+                      FECHARESULTADO: $('#fechaResultado').val(),
+                      tipoEvento: $('#comboTipoEventos option:selected').val(),
+                      reqInforme: $('#comboReqsInforme option:selected').val(),
+                      fechaVencimiento: $('#fechaVencimiento').val(),
+                      horaVencimiento: $('#horaVencimiento').val(),
+                      grupoId: $('#grupoDenuncianteId').val(),
+                      nroClienteContrato: $('#nroClienteContrato').val(),
+                      mediadorId: $('#comboMediadores option:selected').val(),
+                      domicilioMediadorId: $('#comboDomiciliosMediadores option:selected').val(),
+                      reclamoRelacionado: $('#reclamoRelacionado').val()
+                  },
+
+                  success: function (response) {
+                      //toastr.options.positionClass = 'toast-bottom-right';
+                      //toastr.success("Se ha guardado correctamente");
+                      //window.close();
+                      //var ventanaCreación = window;
+                      var ventana = window.open('@Url.Action("CrearDenuncia", "Denuncias")','_self');
+                      ventana.document.write(response);
+                      //ventanaCreación.close();
+                      //ventana = window.document.write(response);
+                      
+                      try {
+                          //$('#homeDenuncia').html(response);
+                      } catch (response) {
+                          ocultarLoading();
+                          toastr.error(response.responseText + ' ' + response.status);
+                      } finally {
+                          ocultarLoading();
+                      }
+                  },
+                  error: function (response) {
+                      toastr.error(response.responseText);
+
+                  }
+              });
+          }
+      });
+
+            function esVálidaDenuncia() {
+                var flag = true;
+                toastr.options.hideDuration = 10000;
+                //console.log($('#denuncianteId').val());
+                if ($('#denuncianteId').val().length == 0 || $('#denuncianteId').val()== 0) {
+                    toastr.warning("Debe Seleccionar un Denunciante");
+                    flag = false;
+                }
+                if ($('#fechaNotificacion').val().length == 0) {
+                    toastr.warning("Debe ingresar la Fecha de Notificación");
+                    flag = false;
+                }
+                if ($('#fechaNotificacionGcia').val().length == 0) {
+                    toastr.warning("Debe ingresar la Fecha de Notificación de la Gerencia");
+                    flag = false;
+                }
+                if ($('#comboOrganismo')[0].selectedIndex == 0) {
+                    toastr.warning("Debe Seleccionar un Organismo");
+                    flag = false;
+                }
+                if ($('#comboEstudioEdicion')[0].selectedIndex == 0) {
+                    toastr.warning("Debe Seleccionar un Estudio");
+                    flag = false;
+                }
+                if ($('#comboServicios')[0].selectedIndex == 0) {
+                    toastr.warning("Debe Seleccionar un Servicio");
+                    flag = false;
+                }
+                if ($('#comboMotivosReclamo')[0].selectedIndex == 0) {
+                    toastr.warning("Debe Seleccionar un Motivo de Reclamo");
+                    flag = false;
+                }
+                if ($('#comboSubEstados')[0].selectedIndex == 0) {
+                    toastr.warning("Debe Seleccionar un Estado de Conciliación");
+                    flag = false;
+                }
+                
+                if ($('#comboTipoEventos')[0].selectedIndex == 0) {
+                    toastr.warning("Debe Seleccionar un tipo de Evento");
+                    flag = false;
+                }
+                if ($('#fechaVencimiento').val().length == 0) {
+                    toastr.warning("Debe Seleccionar la Fecha de Vencimiento");
+                    flag = false;
+                }
+                if ($('#horaVencimiento').val().length == 0) {
+                    toastr.warning("Debe Seleccionar la Hora de Vencimiento");
+                    flag = false;
+                }
+                
+                
+                if ($('#comboOrganismo option:selected').text().includes('COPREC')) {
+                    if ($('#comboMediadores')[0].selectedIndex == 0) {
+                        toastr.warning("Debe Seleccionar un Mediador");
+                        flag = false;
+                    }
+                    if ($('#comboDomiciliosMediadores')[0].selectedIndex == 0) {
+                        toastr.warning("Debe Seleccionar el Domicilio del Mediador");
+                        flag = false;
+                    }
+
+                   
+                }
+                return flag;
+            }
+
+            function denunciaEditadaEsVálida() {
+                var flag = true;
+                toastr.options.hideDuration = 10000;
+                //console.log($('#denuncianteId').val());
+                if ($('#denuncianteId').val().length == 0 || $('#denuncianteId').val() == 0) {
+                    toastr.warning("Debe Seleccionar un Denunciante");
+                    flag = false;
+                }
+                if ($('#fechaNotificacion').val().length == 0) {
+                    toastr.warning("Debe ingresar la Fecha de Notificación");
+                    flag = false;
+                }
+                if ($('#fechaNotificacionGcia').val().length == 0) {
+                    toastr.warning("Debe ingresar la Fecha de Notificación de la Gerencia");
+                    flag = false;
+                }
+                if ($('#comboOrganismo')[0].selectedIndex == 0) {
+                    toastr.warning("Debe Seleccionar un Organismo");
+                    flag = false;
+                }
+                if ($('#comboEstudioEdicion')[0].selectedIndex == 0) {
+                    toastr.warning("Debe Seleccionar un Estudio");
+                    flag = false;
+                }
+                if ($('#comboServicios')[0].selectedIndex == 0) {
+                    toastr.warning("Debe Seleccionar un Servicio");
+                    flag = false;
+                }
+                if ($('#comboMotivosReclamo')[0].selectedIndex == 0) {
+                    toastr.warning("Debe Seleccionar un Motivo de Reclamo");
+                    flag = false;
+                }
+                if ($('#comboSubEstados')[0].selectedIndex == 0) {
+                    toastr.warning("Debe Seleccionar un Estado de Conciliación");
+                    flag = false;
+                }
+
+               
+                if ($('#comboOrganismo option:selected').text().includes('COPREC')) {
+                    if ($('#comboMediadores')[0].selectedIndex == 0) {
+                        toastr.warning("Debe Seleccionar un Mediador");
+                        flag = false;
+                    }
+                    if ($('#comboDomiciliosMediadores')[0].selectedIndex == 0) {
+                        toastr.warning("Debe Seleccionar el Domicilio del Mediador");
+                        flag = false;
+                    }
+
+
+                }
+                return flag;
+            }
+
+
+            function guardarEventoEditado() {
+                console.log($('input:checkbox[name=estaContestadoEE]:checked').val());
+                if (elEventoEditadoEsVálido()) { 
+                $.ajax({
+                    url: '@Url.Action("guardarEventoEditado","Denuncias")',
+                    type: "Post",
+                    data: {
+                        EventoId: $('#idEventoAEditar').val(),
+                        DenunciaId: $('#nroDenuncia').text(),
+                        Fecha: $('#fechaVencimientoEE').val() + ' ' + $('#horaVencimientoEE').val(),                        
+                        tipoEvento: $('#comboTipoEventoEE option:selected').val(),                        
+                        /*CONTESTADO: $('input:checkbox[name=estaContestadoEE]:checked').val(),*//*('#contestadoEE').val()*/                        
+                        CONTESTADO: $('#ContestadoEE').prop('checked'),
+                        SOLUCIONADO: $('#comboSolucionadoEE option:selected').val(),                        
+                        REQUERIMIENTOINFORME: $('#comboReqInformeEE option:selected').val(),
+                        Observacion: $('#observacionEE').val()
+                    },
+                    success(response) {
+                        $('#divlistaEventos').html(response);
+                        toastr.success('Evento guardado correctamente');
+                        $('.modal-backdrop').hide();
+                        //cleanEditModal();
+                        $('#btnGuardarEventoEditado').removeAttr("data-dismiss");
+                        //$('#editEventModal').on('hidden.bs.modal', function (e) {
+                        //    cleanEditModal();
+                        //})
+                        //$("[data-dismiss=modal]").trigger({ type: "click" });
+                       
+                        //document.getElementsByTagName("body").style('overflow-y','visible'); "overflow-y:visible"
+                        
+                        $('body').css('overflow-y', 'visible');
+                    },
+                    error(response) {
+                        //toastr.options.positionClass = 'top-full-widht';
+                        toastr.error(response.responseText + ' ' + response.statusText)
+                    }
+                    });
+                }
+            }
+
+            @*$('#EditarEvento').on("click", function () {
+
+            //if (esUnEventoVálido()) {
+                $.ajax({
+                    url: '@Url.Action("guardarEventoEditado","Denuncias")',
+                    type: "Post",
+                    data: {
+                        EventoId: $('#idEventoAEditar').val(),
+                        DenunciaId: $('#nroDenuncia').text(),
+                        Fecha: $('#fechaVencimientoEE').val() + ' ' + $('#horaVencimientoEE').val(),
+                        ////tipoEvento: $('#evento_tipoEvento option:selected').val(),
+                        tipoEvento: $('#comboTipoEventoEE option:selected').val(),
+                        CONTESTADO: $('#contestadoEE :checked').val(),
+                        //SOLUCIONADO: $('#evento_SOLUCIONADO option:selected').val(),
+                        SOLUCIONADO: $('#comboSolucionadoEE option:selected').val(),
+                        //REQUERIMIENTOINFORME: $('#evento_REQUERIMIENTOINFORME option:selected').val(),
+                        REQUERIMIENTOINFORME: $('#comboReqInformeEE option:selected').val(),
+                        Observacion: $('#observacionEE').val()
+                    },
+                    success(response) {
+                        toastr.success('Evento guardado correctamente');
+                        $('#divlistaEventos').html(response);
+                    },
+                    error(response) {
+                        //toastr.options.positionClass = 'top-full-widht';
+                        toastr.error(response.responseText + ' ' + response.statusText)
+                    }
+                });
+            //}
+
+        });*@
+
+            //GrupoDenunciantes
+
+
+            function limpiarInput(elemento) {
+                var elem = '#' + elemento
+                console.log($(elem));
+                $(elem).val('');
+            }
+
+            //$("#cantidadDenunciantes").keypress(function (e) {
+            //    if (e.which == 13) {
+            //        e.preventDefault();
+            //        generarNFilas($(this).val());
+            //        console.log($(this).val());
+            //        $(this).val = 0;
+            //    }
+            //});
+
+            //$("#cantidadDenunciantesASacar").keypress(function (e) {
+            //    if (e.which == 13) {
+            //        e.preventDefault();
+            //        removerNFilas($(this).val());
+            //        $(this).val = 0;
+            //    }
+            //});
+
+
+            //
+
+            function getEventobyId(EventID) {
+                $.ajax({
+                    url: '@Url.Action("EditarEvento", "Home")' /*+ EventID */,
+                    type: "POST",
+                    data: { id:EventID},
+
+                    success: function (result) {
+                        $('#divEventoAEditar').html(result);
+                    },
+                    error: function (result) {
+                        toastr.error(result.responseText)
+                    }
+
+                });
+
+                return false;
+
+            }
+
+
+                                //});
+                   function getEvento(EventID) {
+                      $.ajax({
+
+                        url: '@Url.Action("EditarEvento", "Home")',
+                        type: "Post",
+                        data: { id: EventID },
+                                        //contentType: "application/json;charset=UTF-8",
+
+                                        //dataType: "json",
+
+                          success: function (result) {
+                              $('#eventoEdicionDenunciaId').val(result.DenunciaId);
+                              $('#eventoEdicionEventoId').val(result.EventoId);
+                              $('#eventoEdicionContestado').val(result.contestado);
+                              //$('#tipoEventoEdicionSeleccionado')
+                              //$('#eventoEdicionFechaVencimiento')
+                              //$('#eventoEdicionHoraVencimiento')
+
+
+                                            //$('#EventoId').val(result.EventoId);
+
+                                            //$('#Fecha').val(result.Fecha);
+
+                                            //$('#tipoEvento').val(result.tipoEvento);
+
+                                            //$('#Observacion').val(result.Observacion);
+
+                                            //$('#Solucionado').val(result.Solucionado);
+
+                                            $('#eventoAEditar').html(result);
+
+                                        },
+
+                                    error: function (errormessage) {
+                                        console.log(errormessage.responseText);
+
+                                        alert(errormessage.responseText);
+
+                                    }
+
+                                });
+
+                                return false;
+
+            }
+
+            //funciones traidas de la Vista nueva denuncia -- a partir de  aquí
+            
+ $("#comboMediadores").change(function () {
+
+            if ($(this)[0].selectedIndex != 0) {
+
+                $.ajax({
+                    url: '@Url.Action("GetDomiciliosMediadores", "Home")',
+                    type: "Post",
+                    data: {
+                        idMediador: $('#comboMediadores option:selected').val()
+                    },
+                    success: function (response) {
+                        $('#comboDomiciliosMediadores').empty();
+                        $('#comboDomiciliosMediadores').append('<option value=0/>');
+                        $(response).each(function () {
+                            $('#comboDomiciliosMediadores').append(
+                                $('<option/>', { value: this.Id }).html(this.Domicilio)
+                            );
+                        });
+                        $('#comboDomiciliosMediadores').attr("disabled",false);
+
+                    },
+                    error: function (response) {
+                        toastr.error(response);
+                    }
+                });
+            }
+        });
+
+        $("#comboServicios").change(function () {
+
+            if ($(this)[0].selectedIndex != 0) {
+
+                $.ajax({
+                    url: '@Url.Action("GetMotivosDeReclamoPorServicio", "Home")',
+                    type: "Post",
+                    data: {
+                        idServicio: $('#comboServicios option:selected').val()
+                    },
+                    success: function (response) {
+                        $('#comboMotivosReclamo').empty();
+                        $('#comboMotivosReclamo').append('<option value=0/>');
+                        $(response).each(function () {
+                            $('#comboMotivosReclamo').append(
+                                $('<option/>', { value: this.Id }).html(this.Nombre)
+                            );
+                        });
+                        $('#comboMotivosReclamo').attr("disabled",false);
+
+                    },
+                    error: function (response) {
+                        toastr.error(response);
+                    }
+                });
+            }
+        });
+
+         $("#comboOrganismo").change(function () {
+
+             if ($(this)[0].selectedIndex != 0) {
+
+                 $.ajax({
+                     url: '@Url.Action("GetEstudiosPorOrganismo", "Home")',
+                     type: "Post",
+                     data: {
+                         organismoId: $('#comboOrganismo option:selected').val()
+                     },
+                     success: function (response) {
+                         $('#comboEstudioEdicion').empty();
+                         $('#comboEstudioEdicion').append('<option value=0/>');
+                         $(response).each(function () {
+                             $('#comboEstudioEdicion').append(
+                                 $('<option/>', { value: this.EstudioRelacionId }).html(this.Estudio)
+                             );
+                         });
+                         $('#comboEstudioEdicion').removeAttr("disabled");
+
+                         if ($('#comboOrganismo option:selected').text().includes('COPREC')) {
+                             $('#bloqueCamposCoprec').show();
+                             $('#solapaDatosCoprec').show();
+                         } else {
+                             $('#bloqueCamposCoprec').hide();
+                             $('#solapaDatosCoprec').hide();
+                         }
+                     },
+                     error: function (response) {
+                         toastr.error(response);
+                     }
+                 });
+             }
+        });
+
+            function limpiarDenuncianteResult(){
+                $('#divDatosDenunciante').remove();
+                $('#inputdatosDenunciante').removeAttr("hidden");
+            }
+        </script>
+    }
+
+

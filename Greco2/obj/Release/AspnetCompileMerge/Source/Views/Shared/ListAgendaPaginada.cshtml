@@ -1,0 +1,181 @@
+﻿@using Greco2.Models.Evento
+@model PaginadorAgenda
+
+<style>
+    td {
+        /*background-image: linear-gradient(white 40%,#f2f2f2);*/
+        font-size: 11px;
+        background-color:white;
+    }
+    th {
+        font-size: 12px;
+    }
+
+    .fila:hover {
+        -webkit-box-shadow: 0px 1px 5px 0px rgba(0,0,0,0.25);
+        -moz-box-shadow: 0px 1px 5px 0px rgba(0,0,0,0.25);
+        box-shadow: 0px 1px 5px 0px rgba(0,0,0,0.25);
+        background-color: #f9f9f9;
+    }
+</style>
+
+@if (Model.listadoAgenda.Any())
+{
+<table class="table table-bordered table-responsive" id="listaAgenda" style="max-width:180%;margin-top:-10px;margin-right:-100px;margin-bottom:0px;border-radius:4px;overflow:auto;">
+
+    <thead style="color:#2e6da4;"> 
+   
+        <tr>
+            <th style="text-align:center;">Fecha</th>
+            <th>DenunciaId</th>
+            <th style="text-align:center;">Tipo</th>
+            <th>Organismo</th>
+            <th>Denunciante</th>
+            <th>TramiteCRM</th>
+            <th>Solucionado</th>
+            <th>Contestado</th>
+            <th>Req.Informe</th>
+            <th>Responsable</th>
+            <th>Estudio</th>
+            <th>Editar</th>
+            <th>Eliminar</th>
+        </tr>
+    </thead>
+    <tbody style="text-align:left;">
+
+
+        @foreach (var item in @Model.listadoAgenda)
+        {
+            <tr style="height:50px;overflow:auto;" class="fila">
+                
+                <td style="max-width:400px;" nowrap>
+                    @{
+                        var fechaVencimiento = item.Fecha != null ? Convert.ToString(string.Format("{0:dd/MM/yyyy HH:mm}", item.Fecha)) : "";
+                    }
+                    @fechaVencimiento
+                    
+                    @*@Convert.ToString(string.Format("{0:dd/MM/yyyy HH:mm}", item.Fecha))*@
+
+                </td>
+                
+                                <td class="text-primary" style="width:80px;text-align:center;">
+                    
+                    @Html.ActionLink(@item.DenunciaId.ToString(), "GetDenunciaById", "Denuncias", new { id = @item.DenunciaId }, null)
+                </td>
+                <td>
+                
+                    @Html.DisplayFor(modelItem => item.nombretipoEvento)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Organismo)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Denunciante)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.TramiteCRM)
+                </td>
+                <td style="text-align:center;">
+                    @Html.DisplayFor(modelItem => item.Solucionado)
+                </td>
+                @{
+                    var esContestado = (@item.Contestado == 1) ? "SI" : "NO";
+                    <td style="text-align:center;">
+                        @esContestado
+                    </td>
+                }
+
+                <td>
+                    @Html.DisplayFor(modelItem => item.RequerimientoInforme)
+                </td>
+                <td>
+                    
+                    @Html.DisplayFor(modelItem => item.Responsable)
+                </td>
+
+                <td nowrap>
+                    @Html.DisplayFor(modelItem => item.Estudio)
+                </td>
+                <td style="text-align:center;">
+                    <a class="btn btn-sm btn-success" href="#" id="btn-editEvent" onclick="return getEventobyId(@item.EventoId)" data-toggle="modal" data-target="#editEventModal"><i class="glyphicon glyphicon-pencil"></i></a>
+                </td>
+                
+                <td style="text-align:center;">
+
+
+                    <a class="btn btn-sm btn-danger" href="#" onclick="ConfirmarEliminarEvento(@item.EventoId,this)" data-toggle="modal" data-target="#deleteModalEvento">
+                        <span class="glyphicon glyphicon-trash" id="DeleteElement"></span>
+                    </a>
+                    
+                </td>
+
+
+            </tr>
+
+                    }
+
+    </tbody>
+</table>
+
+                    //aqui va el modal edit
+
+        int Inicial = 1;
+        var radio = 7;
+        var cantidadMaximaDePaginas = radio * 2 + 1;
+        int Final = (Model.PageCount > cantidadMaximaDePaginas) ? cantidadMaximaDePaginas : Model.PageCount;
+        if (Model.CurrentPageIndex > radio + 1)
+        {
+            Inicial = Model.CurrentPageIndex - radio;
+            if (Model.PageCount > Model.CurrentPageIndex + radio)
+            {
+                Final = Model.CurrentPageIndex + radio;
+            }
+            else
+            {
+                Final = Model.PageCount;
+            }
+        }
+
+
+<div>
+    <div class="text-center" style="margin-bottom:-12px;overflow:auto;background-color:#f9f9f9;">
+        <ul class="pagination">
+            @*@for (int i = 1; i <= Model.PageCount; i++)*@
+               @for (int i = Inicial; i <= Final; i++)
+
+                {
+
+                    if (i != Model.CurrentPageIndex)
+                    {
+                        <li>
+                            <a href="javascript:PagerClick(@i);">@i</a>
+                        </li>
+                    }
+                    else
+                    {
+                        <li class="active">
+                            <span class="active">@i</span>
+                        </li>
+                    }
+
+                }
+        </ul>
+    </div>
+    <input type="hidden" id="hfCurrentPageIndex" name="currentPageIndex" />
+
+    <div class="text-center text-primary" style="height:30px;">
+        Total : @Model.totalDeRegistros.ToString()
+    </div>
+    
+</div>
+
+}
+else
+{
+
+    <div>
+        <h5 class="text-primary text-center">No se encontraron coincidencias</h5>
+    </div>
+    //style = "background-color: #f5f5f0;"
+}
+

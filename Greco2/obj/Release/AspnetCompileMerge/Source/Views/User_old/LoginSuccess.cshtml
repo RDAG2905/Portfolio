@@ -1,0 +1,16 @@
+﻿@{
+    ViewBag.Title = "LoginSuccess";
+}
+<h2>Login Success</h2>
+@if (ViewBag.Status != null && Convert.ToBoolean(ViewBag.Status))
+{
+    <div class="alert alert-success">
+        <strong>Welcome!</strong> Login successfully. 
+    </div>
+}
+else
+{
+    <div class="alert alert-danger">
+        <strong>Error!</strong> @ViewBag.Message
+    </div>
+}

@@ -1,0 +1,756 @@
+﻿@model Greco2.Models.Denuncia.FiltroDenunciasModelView
+
+
+<style>
+
+    @@keyframes lds-dual-ring {
+        0% {
+            transform: rotate(0deg);
+        }
+
+        100% {
+            transform: rotate(360deg);
+        }
+    }
+
+    .loader-container {
+        width: 40px;
+        height: 40px;
+        margin-left: 48%;
+        margin-top: -30%;
+        /*margin-left:68%;*/
+    }
+
+        .loader-container .loader {
+            width: 100%;
+            height: 100%;
+            /*margin-left:50%;*/
+            /*z-index:10000;*/
+            /*padding-bottom:500px;*/
+            /*position:absolute;*/
+            border: solid 8px transparent;
+            border-top-color: #337ab7;
+            border-bottom-color: #337ab7;
+            border-left-color: #f2f2f2;
+            /*border--color: #337ab7;*/
+            border-radius: 50%;
+            animation: lds-dual-ring 1.2s linear infinite;
+        }
+   
+
+    .row {
+       margin-left:10px;
+       margin-bottom:0px;
+    }
+
+   
+    
+    
+    footer {
+        background-color: #F2F2F2;
+    }
+
+    option {
+        background-image: linear-gradient(white,#f2f2f2);
+        
+    }
+
+    label {
+        color: #404040;
+    }
+
+    .panel {
+    border-color:#f7f7f7;
+    }
+
+    .wrapper {
+        display: grid;
+        grid-gap: 20px;
+        grid-template-areas: "header" "izquierda" "derecha" "botonera" "resultados";
+        background-color: white;
+        
+    }
+
+    .wrapper > select, .form-control,label {
+        max-height: 26px;
+        max-width: 220px;
+        font-size: 11px;
+        
+    }
+
+    .header {
+        grid-area: header;
+        /*background-color:white;*/
+        border-radius: 8px;
+        /*height: 40px;*/
+        height: 55px;
+        /*margin-top:1px;*/
+        margin-bottom: -10px;
+        font-family: 'Berlin Sans FB';
+        padding-top: 7px;
+    }
+
+    .derecha {
+        grid-area: derecha;
+        background-color: #f5f5f5;
+        padding-top: 15px;
+        border-radius: 8px;
+        padding-bottom:10px;
+    }
+
+    .izquierda {
+        grid-area: izquierda;
+        background-color: #f5f5f5;
+        padding-top: 15px;
+        border-radius: 8px;
+        padding-bottom:10px;
+    }
+
+
+    .botonera {
+        grid-area: botonera;
+        margin-top:-5px;
+    }
+
+    .resultados {
+        grid-area: resultados;
+        margin-top: -5px;
+    }
+
+    input[type=button]:hover {
+        -webkit-box-shadow: 0px 1px 10px 0px rgba(0,0,0,0.25);
+        -moz-box-shadow: 0px 1px 10px 0px rgba(0,0,0,0.25);
+        box-shadow: 0px 1px 10px 0px rgba(0,0,0,0.25);
+    }
+
+    /*body { 
+        background-image: linear-gradient(#f2f2f2,white);
+          }*/
+
+    @@media(min-width: 800px) {
+        /*body {
+            background-image: linear-gradient(#e6e6e6,white);
+        }*/
+        .wrapper {
+            /*grid-template-columns: 3fr 3fr;*/
+            grid-template-areas: "header  header" "izquierda  derecha" "botonera botonera" "resultados resultados";
+            margin-left: -50px;
+            margin-right: -50px;
+           
+            -webkit-box-shadow: 10px 10px 5px 0px rgba(209,202,209,1);
+            -moz-box-shadow: 10px 10px 5px 0px rgba(209,202,209,1);
+            box-shadow: 10px 10px 5px 0px rgba(209,202,209,1);
+            padding-left: 35px;
+            padding-right: 35px;
+            border:1px solid #f5f5f5;
+            border-radius:8px;
+            width:110%;
+            
+        }
+        nav ul {
+            display: flex;
+            justify-content: space-between;
+      }
+        .izquierda {
+            margin-left: 10px;
+            padding-top:20px;
+        }
+        .derecha {
+            margin-right: 10px;
+            padding-top: 20px;
+        }
+        /*.resultados {
+        max-height:300px;
+        overflow:auto;
+        }*/
+        .header > h4 {
+        margin-left: 180px;
+        }
+        label {
+        margin-left:10px;
+        }
+        .botonera {
+        padding-bottom:-15px;
+        }
+        /*input [type=button] {
+         max-width:80px;  
+           
+        }*/
+  }
+    /*@@media (min-width: 700px) {
+  .wrapper {
+    grid-template-columns: 1fr 4fr 1fr;
+    grid-template-areas:
+      "header header  header"
+      "nav    content sidebar"
+      "nav    content ad"
+      "footer footer  footer"
+   }
+   nav ul {
+     flex-direction: column;
+   }*/
+}
+    /*Dividir en para pantallas grandes
+    header header
+    izquierda derecha
+    botonera botonera
+    tabla tabla*/
+    /*Dividir en una sola columna para móviles
+    header 
+    izquierda 
+    derecha
+    botonera
+    tabla*/
+    /*Colores igual que center la Agenda*/
+</style>
+<form>
+    @Html.AntiForgeryToken()
+    <div class="wrapper">
+        <header class="header">
+            <h4 class="text-primary">Gestión de Denuncias</h4>
+        </header>
+        <div class="izquierda">
+            <div class="row">
+                <div class="col-md-6 col-xs-6">
+                    <label>Fecha Desde:</label>
+                </div>
+                <div class="col-md-6 col-xs-5">
+                    <input class="form-control" type="date" name="fechaDesde" id="fechaDesde" value="@Model.fechaNotifDesde" onkeypress="onEnter(event)" />
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6 col-xs-6">
+                    <label>Fecha Notif.Gcia desde:</label>
+                </div>
+                <div class="col-md-6 col-xs-5">
+                    <input class="form-control" type="date" id="fechaGciaDesde" value="@Model.fechaNotifGciaDesde" onkeypress="onEnter(event)"/>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6 col-xs-6">
+                    <label>Region</label>
+                </div>
+                <div class="col-md-6 col-xs-5">
+                    @Html.DropDownList("comboRegiones", Model.Regiones, "", new { @class = "form-control col-xs-1" })
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-6 col-xs-6">
+                    <label>Provincia</label>
+                </div>
+                <div class="col-md-6 col-xs-5">
+                    @Html.DropDownList("comboProvincias", Model.Provincias, "", new { @class = "form-control col-xs-1", style = "margin-right:50px" })
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6 col-xs-6">
+                    <label>Organismo</label>
+                </div>
+                <div class="col-md-6 col-xs-5">
+                    @Html.DropDownList("comboOrganismos", Model.Organismos, "", new { @class = "form-control col-xs-1", style = "margin-right:50px" })
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6 col-xs-6">
+                    <label>Localidad</label>
+                </div>
+                <div class="col-md-6 col-xs-5">
+                    @Html.DropDownList("comboLocalidades", Model.Localidades, "", new { @class = "form-control col-xs-1" })
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6 col-xs-6">
+                    <label>N°de Expediente:</label>
+                </div>
+                <div class="col-md-6 col-xs-5">
+                    <input class="form-control" value="@Model.nroExpediente" id="nroExpediente" style="margin-right:50px" onkeypress="onEnter(event)"/>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6 col-xs-6">
+                    <label>Tramite CRM</label>
+                </div>
+                <div class="col-md-6 col-xs-5">
+                    <input class="form-control col-xs-3" id="tramiteCRM" value="@Model.tramiteCRM" style="margin-right:50px" onkeypress="onEnter(event)" />
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6 col-xs-6">
+                    <label>Apellido</label>
+                </div>
+                <div class="col-md-6 col-xs-5">
+                    <input class="form-control" id="apellidoDenunciante" value="@Model.apellidoDenunciante" style="margin-right:50px" onkeypress="onEnter(event)"/>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6 col-xs-6">
+                    <label>Nombre</label>
+                </div>
+                <div class="col-md-6 col-xs-5">
+                    <input class="form-control" id="nombreDenunciante" value="@Model.nombreDenunciante"onkeypress="onEnter(event)" />
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6 col-xs-6">
+                    <label>N° de Documento</label>
+                </div>
+                <div class="col-md-6 col-xs-5">
+                    <input class="form-control col-xs-3" id="dniDenunciante" type="text" value="@Model.dniDenunciante" onkeypress="onEnter(event)" />
+                </div>
+            </div>
+        </div>
+
+
+        <div class="derecha">
+            <div class="row">
+                <div class="col-md-6 col-xs-6">
+                    <label>Fecha Hasta:</label>
+                </div>
+                <div class="col-md-6 col-xs-5">
+                    <input class="form-control" type="date" id="fechaHasta" value="@Model.fechaNotifHasta" onkeypress="onEnter(event)"/>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6 col-xs-6">
+                    <label>Fecha Notif.Gcia hasta:</label>
+                </div>
+                <div class="col-md-6 col-xs-5">
+                    <input class="form-control" type="date" id="fechaGciaHasta" value="@Model.fechaNotifGciaHasta" onkeypress="onEnter(event)"/>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6 col-xs-6">
+                    <label>Etapa Procesal:</label>
+                </div>
+                <div class="col-md-6 col-xs-5">
+                    @Html.DropDownList("comboEtapaProcesal", Model.etapasProcesales, "", new { @class = "form-control" })
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6 col-xs-6">
+                    <label>Estado Conciliación</label>
+                </div>
+                <div class="col-md-6 col-xs-5">
+                    @Html.DropDownList("comboEstados", Model.estadosDeConciliacion, "", new { @class = "form-control col-xs-1", style = "margin-right:50px" })
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-6 col-xs-6">
+                    <label>Estudio Jurídico</label>
+                </div>
+                <div class="col-md-6 col-xs-5">
+                    @Html.DropDownList("comboEstudios", Model.Estudios, "", new { @class = "form-control col-xs-1", style = "margin-right:50px" })
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6 col-xs-6">
+                    <label>Responsable Interno</label>
+                </div>
+                <div class="col-md-6 col-xs-5">
+                    @Html.DropDownList("responsableInterno", Model.Responsables, "", new { @class = "form-control", style = "margin-right:50px" })
+                    
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6 col-xs-6">
+                    <label>Servicio</label>
+                </div>
+                <div class="col-md-6 col-xs-5">
+                    @Html.DropDownList("comboServicios", Model.Servicios, "", new { @class = "form-control col-xs-1", style = "margin-right:50px" })
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6 col-xs-6">
+                    <label>Motivo de Reclamo</label>
+                </div>
+                <div class="col-md-6 col-xs-5">
+                    @Html.DropDownList("comboMotivosDeReclamo", Model.MotivosDeReclamo, "", new { @class = "form-control col-xs-1" })
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6 col-xs-6">
+                    <label>Id Denuncia</label>
+                </div>
+                <div class="col-md-6 col-xs-5">
+                    <input class="form-control" id="idDenuncia" type="text" value="@Model.idDenuncia" onkeypress="onEnter(event)"/>
+                </div>
+
+            </div>
+            <div class="row">
+                <div class="col-md-6 col-xs-6">
+                    <label>Linea</label>
+                </div>
+                <div class="col-md-6 col-xs-5">
+                    <input class="form-control col-xs-3" id="nroLinea" type="text" value="@Model.nroLinea" onkeypress="onEnter(event)"/>
+                </div>
+
+            </div>
+            <div class="row">
+                <div class="col-md-6 col-xs-5">
+                    <label>Incluir Denuncias Inactivas</label>
+                </div>
+                <div class="col-md-5 col-xs-5" style="margin-left:-80px;">
+                    <input id="incluirDenunciasInactivas" type="checkbox" />
+                </div>
+                @*<div class="col-md-6 col-xs-5">
+                        <label>Id Denuncia Original</label>
+                    </div>
+                    <div class="col-md-6 col-xs-5">
+                        <input class="form-control col-xs-3" id="idDenunciaOriginal" style="margin-right:50px" disabled />
+                    </div>*@
+
+            </div>
+            <div class="row">
+                <div class="col-md-6 col-xs-5">
+                    <label>ver Denuncias Eliminadas</label>
+                </div>
+                <div class="col-md-6 col-xs-5">
+                    @Html.CheckBox("verDenunciasEliminadas", new { id = "verDenunciasEliminadas", style = "margin-left:0px;" })
+                </div>
+            </div>
+
+        </div>
+
+        <div class="botonera text-center">
+            <input type="button" id="btnListarDenunciasMM" class="btn btn-primary btn-sm" value="Buscar Denuncias" onclick="listarDenuncias()" />
+            <input type="button" class="btn btn-primary btn-sm" value="Limpiar Busqueda" onclick="limpiarFiltrosDenunciaMM()" />
+            <input type="button" class="btn btn-primary btn-sm" value="Seleccionar Todo" onclick="checkAllItems()" />
+            <input type="button" class="btn btn-primary btn-sm" value="Invertir Selección" onclick="unCheckAllItems()" />
+            <input type="button" class="btn btn-primary btn-sm" value="Aceptar Selección" onclick="aceptarSelección()" />
+            <input type="button" class="btn btn-primary btn-sm" value="Cancelar Selección" onclick="cancelarSeleccion()" />
+        </div>
+        <div style="display:none;margin-left:550px;" id="divLoadingDenunciasMM">
+            <div class="loader-container">
+                <div class="loader"></div>
+            </div>
+            @*<img src="@Url.Content("~/Images/4.gif")" />*@
+        </div>
+        <div class="resultados" id="tableContainer"></div>
+    </div>
+
+</form>
+
+@*<div id="ParentContainerFMM" class="panel panel-default" style="font-size:12px;margin-top:-5px;">
+   
+
+    <div class="panel-heading" style="margin-left:25px;margin-right:25px;border-radius:6px;background-color:white;height:45px;">
+        <span class="text-primary" style="margin-left:80px;font-size:16px;"> Gestión de Denuncias</span>
+        <button style="margin-left:800px;margin-top:-15px;" class="btn btn-sm btn-primary" onclick="Volver()">
+         <i style="margin-right:15px;" class="glyphicon glyphicon-arrow-left"></i>Volver</button>
+    </div>
+
+    <div>
+        <form class="container" style="margin-left:-30px;">
+            <br />
+
+            @Html.AntiForgeryToken()
+
+            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+            <div class="row">
+                <div class="col-md-6 col-xs-3">
+                    <label>Fecha Desde:</label>
+                </div>
+                <div class="col-md-6 col-xs-5">
+                    <input class="form-control" type="date" name="fechaDesde" id="fechaDesde" value="@Model.fechaNotifDesde" />
+                </div>
+
+                <div class="col-md-6 col-xs-3">
+                    <label>Fecha Hasta:</label>
+                </div>
+                <div class="col-md-6 col-xs-5">
+                    <input class="form-control" type="date" id="fechaHasta" value="@Model.fechaNotifHasta" />
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-6 col-xs-3">
+                    <label>Fecha Notif.Gcia desde:</label>
+                </div>
+                <div class="col-md-6 col-xs-5">
+                    <input class="form-control" type="date" id="fechaGciaDesde" value="@Model.fechaNotifGciaDesde" />
+                </div>
+
+                <div class="col-md-6 col-xs-3">
+                    <label>Fecha Notif.Gcia hasta:</label>
+                </div>
+                <div class="col-md-6 col-xs-5">
+                    <input class="form-control" type="date" id="fechaGciaHasta" value="@Model.fechaNotifGciaHasta" />
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-6 col-xs-3">
+                    <label>N°de Expediente:</label>
+                </div>
+                <div class="col-md-6 col-xs-5">
+                    <input class="form-control" value="@Model.nroExpediente" id="nroExpediente" style="margin-right:50px" />
+                </div>
+
+                <div class="col-md-6 col-xs-3">
+                    <label>Etapa Procesal:</label>
+                </div>
+                <div class="col-md-6 col-xs-5">
+                    @Html.DropDownList("comboEtapaProcesal", Model.etapasProcesales, "", new { @class = "form-control" })
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-6 col-xs-3">
+                    <label>Organismo</label>
+                </div>
+                <div class="col-md-6 col-xs-5">
+                    @Html.DropDownList("comboOrganismos", Model.Organismos, "", new { @class = "form-control col-xs-1", style = "margin-right:50px" })
+                </div>
+
+                <div class="col-md-6 col-xs-3">
+                    <label>Region</label>
+                </div>
+                <div class="col-md-6 col-xs-5">
+                    @Html.DropDownList("comboRegiones", Model.Regiones, "", new { @class = "form-control col-xs-1" })
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-6 col-xs-3">
+                    <label>Provincia</label>
+                </div>
+                <div class="col-md-6 col-xs-5">
+                    @Html.DropDownList("comboProvincias", Model.Provincias, "", new { @class = "form-control col-xs-1", style = "margin-right:50px" })
+                </div>
+
+                <div class="col-md-6 col-xs-3">
+                    <label>Localidad</label>
+                </div>
+                <div class="col-md-6 col-xs-5">
+                    @Html.DropDownList("comboLocalidades", Model.Localidades, "", new { @class = "form-control col-xs-1" })
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-6 col-xs-3">
+                    <label>Servicio</label>
+                </div>
+                <div class="col-md-6 col-xs-5">
+                    @Html.DropDownList("comboServicios", Model.Servicios, "", new { @class = "form-control col-xs-1", style = "margin-right:50px" })
+                </div>
+
+                <div class="col-md-6 col-xs-3">
+                    <label>Id Denuncia</label>
+                </div>
+                <div class="col-md-6 col-xs-5">
+                    <input class="form-control" id="idDenuncia" type="number" value="@Model.idDenuncia" />
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-6 col-xs-3">
+                    <label>Estudio Jurídico</label>
+                </div>
+                <div class="col-md-6 col-xs-5">
+                    @Html.DropDownList("comboEstudios", Model.Estudios, "", new { @class = "form-control col-xs-1", style = "margin-right:50px" })
+                </div>
+
+                <div class="col-md-6 col-xs-3">
+                    <label>ver Denuncias Eliminadas</label>
+                </div>
+                <div class="col-md-6 col-xs-5">
+                    @Html.CheckBox("verDenunciasEliminadas", new { id = "verDenunciasEliminadas", style = "margin-left:0px;", disabled = "disabled" })
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-6 col-xs-3">
+                    <label>Apellido</label>
+                </div>
+                <div class="col-md-6 col-xs-5">
+                    <input class="form-control" id="apellidoDenunciante" value="@Model.apellidoDenunciante" style="margin-right:50px" />
+                </div>
+
+                <div class="col-md-6 col-xs-3">
+                    <label>Nombre</label>
+                </div>
+                <div class="col-md-6 col-xs-5">
+                    <input class="form-control" id="nombreDenunciante" value="@Model.nombreDenunciante" />
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-6 col-xs-3">
+                    <label>Estado Conciliación</label>
+                </div>
+                <div class="col-md-6 col-xs-5">
+                    @Html.DropDownList("comboEstados", Model.estadosDeConciliacion, "", new { @class = "form-control col-xs-1", style = "margin-right:50px" })
+                </div>
+
+                <div class="col-md-6 col-xs-3">
+                    <label>Motivo de Reclamo</label>
+                </div>
+                <div class="col-md-6 col-xs-5">
+                    @Html.DropDownList("comboMotivosDeReclamo", Model.MotivosDeReclamo, "", new { @class = "form-control col-xs-1" })
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-6 col-xs-3">
+                    <label>Tramite CRM</label>
+                </div>
+                <div class="col-md-6 col-xs-5">
+                    <input class="form-control col-xs-3" id="tramiteCRM" value="@Model.tramiteCRM" style="margin-right:50px" />
+                </div>
+
+                <div class="col-md-6 col-xs-3">
+                    <label>Linea</label>
+                </div>
+                <div class="col-md-6 col-xs-5">
+                    <input class="form-control col-xs-3" id="nroLinea" type="number" value="@Model.nroLinea" />
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-6 col-xs-3">
+                    <label>Tipo Documento</label>
+                </div>
+                <div class="col-md-6 col-xs-5">
+                    <input class="form-control col-xs-3" id="tipoDocumento" style="margin-right:50px" disabled />
+                </div>
+
+                <div class="col-md-6 col-xs-3">
+                    <label>N° de Documento</label>
+                </div>
+                <div class="col-md-6 col-xs-5">
+                    <input class="form-control col-xs-3" id="dniDenunciante" type="number" value="@Model.dniDenunciante" />
+                </div>
+            </div>
+
+
+            <div class="row">
+                <div class="col-md-6 col-xs-3">
+                    <label>Responsable Interno</label>
+                </div>
+                <div class="col-md-6 col-xs-5">
+                    <select class="form-control col-xs-3" id="responsableInterno" style="margin-right:50px">
+                        <option value="0"></option>
+                        <option value="1">Quiroga,Marcela Alejandra (u194486)</option>
+                        <option value="2">Aguirre Zanardi,Mario Matias (u551212)</option>
+                        <option value="3">Centurion,Sandra (u597852)</option>
+                        <option value="4">Delgado,Paola (u597856)</option>
+                    </select>
+                </div>
+
+                <div class="col-md-6 col-xs-3">
+                    <label>Id Denuncia Original</label>
+                </div>
+                <div class="col-md-6 col-xs-5">
+                    <input class="form-control col-xs-3" id="idDenunciaOriginal" style="margin-right:50px" disabled />
+                </div>
+            </div>
+
+
+            <br />
+        </form>
+    </div>
+    <div class="text-center" style="margin-top:-10px;padding-top:5px;padding-bottom:10px;background-color:#f2f2f2;">
+
+        <input type="button" class="btn btn-primary btn-sm" value="Buscar Denuncias" onclick="listarDenuncias()" />
+        <input type="button" class="btn btn-primary btn-sm" value="Limpiar Busqueda" onclick="limpiarFiltros()" />
+        <input type="button" class="btn btn-primary btn-sm" value="Seleccionar Todo" onclick="checkAllItems()" />
+        <input type="button" class="btn btn-primary btn-sm" value="Invertir Selección" onclick="unCheckAllItems()" />
+        <input type="button" class="btn btn-primary btn-sm" value="Aceptar Selección" onclick="aceptarSelección()" />
+        <input type="button" class="btn btn-primary btn-sm" value="Cancelar Selección" onclick="cancelarSeleccion()" />
+    </div>
+    <div>
+        <div id="tableContainer" class="tableContainer" style="max-width:1300px; max-height:300px;overflow:auto;overflow-x:auto;margin-right:-130px;background-color:#e6e6ff">
+
+        </div>
+
+    </div>
+
+</div>*@
+
+@section scripts{
+<script>
+    
+
+    $("#fechaDesde").keypress(function (e) {
+        if (e.which == 13) {
+            e.preventDefault();
+            listarDenuncias();
+        }
+    });
+
+    $("#fechaHasta").keypress(function (e) {
+        if (e.which == 13) {
+            e.preventDefault();
+            listarDenuncias();
+        }
+    });
+
+    $("#fechaGciaDesde").keypress(function (e) {
+        if (e.which == 13) {
+            e.preventDefault();
+            listarDenuncias();
+        }
+    });
+
+    $("#fechaGciaHasta").keypress(function (e) {
+        if (e.which == 13) {
+            e.preventDefault();
+            listarDenuncias();
+        }
+    });
+
+    $("#nroExpediente").keypress(function (e) {
+        if (e.which == 13) {
+            e.preventDefault();
+            listarDenuncias();
+        }
+    });
+
+    $("#tramiteCRM").keypress(function (e) {
+        if (e.which == 13) {
+            e.preventDefault();
+            listarDenuncias();
+        }
+    });
+
+    $("#apellidoDenunciante").keypress(function (e) {
+        if (e.which == 13) {
+            e.preventDefault();
+            listarDenuncias();
+        }
+    });
+
+    $("#nombreDenunciante").keypress(function (e) {
+        if (e.which == 13) {
+            e.preventDefault();
+            listarDenuncias();
+        }
+    });
+
+    $("#dniDenunciante").keypress(function (e) {
+        if (e.which == 13) {
+            e.preventDefault();
+            listarDenuncias();
+        }
+    });
+
+    $("#nroLinea").keypress(function (e) {
+        if (e.which == 13) {
+            e.preventDefault();
+            listarDenuncias();
+        }
+    });
+
+    $("#idDenuncia").keypress(function (e) {
+        if (e.which == 13) {
+            e.preventDefault();
+            listarDenuncias();
+        }
+    });
+
+</script>
+    
+    }

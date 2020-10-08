@@ -1,0 +1,119 @@
+﻿@model IEnumerable<Greco2.Models.Evento.EventoDto>
+
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.DenunciaId)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.DenunciaHistId)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Fecha)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Organismo_Id)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.ResExId)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.ResIntId)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Observacion)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Deleted)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.FECHACREACION)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.PRESENCIAL)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.CREATIONPERSON)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.ASISTENCIA)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.REQUERIMIENTOINFORME)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.SOLUCIONADO)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.CONTESTADO)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.tipoEvento)
+        </th>
+        <th></th>
+    </tr>
+    <tbody id="listaEventos">
+
+    </tbody>
+@*@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.DenunciaId)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.DenunciaHistId)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Fecha)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Organismo_Id)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.ResExId)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.ResIntId)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Observacion)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Deleted)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.FECHACREACION)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.PRESENCIAL)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.CREATIONPERSON)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.ASISTENCIA)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.REQUERIMIENTOINFORME)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.SOLUCIONADO)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.CONTESTADO)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.tipoEvento)
+        </td>
+        <td>
+            @Html.ActionLink("Edit", "Edit", new { id=item.EventoId }) |
+            @Html.ActionLink("Details", "Details", new { id=item.EventoId }) |
+            @Html.ActionLink("Delete", "Delete", new { id=item.EventoId })
+        </td>
+    </tr>*@
+}
+
+</table>

@@ -1,0 +1,168 @@
+﻿@using Greco2.Models.Evento
+@model IEnumerable<EventoDto>
+
+<table class="table list-group-item" id="listaEventos" style="max-width:100%;margin-left:-10px;margin-right:-10px;">@*background-color:ghostwhite;*@
+    <thead>
+        <tr>
+            <th></th>
+            <th class="thCentrado">Fecha Vencimiento</th>
+            <th>Tipo Evento</th>
+            <th>Observaciones</th>
+            <th>Contestado</th>
+            <th>Solucionado</th>
+            <th>Req.Informe</th>
+            <th>Editar</th>
+            <th>Eliminar</th>
+        </tr>
+    </thead>
+    <tbody>
+
+
+        @foreach (var item in @Model)
+        {
+            <tr>
+                <td class="text-primary" style="width:80px;">
+                    @Html.DisplayFor(i => @item.EventoId)
+
+                </td>
+
+                <td style="width:150px;text-align:left;">
+                    @Html.DisplayFor(i => @item.Fecha)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.tipoEvento)
+                </td>
+                <td>
+                    @Html.TextAreaFor(modelItem => item.Observacion,new { style= "background-color:lavender;max-width:280px;max-height:80px;border-style:none;" })
+                </td>
+
+                @{
+                    //var esContestado = (@item.CONTESTADO.Equals(true)) ? "SI" : "NO";
+                    var esContestado = (@item.CONTESTADO) ? "SI" : "NO";
+                    <td>
+                        @esContestado
+                    </td>
+                }
+                @{
+//var estaSolucionado = (@item.SOLUCIONADO.Equals(true)) ? "SI" : "NO";
+//var estaSolucionado = (@item.SOLUCIONADO) ? "SI" : "NO";
+                    <td>
+                        @item.SOLUCIONADO
+                    </td>
+                }
+
+
+                <td>
+                    @Html.DisplayFor(modelItem => item.REQUERIMIENTOINFORME)
+                </td>
+                <td>
+
+                    <a href="#" id="btn-editEvent" onclick="return getEventobyId(@item.EventoId)" data-toggle="modal" data-target="#editEventModal"><i class="glyphicon glyphicon-pencil"></i></a>
+                    @*<a id="btn-editEvent" onclick="getEvento(@item.EventoId)" data-toggle="modal" data-target="#editEventoModal"><i class="glyphicon glyphicon-pencil"></i></a>*@
+
+                </td>
+                <td class="columnaIcono">
+                    <a href="#" onclick="eliminarEvento(@item.EventoId,@item.DenunciaId)">
+                        <span class="glyphicon glyphicon-trash" id="DeleteElement" data-toggle="modal" data-target="#divDeleteEvent"></span>
+                    </a>
+                </td>
+                <td hidden id="eventoDenunciaId">
+                    @Html.DisplayFor(modelItem => item.DenunciaId)
+                </td>
+
+            </tr>
+
+        }
+
+    </tbody>
+</table>
+
+
+<!-- Modal -->
+<div class="modal fade" id="editEventModal" role="dialog" data-collapsed="true">
+    <div class="modal-dialog">
+
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header"
+                 style="background-color:#337ab7; color:white;">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                
+                <button type="button" class="close" data-dismiss="modal">×</button>
+
+                <h4 class="modal-title" id="myModalLabel" style="margin-left:50px;">Editar Evento</h4>
+
+            </div>
+
+            <div class="modal-body">
+                
+             <div id="divEventoAEditar"></div>
+
+            </div>
+
+            <div class="modal-footer">
+
+                <button type="button" class="btn btn-primary" onclick="guardarEventoEditado()" id="btnGuardarEventoEditado" >Guardar</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+
+
+@section scripts{
+    <script>
+        
+        @*$("#btn-editEvent").click(function () {
+            bootbox.alert("This is an alert with a callback!", function () {
+                console.log('This was logged in the callback!');
+            });
+            //bootbox.alert("Seguro que desea editar a este denunciante ?");
+        });
+
+
+
+        function llamarVistaParcial() {
+
+            var URLDeLaVista = '@Url.Action("EditarEvento", "Home")';
+            //var idEvento = $(this).find("td:eq(0)").text();
+                $.ajax({
+                    cache: false,
+                    async: true,
+                    type: "GET",
+                    url: URLDeLaVista,
+                    data: {},
+                    success: function (response) {
+                        //$('#resultado').html('');
+                        $('#divEditEvent').html(response);
+                    }
+                });
+        };
+
+        $("table tbody tr").click(function () {
+            var idEvento = $(this).find("td:eq(0)").text();
+            console.log(idEvento);
+            var urlEvento = @Url.Action("EditarEvento", "Home");/*"/Home/EditarEvento/";*/
+            $.ajax({
+                type: "GET",
+                url: urlEvento,
+                data: { id: idEvento }
+            }).done(function (data) {
+                $("#divEditEvent").html(data);
+                //$('#editEventModal').modal('show');
+                //$("#EditEventModal").show();
+            });
+        });*@
+
+
+
+
+    </script>
+
+}

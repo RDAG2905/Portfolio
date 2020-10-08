@@ -1,0 +1,25 @@
+﻿@using Greco2.Models.Denuncia
+@model List<ArchivoDto>
+
+
+<div class="col-md-12">
+    @foreach (var item in Model)
+    {
+    <div class="row list-group-item">
+        <span class="col-xs-1">@item.fechaCreacion.ToShortDateString() </span>
+        <a href="@Url.Action("DescargarArchivo", "Home", new { id = item.Id})">
+            <span class="col-xs-4">@item.Nombre.@item.Extension</span>
+            <span class="glyphicon glyphicon-save col-xs-2"> Descargar</span>
+        </a>
+        <span class="col-xs-2"> - Descargas: @item.Descargas - </span>
+        <a href="@Url.Action("EliminarArchivo", "Home",
+                         new { id = item.Id })" class="text-danger">
+            <span>Eliminar <i class="glyphicon glyphicon-trash text-capitalize small"></i></span>
+            
+        </a>
+    </div>
+            @*<br />*@
+            }
+        </div>
+    
+

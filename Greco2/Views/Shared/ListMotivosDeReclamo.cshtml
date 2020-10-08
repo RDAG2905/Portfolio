@@ -1,0 +1,77 @@
+﻿@using Greco2.Models.MotivoDeReclamo
+@model IEnumerable<MotivoDeReclamoDto>
+
+<style>
+
+    /*table {
+        margin-left: 80px;
+        margin-right: 80px;
+    }*/
+    th {
+        text-align: center;
+    }
+
+    .check {
+        width: 20px;
+    }
+</style>
+
+@if (Model.Any())
+{
+    <div style="display:flex;max-height:300px;overflow:auto">
+        <table class="table table-hover list-group-item">
+            <thead>
+                <tr>
+                    <th></th>
+                    <th>Nombre</th>
+                    <th>Servicio</th>
+                    <th>Tipo de Proceso</th>
+                    <th class="col-xs-1">Editar</th>
+                    @*<th class="col-xs-1">Eliminar</th>*@
+                    <th>Inactivo</th>
+                </tr>
+            </thead>
+
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td class="check">
+                        @Html.DisplayFor(i => item.Id)
+                    </td>
+                    <td style="width:150px;">
+                        @Html.DisplayFor(i => item.Nombre)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(i => item.servicio_Id)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(i => item.tipoProceso_Id)
+                    </td>
+
+                    @*<td class="check">
+                            <a onclick="editar(@item.Id,'EditarMotivoDeReclamo','ListarMotivosDeReclamo')" data-toggle='modal' data-target='#editModalMotivoDeReclamo'><i class="glyphicon glyphicon-pencil col-xs-1"></i></a>
+                        </td>*@
+                    <td class="check">
+                        <a onclick="cargarModalDeleteEstudio(@item.Id.ToString())" data-toggle='modal' data-target='#deleteModalMotivosDeReclamo'><i class="glyphicon glyphicon-trash col-xs-1"></i></a>
+                    </td>
+                    <td>
+                        @Html.DisplayFor(i => @item.Deleted)
+                    </td>
+                </tr>
+            }
+
+        </table>
+    </div>
+    <br />
+    <div class="text-primary">Total:  @Model.Count()</div>
+
+}
+else
+{
+
+    <div id="infoResult" class="alert-info text-center col-xs-12">
+        <h4>Sin resultados</h4>
+    </div>
+
+}
+

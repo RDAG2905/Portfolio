@@ -1,0 +1,189 @@
+﻿<style>
+    input[type=text], input[type=number] {
+        height: 28px;
+        font-size: 12px;
+    }
+
+    #divListaDenunciantes {
+        max-height: 300px;
+        overflow: auto;
+        
+    }
+
+    #divGrupo {
+        max-height: 300px;
+        overflow: auto;
+    }
+
+   
+   
+
+</style>
+
+<div id="grupoDenunciantesContainer" style="background-color:#f2f2f2;padding-right:50px;">
+    <div>
+        @*<div id="divGrupo"style="color:white;">
+
+        </div>*@
+        <text id="validandoDniMessage" style="display:none;">Validando Números de Documento ......</text>
+        <div class="list-group-item" style="border:2px inherit;">
+
+            <div class="row">
+                <label style="margin-right:-5px;margin-left:80px;" class="col-xs-1">Filas</label>
+                <input type="number" style="max-width:100px;text-align:center;margin-left:5px;" id="cantidadDenunciantes" onkeypress="agregarFilas(this,event)" class="form-control input-sm col-xs-1" />
+                <div class="col-xs-1"><i onclick="limpiarInput('cantidadDenunciantes');" style="color:#d6d6d6;" class="glyphicon glyphicon-remove"></i></div>
+
+                <label style="margin-right:10px;" class="col-xs-1">Remover </label>
+                <input type="number" style="max-width:100px;text-align:center;margin-left:10px;" id="cantidadDenunciantesASacar" onkeypress="removerFilas(this,event)" class="form-control input-sm col-xs-1" />
+                <div class="col-xs-1"><i onclick="limpiarInput('cantidadDenunciantesASacar');" style="color:#d6d6d6;" class="glyphicon glyphicon-remove"></i></div>
+
+                @*<button class="col-xs-1 btn" onclick="eliminarFilasGrupo();" style="margin-left:50px;"><i style="color:darkgray;" class="glyphicon glyphicon-arrow-left"></i></button>*@
+                <button class="col-xs-2 btn" onclick="eliminarFilasGrupo();" style="margin-left:50px;color:#337ab7;">Limpiar Todo</button>
+                <button id="btn-cancelarBusqueda" onclick="ocultarBusqueda()" style="display:none;" type="button" class="close">&times;</button>
+            </div>
+        </div>
+        <br />
+        <div id="divGrupo" style="color:white;">
+
+        </div>
+        <div id="divListaDenunciantes" class="list-group-item">
+            <form>
+                @Html.AntiForgeryToken()
+            </form>
+            <table id="lista" class="table" style="width:950px;">
+                <thead>
+                    <tr style="margin:auto">
+                        <th></th>
+                        <th>Nombre</th>
+                        <th>Apellido</th>
+                        <th>Nro.de Documento</th>
+                        <th></th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+
+            </table>
+
+        </div>
+        <br />
+
+        <div class="row">
+            <text class="text-primary" id="validandoDniMessage" style="display:none;">Validando Números de Documento</text>
+            <text class="text-primary" id="creandoGrupo" style="display:none;">Creando Grupo</text>
+            <div class="loader-container" style="display:none" id="loadingDG">
+                <div class="loader"></div>
+            </div>
+            @*<img src="@Url.Content("~/Images/4.gif")" id="loadingDG" style="display:none;" />*@
+            <div class="navbar-right">
+                <button id="btnGuardarGrupoDenunciantes" class="btn btn-sm btn-primary right" onclick="validarDniDenunciantes()" @*"onclick="validarListaDni()"*@>Crear Grupo</button>
+                <button id="btnAgregarDenuncianteAlGrupo" class="btn btn-sm btn-primary right" style="display:none;" onclick="validarDniDenunciantesNuevosGrupoExistente()" @*onclick="validarNuevosDenunciantesGrupo()"*@>Guardar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<!-- Inicio Modal Denunciantes -->
+<div class="modal fade" id="BusquedaDenunciantesGrupoModal" role="dialog" data-collapsed="true">
+    <div class="modal-dialog">
+
+        <!-- Modal content-->
+        <div class="modal-content" style="width:700px;">
+            <div class="modal-header">
+                
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+
+
+
+                <h4 class="modal-title text-primary" id="myModalLabel" style="margin-left:200px;">Buscar Denunciante</h4>
+
+            </div>
+
+            <div class="modal-body">
+
+                <div id="divEventoAEditar">
+                    @Html.Partial("BusquedaDenunciantesGrupo")
+                </div>
+                
+            </div>
+
+            <div class="modal-footer"">
+                
+            </div>
+
+        </div>
+
+    </div>
+   
+</div>
+
+
+
+@section scripts{
+    <script>
+
+        function eliminarFilasGrupo() {
+            var tbody = $('#lista tbody');
+            tbody.empty();
+        }
+
+
+        @*$('#guardarGrupoDenunciantes').click(function () {
+                    var fila = [];
+                    var n = 0;
+                    $('#lista tbody tr').each(function (i, valor) {
+
+                        fila.push($(valor).find('td').eq(0).children().val());
+                        fila.push($(valor).find('td').eq(1).children().val());
+                        fila.push($(valor).find('td').eq(2).children().val());
+                        //fila.push($(valor).find('td').eq(3).children().val());
+                        //fila[1] = $(valor).find('td').eq(1).children().val();
+                        //fila[2] = $(valor).find('td').eq(2).children().val();
+                        //fila[3] = $(valor).find('td').eq(3).children().val();
+                        listadoDenunciantes.push(fila);
+                        fila = [];
+                    });
+                    console.log(listadoDenunciantes);
+                    console.log(listadoDenunciantes.length);
+                    if (listadoDenunciantes.length <= 1) {
+                        toastr.options.positionClass = 'toast-bottom-full-width'; /*'toast-bottom-right'*/
+                        toastr.warning('.......................................................................... Para crear un Grupo de Denunciantes se requieren al menos 2 Integrantes');
+                    }
+                    else {
+                        $.ajax({
+                            url: '@Url.Action("CrearGrupo","Denuncias")',
+                            type: 'Post',
+                            data: { lista: listadoDenunciantes },
+                            success(response) {
+                                //console.log(response)
+                                //$('#divListaDenunciantes').html(response);
+                                $('#divGrupo').html(response);
+                                $('#lista tbody').empty();
+                                $('#grupoIdDenunciantes').val($('#grupoDenuncianteId').text())
+                                var nombrePrincipal = $('#nombreDenunciantePrincipal').val();
+                                var apellidoPrincipal = $('#apellidoDenunciantePrincipal').val();
+                                var dniPrincipal = $('#dniDenunciantePrincipal').val();
+                                console.log(nombrePrincipal);
+                                console.log(apellidoPrincipal);
+                                console.log(dniPrincipal);
+                                console.log($('#idDenunciantePrincipal').val());
+                                $('#denuncianteResult').html(nombrePrincipal + " " + apellidoPrincipal + " " + dniPrincipal);
+                                $('#denuncianteId').val($('#idDenunciantePrincipal').val());
+
+                                $('#btnClearTable').attr("disabled", true);
+                                $('#guardarGrupoDenunciantes').css("display", "none");
+                                $('#editarGrupoDenunciantes').css("display","block");
+                            },
+                            error(response) {
+                                toastr.error(response.responseText);
+                            }
+                        });
+                        listadoDenunciantes = [];
+                    }
+            });*@
+    </script>
+
+}
+

@@ -1,0 +1,841 @@
+﻿
+@{
+    ViewBag.Title = "AgendaExternos";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@using Greco2.Models.Evento
+@model AgendaModelView
+
+<style>
+
+    .form-control, select {
+        /*background-image: linear-gradient(white 60%,#f2f2f2);*/
+        font-size: 11px;
+        width: 220px;
+    }
+
+    h4 {
+        font-family: 'Berlin Sans FB';
+    }
+
+
+    body {
+        /*background-color: #e6e6e6;*/
+        /*background-image: linear-gradient(#e6e6e6,white);*/
+        background-image: linear-gradient(#f2f2f2,white);
+        /*background-color: #f2f2f2;*/
+        /*background-color: #eaeafb;*/
+    }
+
+    a:active {
+        background-color: blue;
+        color: white;
+    }
+
+    .jumbotron {
+        justify-content: center;
+        padding-top: 10px;
+        padding-bottom: 5px;
+        margin-left: -8px;
+        /*background-color:#e6e6e6;*/
+    }
+
+
+
+    select, input {
+        /*max-height: 28px;*/
+        /*max-width:300px;*/
+    }
+
+
+    label {
+        font-size: 11px;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        /*color: #4d4d4d;*/
+        color: #111a00;
+    }
+    /*select,option,input{
+
+    }*/
+
+
+
+
+    .list-group-item {
+        border-radius: 8px;
+    }
+
+    .row {
+        text-align: left;
+    }
+
+    .item1 {
+        grid-area: left;
+        /*padding-left: 100px;*/
+        background-color: #f2f2f2;
+        border-radius: 8px;
+        padding-top: 5px;
+    }
+
+        .item1 > .row {
+            margin-left: 100px;
+        }
+
+    /*.item2 {
+        grid-area: center;
+    }*/
+
+    .item3 {
+        grid-area: right;
+        background-color: #f2f2f2;
+        /*padding-left: 60px;*/
+        border-radius: 8px;
+        padding-top: 10px;
+    }
+
+        .item3 > .row > label {
+            margin-left: 50px;
+        }
+
+    /*.item3:hover {
+        -webkit-box-shadow: 0px 1px 10px 0px rgba(0,0,0,0.25);
+        -moz-box-shadow: 0px 1px 10px 0px rgba(0,0,0,0.25);
+        box-shadow: 0px 1px 10px 0px rgba(0,0,0,0.25);
+    }*/
+
+    .grid-container {
+        /*grid-template-areas: 'left left center center right right';*/
+        /*grid-template-areas: 'left left left right right right';*/
+        grid-template-areas: 'left' 'right';
+        grid-gap: 20px;
+        display: grid;
+        margin-left: -10px;
+    }
+
+    .grid-item {
+        border: 1px solid rgba(0, 0, 0, 0.8);
+    }
+    /*nav {
+    display:none;
+    }*/
+    input[type=button]:hover, button:hover {
+        /*-webkit-box-shadow: 0px 3px 8px 0px rgba(12,79,130,1);
+        -moz-box-shadow: 0px 3px 8px 0px rgba(12,79,130,1);
+        box-shadow: 0px 3px 8px 0px rgba(12,79,130,1);*/
+        /*-webkit-box-shadow: 0px 1px 10px 0px rgba(12,79,130,1);
+        -moz-box-shadow: 0px 1px 10px 0px rgba(12,79,130,1);
+        box-shadow: 0px 1px 10px 0px rgba(12,79,130,1);*/
+        -webkit-box-shadow: 0px 1px 10px 0px rgba(0,0,0,0.25);
+        -moz-box-shadow: 0px 1px 10px 0px rgba(0,0,0,0.25);
+        box-shadow: 0px 1px 10px 0px rgba(0,0,0,0.25);
+    }
+
+
+    /*#divListAgenda {
+        -webkit-box-shadow: 10px 10px 5px -2px rgba(209,202,209,1);
+        -moz-box-shadow: 10px 10px 5px -2px rgba(209,202,209,1);
+        box-shadow: 10px 10px 5px -2px rgba(209,202,209,1);
+    }*/
+
+    @@media(min-width: 1150px) {
+
+        .grid-container {
+            grid-template-areas: 'left right';
+            grid-gap: 20px;
+            display: grid;
+            margin-left: -10px;
+        }
+    }
+</style>
+<div class="list-group-item" style="padding-left:30px;padding-right:25px;margin-left:-60px;margin-right:-55px;border-color:#f2f2f2;
+        -webkit-box-shadow: 10px 10px 5px -2px rgba(209,202,209,1);
+        -moz-box-shadow: 10px 10px 5px -2px rgba(209,202,209,1);
+        box-shadow: 10px 10px 5px -2px rgba(209,202,209,1);">
+    <div class="jumbotron" style="max-height:45px;padding-top:5px;background-color:white;">
+        <div class="row">
+            <div class="col-xs-1">
+                <i style="padding-top:9px;" class="glyphicon glyphicon-th"></i>
+            </div>
+            <div class="col-xs-1">
+                <h4 class="text-primary">AGENDA</h4>
+            </div>
+            <div class="col-xs-offset-2">
+                <button style="margin-left:800px;margin-top:4px;height:28px;" class="btn btn-sm btn-toolbar" onclick="Volver()"><i style="margin-right:15px;" class="glyphicon glyphicon-arrow-left"></i>Volver</button>
+            </div>
+        </div>
+    </div>
+
+    <form>
+        @Html.AntiForgeryToken()
+
+        <div class="grid-container list-group-item" style="border-style:none;margin-top:-30px;">
+            <div class="item1" style="font-size:13px;">
+                <br />
+
+                <div class="row">
+                    <label class="col-xs-1 ">Desde </label>
+                    <input class="form-control" type="date" id="fechaDesde" value="@Model.fechaDesde" onchange="clonarFecha(this)" />
+
+                </div>
+                <div class="row">
+                    <label class="col-xs-1">Hasta </label>
+                    <input class="form-control" type="date" id="fechaHasta" value="@Model.fechaHasta" />
+
+                </div>
+                <br />
+
+                <div class="row" style="margin-top:5px;height:25px;">
+                    <label style="width:200px;">Fecha de Vencimiento</label>
+                    <input type="radio" name="radioFecha" id="filtroPorFechaVencimiento" value="@Model.filtrarPorFechaVencimiento" checked>
+                </div>
+
+                <div class="row" style="height:25px">
+                    <label style="width:200px;">Fecha de Notificación</label>
+                    <input type="radio" name="radioFecha" id="filtroPorFechaNotificacion" value="@Model.filtrarPorFechaNotificacion">
+                </div>
+                <div class="row" style="height:25px">
+                    <label style="width:200px;">Fecha de Notificación Gcia.</label>
+                    <input type="radio" name="radioFecha" id="filtroPorFechaNotificacionGcia" value="@Model.filtrarPorFechaNotificacionGcia">
+                </div>
+
+
+
+                <div>
+                    
+
+
+                    <div class="row">
+                        <br />
+                        <span class="col-xs-3"></span>
+                        <input type="button" class="btn btn-sm btn-primary col-xs-3" value="Buscar Eventos "
+                               style="margin-bottom:10px;" onclick="BuscarListAgendaExternos()" />
+                    </div>
+
+                    <div class="row">
+                        <span class="col-xs-3"></span>
+                        <input type="button" class="btn btn-sm btn-primary col-xs-3" value="Limpiar Filtros"
+                               style="margin-bottom:10px;" onclick="limpiarFiltros()" />
+                    </div>
+
+                    <div class="row">
+                        <span class="col-xs-3"></span>
+                        <input id="btnExportarAExcelAgenda" type="button" class="btn btn-sm btn-primary col-xs-3" value="Exportar a Excel" onclick="ExportListAgenda()" />
+
+                    </div>
+
+                    <label id="labelGenerandoExcelAgenda" style="display:none;">Generando Excel...</label>
+
+                </div>
+
+
+            </div>
+
+
+            <div class="item3" style="font-size:12px;">
+                <div class="row"><br /></div>
+
+                <div class="row">
+                    
+                    <label class="col-xs-3">Tipo Evento </label>
+                    @Html.DropDownList("tipoEventos", Model.tipoEventos, "", new { @class = "form-control", style = "height:25px" })
+                </div>
+
+                @*<div class="row">
+                    <label class="col-xs-3">Estudio Externo </label>
+                    @Html.DropDownList("estudios", Model.Estudios, "", new { @class = "form-control", style = "height:25px" })
+
+                </div>
+
+                <div class="row">
+                    <label class="col-xs-3">Provincia </label>
+                    @Html.DropDownList("provincias", Model.Provincias, "", new { @class = "form-control", style = "height:25px" })
+
+                </div>*@
+                <div class="row">
+                    <label class="col-xs-3">Req. Informe </label>
+                    @Html.DropDownList("reqInformes", Model.reqInformes, "", new { @class = "form-control", style = "height:25px" })
+
+                </div>
+                @*<div class="row">
+                    <label class="col-xs-3">Organismo </label>
+                    @Html.DropDownList("organismos", Model.Organismos, "", new { @class = "form-control", style = "height:25px" })
+
+                </div>
+                <div class="row">
+                    <label class="col-xs-3">Solucionado </label>
+                    @Html.DropDownList("solucionados", Model.Solucionados, "", new { @class = "form-control", style = "height:25px" })
+
+                </div>
+
+                <div class="row">
+                    <label class="col-xs-3">Responsable</label>
+                    @Html.DropDownList("responsable", Model.Responsables, "", new { @class = "form-control", style = "margin-right:50px;max-width:280px;height:25px;" })
+                   
+                </div>
+                <div class="row">
+                    <label class="col-xs-3">Dni Denunciante</label>
+                    <input type="number" value="@Model.dniDenunciante" id="dniDenunciante" class="form-control" style="max-width:280px;height:25px;" />
+                </div>
+                <div class="row">
+                    <label class="col-xs-3">Id Denuncia</label>
+                    <input type="number" id="idDenuncia" class="form-control" style="max-width:280px;height:25px" />
+                </div>
+                <div class="row">
+                    <label class="col-xs-3">Contestado</label>
+                    <input type="checkbox" checked="@Model.contestado" id="checkboxContestado" style="margin-left:0px;" />
+                </div>*@
+
+            </div>
+        </div>
+    </form>
+</div>
+<br />
+
+<!-- Modal Delete-->
+<div class="modal fade" id="deleteModalEvento" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">×</button>
+            </div>
+            <form>
+                @Html.AntiForgeryToken()
+                <div id="deletePopupContent" class="modal-body center-block">
+                    <h5 class="text-center">Está seguro que desea eliminar al Evento : </h5>
+                    <h5 class="text-center" id="idDeleteEventHidden"></h5>
+                </div>
+            </form>
+            <div id="deleteFooterContent" class="modal-footer">
+                <button type="button" class="btn btn-danger" id="btnDelete" onclick="eliminarEvento()" data-dismiss="modal">Aceptar</button>
+                <button type="button" class="btn btn-toolbar" data-dismiss="modal">Cancelar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="editEventModal" role="dialog" data-collapsed="true">
+    <div class="modal-dialog">
+
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header"
+                 style="background-color:#337ab7; color:white;">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+
+                @*<button type="button" class="close" data-dismiss="modal">×</button>*@
+
+                <h4 class="modal-title" id="myModalLabel" style="margin-left:50px;">Editar Evento</h4>
+
+            </div>
+
+            <div class="modal-body">
+
+                <div id="divEventoAEditar"></div>
+
+            </div>
+
+            <div class="modal-footer">
+
+                <button type="button" class="btn btn-primary" onclick="guardarEventoEditado()" id="btnGuardarEventoEditado">Guardar</button>
+                <button type="button" class="btn btn-toolbar" data-dismiss="modal">Cancelar</button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+
+<div id="divListAgenda" @*class="list-group-item"*@ style="margin-left:-80px;margin-right:-100px;display:none;height:400px;">
+
+    <table cellpadding="0" cellspacing="0">
+        <tr>
+            @for (int i = 1; i <= Model.PageCount; i++)
+            {
+                <td>
+                    @if (i != Model.CurrentPageIndex)
+                    {
+                        <a href="javascript:PagerClick(@i);">@i</a>
+                    }
+                    else
+                    {
+                        <span>@i</span>
+                    }
+                </td>
+            }
+        </tr>
+    </table>
+    <input type="hidden" id="hfCurrentPageIndex" name="currentPageIndex" />
+
+</div>
+
+@*</div>*@
+@section scripts{
+    <script>
+        $(window).on('load', GetListAgendaTodayExternos());
+
+        $('#checkboxSoloFechas').on("change", habilitarFiltros());
+
+        function habilitarFiltros(elem) {
+            if (!$('#checkboxSoloFechas').is("checked")) {
+                $('#tipoEventos').removeAttr("disabled");
+                $('#estudios').removeAttr("disabled");
+                $('#provincias').removeAttr("disabled");
+                $('#reqInformes').removeAttr("disabled");
+                $('#organismos').removeAttr("disabled");
+                $('#solucionados').removeAttr("disabled");
+                $('#dniDenunciante').removeAttr("disabled");
+                $('#checkboxContestado').removeAttr("disabled");
+            }
+            else
+                if ($('#checkboxSoloFechas').is("checked"))
+            {
+                $('#tipoEventos').prop("disabled",true);
+                $('#estudios').prop("disabled",true);
+                $('#provincias').prop("disabled", true);
+                $('#reqInformes').prop("disabled", true);
+                $('#organismos').prop("disabled", true);
+                $('#solucionados').prop("disabled", true);
+                $('#dniDenunciante').prop("disabled", true);
+                $('#checkboxContestado').attr("disabled", "disabled");
+            }
+        }
+
+        function GetListAgendaTodayExternos() {
+            $('#divListAgenda').css('display', 'block');
+            var token = '@Html.AntiForgeryToken()';
+              var agendaTToken = $(token).val();
+            $.ajax({
+                url: '@Url.Action("GetListAgendaTodayExternos","Agenda")',
+                        type: "Post",
+                        data: {
+                            fechaDesde: $('#fechaDesde').val() + ' ' + '00:00:00',
+                            fechaHasta: $('#fechaHasta').val() + ' ' + '00:00:00',
+                            __RequestVerificationToken: agendaTToken
+                            //fechaHasta: $('#fechaHasta').val() + ' ' + '23:59:59'
+
+                        },
+                        success(response) {
+                            $('#divListAgenda').html(response);
+                        },
+                        error(response) {
+                            toastr.error(response.responseText);
+                        }
+            });
+
+        }
+
+        function BuscarListAgendaExternos() {
+            $('#divListAgenda').css('display', 'block');
+
+            var fechaInicial;
+            var fechaFinal;
+            fechaInicial = $('#fechaDesde').val() + ' ' + '00:00:00';
+            fechaFinal = $('#fechaHasta').val() + ' ' + '00:00:00';
+
+            //if ($('#filtroPorFechaVencimiento').prop('checked')) {
+            //    fechaInicial = $('#fechaDesde').val() + ' ' + '00:00:00';
+            //    fechaFinal = $('#fechaHasta').val() + ' ' + '00:00:00';
+                
+            //} else {
+            //    fechaInicial = $('#fechaDesde').val();
+            //    fechaFinal = $('#fechaHasta').val();
+            //}
+              var token = '@Html.AntiForgeryToken()';
+              var agendaToken = $(token).val();
+            $.ajax({
+                url: '@Url.Action("BuscarListAgendaExternos","Agenda")',
+                        type: "Post",
+                        data: {
+                            fechaDesde: fechaInicial,/*$('#fechaDesde').val() + ' ' + '00:00:00',*/
+                            fechaHasta: fechaFinal,/*$('#fechaHasta').val() + ' ' + '23:59:59',*/
+                            soloFechas: $('#checkboxSoloFechas').prop('checked'),
+                            tipoEventoSeleccionado: $('#tipoEventos option:selected').val(),
+                            estudioSeleccionado: $('#estudios option:selected').val(),
+                            provinciaSeleccionada: $('#provincias option:selected').val(),
+                            reqInformeSeleccionado: $('#reqInformes option:selected').val(),
+                            organismoSeleccionado: $('#organismos option:selected').val(),
+                            solucionadoSeleccionado: $('#solucionados option:selected').val(),
+                            responsableSeleccionado: $('#responsable option:selected').val(),
+                            dniDenunciante: $('#dniDenunciante').val(),
+                            idDenuncia: $('#idDenuncia').val(),
+                            //contestado: contestadoValue,
+                            contestado: $('#checkboxContestado').prop('checked'),
+                            currentPageIndex: $('#hfCurrentPageIndex').val(),
+                            filtrarPorFechaVencimiento: $('#filtroPorFechaVencimiento').prop('checked'),
+                            filtrarPorFechaDenuncia: $('#filtroPorFechaDenuncia').prop('checked'),
+                            filtrarPorFechaNotificacion: $('#filtroPorFechaNotificacion').prop('checked'),
+                            filtrarPorFechaNotificacionGcia: $('#filtroPorFechaNotificacionGcia').prop('checked'),
+                            __RequestVerificationToken: agendaToken
+                        },
+                success(response) {
+                    //$('#divListAgenda').empty();
+                    $('#divListAgenda').html(response);
+                    $('#divListAgenda').css('border','inherit');
+                        },
+                        error(response) {
+                            toastr.error(response.responseText);
+                        }
+            });
+
+        }
+
+        function ExportListAgenda() {
+            $('#btnExportarAExcelAgenda').attr('disabled','disabled');
+            $('#labelGenerandoExcelAgenda').css('display', 'block');
+            var fechaInicial;
+            var fechaFinal;
+            if ($('#filtroPorFechaVencimiento').prop('checked')) {
+                fechaInicial = $('#fechaDesde').val() + ' ' + '00:00:00';
+                //fechaFinal = $('#fechaHasta').val() + ' ' + '00:00:00';
+                fechaFinal = $('#fechaHasta').val() + ' ' + '23:59:59';
+            } else {
+                fechaInicial = $('#fechaDesde').val();
+                fechaFinal = $('#fechaHasta').val();
+            }
+              var token = '@Html.AntiForgeryToken()';
+              var agendaExcelToken = $(token).val();
+            $.ajax({
+                url: '@Url.Action("ExportarListAgenda","Agenda")',
+                        type: "POST",
+                data: {
+                            fechaDesde: fechaInicial,
+                            fechaHasta: fechaFinal,
+                            tipoEventoSeleccionado: $('#tipoEventos option:selected').val(),
+                            estudioSeleccionado: $('#estudios option:selected').val(),
+                            provinciaSeleccionada: $('#provincias option:selected').val(),
+                            reqInformeSeleccionado: $('#reqInformes option:selected').val(),
+                            organismoSeleccionado: $('#organismos option:selected').val(),
+                            solucionadoSeleccionado: $('#solucionados option:selected').val(),
+                            responsableSeleccionado: $('#responsable option:selected').val(),
+                            dniDenunciante: $('#dniDenunciante').val(),
+                            idDenuncia: $('#idDenuncia').val(),
+                            contestado: $('#checkboxContestado').prop('checked'),
+                            //currentPageIndex: $('#hfCurrentPageIndex').val(),
+                            filtrarPorFechaVencimiento: $('#filtroPorFechaVencimiento').prop('checked'),//filtroPorFechaNotificacion
+                            filtrarPorFechaNotificacion: $('#filtroPorFechaNotificacion').prop('checked'),
+                            filtrarPorFechaNotificacionGcia: $('#filtroPorFechaNotificacionGcia').prop('checked'),
+                            //filtrarPorFechaDenuncia: $('#filtroPorFechaDenuncia').prop('checked')
+                            __RequestVerificationToken: agendaExcelToken
+                        },
+                //success(response) {
+                //    window.open('data:application/vnd.ms-excel,' + encodeURIComponent(response));
+                //}
+                success: function (data) {
+                    if (data != null && (data.errorMessage == null || data.errorMessage === "")) {
+                        $('#labelGenerandoExcelAgenda').css('display', 'none');
+                        if (data.fileName != "" && data.fileName != "isEmpty") {
+                            
+                            window.location.href = "AgendaExternos/DownloadSpreadsheet/?file=" + data.fileName;
+                        } else
+                            if (data.fileName == "isEmpty") {
+                                toastr.options.positionClass = "toast-bottom-left";
+                                toastr.warning("No existen datos a Exportar");
+                        }
+                    } else {
+                        toastr.error("Error : ", data.errorMessage);
+                        $('#labelGenerandoExcelAgenda').css('display', 'none');
+                    }
+                    $('#btnExportarAExcelAgenda').removeAttr('disabled');
+                }
+                ,
+                error(response) {
+                    toastr.error(response.responseText);
+                    $('#btnExportarAExcelAgenda').removeAttr('disabled');
+                }
+            });
+
+        }
+
+        function excelReport() {
+            var tab_text = "<table border='2px'><tr bgcolor='#87AFC6'>";
+            var textRange; var j = 0;
+            tab = document.getElementById('listaAgenda'); // id of table
+
+            for (j = 0; j < tab.rows.length; j++) {
+                tab_text = tab_text + tab.rows[j].innerHTML + "</tr>";
+                //tab_text=tab_text+"</tr>";
+            }
+
+            tab_text = tab_text + "</table>";
+
+
+            var ua = window.navigator.userAgent;
+            var msie = ua.indexOf("MSIE ");
+
+            if (msie > 0 || !!navigator.userAgent.match(/Trident.*rv\:11\./))      // If Internet Explorer
+            {
+                txtArea1.document.open("txt/html", "replace");
+                txtArea1.document.write(tab_text);
+                txtArea1.document.close();
+                txtArea1.focus();
+                sa = txtArea1.document.execCommand("SaveAs", true, "Global View Task.xls");
+            }
+            else //other browser not tested on IE 11
+                sa = window.open('data:application/vnd.ms-excel,' + encodeURIComponent(tab_text));
+            return (sa);
+        }
+        function clonarFecha(elem) {
+            $('#fechaHasta').val($(elem).val());
+        }
+                //Los métodos de los Eventos están duplicados también en la vista DenunciaEdición
+        function getEventobyId(EventID) {
+                var token = '@Html.AntiForgeryToken()';
+                var evenAEditarToken = $(token).val();
+                $.ajax({
+                    url: '@Url.Action("EditarEvento", "Home")' /*+ EventID */,
+                    type: "POST",
+                    data: {
+                        id: EventID,
+                        __RequestVerificationToken: evenAEditarToken},
+
+                    success: function (result) {
+                        $('#divEventoAEditar').html(result);
+                    },
+                    error: function (result) {
+                        if (result.status == 0) {
+                            toastr.error("Ha culminado la Sesión")
+                        } else
+                        {
+                            toastr.error(result.responseText)
+                        }
+
+                    }
+
+                });
+
+                return false;
+
+                }
+
+            var eventoARemover;
+            function ConfirmarEliminarEvento(id, element) {
+                $('#idDeleteEventHidden').html(id);
+                eventoARemover = $(element).parent().parent();
+
+            }
+
+            function eliminarEvento() {
+
+
+                try {
+                                    var idEvent = parseInt($('#idDeleteEventHidden').text());
+                                    var token = '@Html.AntiForgeryToken()';
+                                    var eevtoken = $(token).val();
+                                    $.ajax({
+                                        url: '@Url.Action("EliminarEvento","Denuncias")',
+                                        type: "Post",
+                                        data: {
+                                            id: idEvent,
+                                            __RequestVerificationToken: eevtoken
+
+                                        },
+                                        success: function (result) {
+
+                                            if (result == "Registro eliminado con éxito") {
+                                                eventoARemover.remove();
+                                                eventoARemover = undefined;
+                                            }
+                                            toastr.info(result);
+                                        },
+                                        error: function (result) {
+                                            toastr.error(result.responseText);
+                                        }
+                                    });
+                                } catch (error) {
+                                    toastr.error(error)
+                                }
+            }
+
+                function elEventoEditadoEsVálido() {
+                    $('#btnGuardarEventoEditado').removeAttr("data-dismiss");
+                    var control = true;
+                    var creacion = $('#fechaCreacionEE').val();
+                    var fechaCreacion = new Date(creacion);
+                    var today = new Date();
+                    var vencimiento = $('#fechaVencimientoEE').val();
+                    var fechaVencimiento = new Date(vencimiento);
+                    if ($('#fechaVencimientoEE').val().length == 0) {
+
+                        toastr.warning('Ingrese la Fecha De Vencimiento');
+                        control = false;
+                    }
+                    if ($('#horaVencimientoEE').val().length == 0) {
+                        //console.log($('#horaVencimientoEE').val().length == 0);
+                        toastr.warning('Ingrese la Hora De Vencimiento');
+                        control = false;
+                    }
+                    //comentado el 17/10. Estas 2 condiciones están vigentes en la versión del sprint 2
+                    //
+                    //if (fechaVencimiento < fechaCreacion) {
+                    //    toastr.warning("La fecha de vencimiento debe ser posterior a la fecha de Creación");
+                    //    control = false;
+                    //}
+                    //if ((today > fechaVencimiento)) {
+                    //    toastr.warning("La fecha de vencimiento no puede ser anterior a la fecha actual");
+                    //    control = false;
+
+                    //}
+
+                    if (control) {
+                        console.log(control);
+                        $('#btnGuardarEventoEditado').attr("data-dismiss", "modal");
+                    }
+
+                    return control;
+                }
+
+
+            function guardarEventoEditado() {
+                //console.log($('input:checkbox[name=estaContestadoEE]:checked').val());
+                    var horaEE = $('#horaVencimientoEE').val();
+                    //alert(horaEE.length);
+                    var hora = (horaEE.length == 5) ? horaEE + ":00" : horaEE
+             if (elEventoEditadoEsVálido()) {
+                    var token = '@Html.AntiForgeryToken()';
+                    var eveneditoken = $(token).val();
+                $.ajax({
+                    url: '@Url.Action("guardarEventoEditado","Denuncias")',
+                    type: "Post",
+                    data: {
+                        EventoId: $('#idEventoAEditar').val(),
+                        DenunciaId: $('#nroDenuncia').text(),
+                        Fecha: $('#fechaVencimientoEE').val() + ' ' + hora,/*$('#horaVencimientoEE').val(),*/
+                        tipoEventoId: $('#comboTipoEventoEE option:selected').val(),
+
+                        CONTESTADO: ($('#ContestadoEE').prop('checked')==true)?1:0,
+                        SOLUCIONADO: $('#comboSolucionadoEE option:selected').val(),
+                        REQUERIMIENTOINFORME: $('#comboReqInformeEE option:selected').val(),
+                        Observacion: $('#observacionEE').val(),
+                        ResIntId: $('#responsableInternoEventoEdicion option:selected').val(),
+                        __RequestVerificationToken: eveneditoken
+                    },
+                    success(response) {
+                        //$('#divListAgenda').html(response);
+                        toastr.success('Evento guardado correctamente');
+                        BuscarListAgendaExternos();
+                        $('.modal-backdrop').hide();
+                        $('#btnGuardarEventoEditado').removeAttr("data-dismiss");
+                        $('body').css('overflow-y', 'visible');
+                    },
+                    error(response) {
+                        if (response.status == 0) {
+                            toastr.error("Ha culminado la Sesión");
+                        } else {
+                            toastr.error(response.responseText + ' ' + response.statusText)
+                        }
+
+                    }
+                    });
+                }
+            }
+
+
+        function limpiarFiltros() {
+            $('#tipoEventos')[0].selectedIndex = 0;
+            //$('#estudios')[0].selectedIndex = 0;
+            //$('#provincias')[0].selectedIndex = 0;
+            $('#reqInformes')[0].selectedIndex = 0;
+            //$('#organismos')[0].selectedIndex = 0;
+            //$('#solucionados')[0].selectedIndex = 0;
+            //$('#dniDenunciante').val('');
+            //$('#idDenuncia').val('');
+            //$('#responsable')[0].selectedIndex = 0;
+            //$('#checkboxContestado').prop('checked', false);
+            $('#divListAgenda').empty();
+        }
+
+
+        function descargarExcel() {
+            //Creamos un Elemento Temporal en forma de enlace
+            var tmpElemento = document.createElement('a');
+            // obtenemos la información desde el div que lo contiene en el html
+            // Obtenemos la información de la tabla
+            var data_type = 'data:application/vnd.ms-excel';
+            var tabla_div = document.getElementById('tblReporte');
+            var tabla_html = tabla_div.outerHTML.replace(/ /g, '%20');
+            tmpElemento.href = data_type + ', ' + tabla_html;
+            //Asignamos el nombre a nuestro EXCEL
+            tmpElemento.download = 'Nombre_De_Mi_Excel.xlsx';
+            // Simulamos el click al elemento creado para descargarlo
+            tmpElemento.click();
+        }
+
+                function PagerClick(index) {
+                    document.getElementById("hfCurrentPageIndex").value = index;
+
+                    BuscarListAgendaExternos();
+                    //document.forms[0].submit();
+
+                    //$.ajax(
+                    //    {
+                    //        type: "POST",
+                    //        url: "/Home/Index",
+                    //        data: {
+                    //            currentPageIndex: index
+                    //        }
+
+                    //    }).done(function (result) {
+                    //        if (result != null) {
+                    //            $("#divListAgenda").html(result);
+
+                    //        }
+                    //    });
+                }
+
+                function BuscarPaginaUno() {
+                    $.ajax(
+                        {
+                            type: "POST",
+                            url: "/Home/Buscar",
+
+                        }).done(function (result) {
+                            if (result != null) {
+                                $("#divListAgenda").html(result);
+
+                            }
+                        });
+                }
+
+        $('#provincias').change(function () {
+
+             $.ajax({
+                    url: '@Url.Action("GetOrganismosPorProvincia", "Agenda")',
+                    type: "Post",
+                    data: {
+                        idProvincia: $('#provincias option:selected').val()
+                    },
+                    success: function (response) {
+                        $('#organismos').empty();
+                        $('#organismos').append('<option value=0/>');
+                        $(response).each(function () {
+                            $('#organismos').append(
+                                $('<option/>', { value: this.Id }).html(this.Nombre)
+                            );
+                        });
+
+                    },
+                    error: function (response) {
+                        toastr.error(response);
+                    }
+                });
+        });
+
+        function Volver() {
+            history.back();
+        }
+        //function agregarHoraInicio(elem) {
+        //    $(elem).val($(elem).val + ' ' +'00:00:00')
+        //}
+
+        //function agregarHoraFin(elem) {
+        //    $(elem).val($(elem).val + ' ' + '23:59:59')
+        //}
+    </script>
+
+}

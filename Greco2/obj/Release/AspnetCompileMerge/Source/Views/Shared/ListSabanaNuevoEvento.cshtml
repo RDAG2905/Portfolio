@@ -1,0 +1,205 @@
+﻿@*@using Greco2.Models.Denuncia*@
+@*@model IEnumerable<ListaSabanaSP>*@
+@using Greco2.Models.Paginacion
+@model ResultadoDenuncias
+
+<style>
+    th, a {
+        font-size: 13px;
+    }
+
+    .pagination {
+        height: 20px;
+        font-size: 14px;
+    }
+
+    td {
+        /*background-image: linear-gradient(white 70%,#f2f2f2);*/
+        font-size: 11px;
+    }
+
+    thead {
+        /*background-image: linear-gradient(white 30%,#e6e6e6);*/
+        background-color: #f5f5f5;
+    }
+</style>
+
+
+@*@if (Model.Any())*@
+@if (Model.listaDenuncias.Any())
+{
+    <div>
+        <div style="margin-bottom:-20px;">
+            @*max-height: 300px;overflow: auto;*@
+
+            <table class="table table-bordered" id="tablalistaSabana" style="max-width:1300px;background-color:white;border:1px solid lightgray;border-radius:4px;padding:10px 10px 10px 10px;">
+
+                <thead>
+
+                    <tr class="text-primary">
+                        <th>DenunciaId</th>
+                        <th></th>
+                        <th nowrap>Nro Expediente</th>
+                        <th>Fecha</th>
+                        <th>Organismo</th>
+                        <th>Servicio</th>
+                        <th>Estudio</th>
+                        <th>Denunciante</th>
+                        <th>Estado Actual</th>
+                        <th>Tipo Proceso</th>
+
+                        
+                    </tr>
+                </thead>
+                <tbody style="text-align:left;">
+
+
+                    @foreach (var item in @Model.listaDenuncias)
+                    {
+                    <tr>
+
+
+                        <td class="text-capitalize" style="width:60px;text-align:center;">
+                            @item.DenunciaId
+                        </td>
+                        @{
+                            var responsableId = item.RESP_INT_ID;
+                            //var fechaNotificacion = Convert.ToString(string.Format("{0:dd/MM/yyyy}", item.FSELLOCIA));
+                            /*var fechaNotificacion = item.FSELLOCIA.Value.ToShortDateString();*//* ToString("yyyy-MM-dd");*/
+                            <td width="100px">
+                                <input type="button" class="btn btn-sm btn-link" value="Agregar Evento" onclick="AddDenunciaIdToEvent(@item.DenunciaId,@responsableId)" data-target="#nuevoEventoModal" data-toggle="modal" />
+                            </td>
+                        }
+                        <td width="100px">
+                            @Html.DisplayFor(modelItem => item.Expediente)
+                        </td>
+                        <td width="100px">
+                            @Convert.ToString(string.Format("{0:dd/MM/yyyy}", item.Fecha_Creacion))
+
+                        </td>
+                        <td width="150px">
+                            @Html.DisplayFor(modelItem => item.Organismo)
+                        </td>
+                        <td width="100px">
+                            @Html.DisplayFor(modelItem => item.Servicio)
+                        </td>
+                        <td max-width="150px">
+                            @Html.DisplayFor(modelItem => item.Estudio)
+                        </td>
+                        @{
+                            var denunciante = item.Apellido + ',' + item.Nombre;
+                            <td width="190px" class="text-capitalize">
+                                @denunciante
+                            </td>
+                        }
+
+                        <td width="110px">
+                            @Html.DisplayFor(modelItem => item.Estado_Actual)
+                        </td>
+                        <td width="100px">
+                            @Html.DisplayFor(modelItem => item.Tipo_Proceso)
+                        </td>
+
+
+
+
+
+
+
+                    </tr>
+
+                    }
+
+                </tbody>
+            </table>
+
+        </div>
+
+    </div>
+
+        int Inicial = 1;
+        var radio = 7;
+        var cantidadMaximaDePaginas = radio * 2 + 1;
+        int Final = (Model.TotalDePaginas > cantidadMaximaDePaginas) ? cantidadMaximaDePaginas : Model.TotalDePaginas;
+        if (Model.PaginaActual > radio + 1)
+        {
+            Inicial = Model.PaginaActual - radio;
+            if (Model.TotalDePaginas > Model.PaginaActual + radio)
+            {
+                Final = Model.PaginaActual + radio;
+            }
+            else
+            {
+                Final = Model.TotalDePaginas;
+            }
+        }
+
+
+    <div class="text-center" style="margin-top:5px;overflow:auto;background-color:#f9f9f9;"> @*margin-bottom:-10px;*@
+        <ul class="pagination">
+            @*@for (int i = 1; i <= Model.TotalDePaginas; i++)*@
+                @for (int i = Inicial; i <= Final; i++)
+
+                {
+
+                    if (i != Model.PaginaActual)
+                    {
+                        <li>
+                            <a href="javascript:PagerClickDenuncias(@i);">@i</a>
+                        </li>
+                    }
+                    else
+                    {
+                        <li class="active">
+                            <span class="active">@i</span>
+                        </li>
+                    }
+
+                }
+        </ul>
+    </div>
+    <input type="hidden" id="hfCurrentPageIndex" name="currentPageIndex" />
+
+    <div class="text-center text-capitalize" style="height:30px;">
+        Total : @Model.TotalDeRegistros.ToString()
+    </div>
+
+}
+else
+{
+
+    <div>
+        <h5 class="text-primary text-center">No se encontraron coincidencias</h5>
+    </div>
+
+}
+
+
+@*----------- Inicio Modal Delete----------*@
+
+<div class="modal fade" id="deleteDenunciasModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header" style="background-color:#f9f9f9;height:50px;">
+                <button type="button" class="close" data-dismiss="modal">×</button>
+            </div>
+            <div class="text-center" style="display:none;" id="divLoadingDenunciasED">
+                <img src="@Url.Content("~/Images/4.gif")" />
+            </div>
+            <div id="deleteDenunciaModalContent" class="modal-body text-info" style="padding-left:30px;padding-right:30px;text-align:center;">
+
+
+            </div>
+            <form>
+                @Html.AntiForgeryToken()
+                <h4 hidden id="DenunciaDeleteElement"></h4>
+            </form>
+            <div id="deleteFooterContent" class="modal-footer" style="height:60px">
+                @*<button type="button" class="btn btn-danger" id="btnEliminarDenuncia" onclick="eliminarDenuncia()">Eliminar</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal" id="btnCancelDelete">Cancelar</button>*@
+                <input type="button" class="btn btn-danger" id="btnEliminarDenuncia" onclick="eliminarDenuncia()" value="Eliminar" />
+                <input type="button" class="btn btn-default" data-dismiss="modal" id="btnCancelDelete" value="Cancelar" />
+            </div>
+        </div>
+    </div>
+</div>

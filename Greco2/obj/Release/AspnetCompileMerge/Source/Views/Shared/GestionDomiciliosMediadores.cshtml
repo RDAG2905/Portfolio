@@ -1,0 +1,596 @@
+﻿@using Greco2.Models.Mediador
+@model DomicilioMediadorModelView
+
+<style>
+    /*input[type=text] {
+    max-width:280px;
+    }*/
+
+    .form-control, select {
+        height: 30px;
+        /*max-width: 280px;*/
+        /*font-size: 12px;*/
+    }
+    .row {
+    margin-bottom:5px;
+    }
+
+    label, .form-control, option {
+        font-size: 12px;
+    }
+   
+
+</style>
+<div>
+    <div class="jumbotron">
+        <h4 class="text-primary">Gestión de Domicilios del Mediador</h4>
+    </div>
+   
+    <div class="row">
+        <span class="col-xs-3"></span>
+        <label class="col-xs-1" style="margin-right:5px;">Domicilio:</label>
+        <input type="text" class="col-xs-1 form-control" id="nombreDomicilio"  />
+        <input type="button" value="Nuevo" class="btn btn-primary btn-sm col-xs-1" id="NuevoDomicilioMediador" style="margin-left:10px;"
+               data-toggle="modal" data-target="#nuevoModalDomicilioMediador" onclick="cleanInputsDomicilios();" />
+    </div>
+    <div class="row">
+        <span class="col-xs-3"></span>
+        <label class="col-xs-1" style="margin-right:5px;">Mediador:</label>
+        @Html.DropDownListFor(m => m.NombreMediador, Model.Mediadores, "", new { @class = "col-xs-1 form-control", id = "comboMediadores",style="width:280px;" })
+        <input style="margin-left:10px;margin-right:5px;" type="button" value="Buscar" class="btn btn-primary btn-sm col-xs-1" id="BuscarDomicilioMediador" onclick="BuscarDomicilioMediador()" />
+        <input type="button" value="Limpiar" class="btn btn-primary btn-sm col-xs-1" id="btnLimpiar" onclick="LimpiarTodo()"
+               style="
+        margin-right:10px;" />
+    </div>
+    <br />
+    <br />
+    <div class="container-fluid"  id="elementos">
+
+    </div>
+
+</div>
+
+@*inicio Popup Nuevo*@
+<div class="modal fade" id="nuevoModalDomicilioMediador" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+
+                <button type="button" class="close" data-dismiss="modal" id="btnCerrarModalNuevoDomicilioMediador">×</button>
+                <h4 class="modal-title" id="myModalLabel">Nuevo Domicilio del Mediador</h4>
+            </div>
+            <div class="modal-body center-block">
+                <div id="nuevoDMBodyContent">
+                    <br />
+
+                    <form>
+                        @Html.AntiForgeryToken()
+
+                        <div class="row col-lg-offset-2">
+                            <label class="col-xs-1" style="margin-right:50px;">Domicilio</label>
+                            <input class="input-sm form-control col-xs-1" type="text" id="filtroNombre" />
+                        </div>
+                        <label type="text" class="text-danger" id="MensajeNombreInvalido" style="display:none;"></label>
+
+                        <div class="row col-lg-offset-2">
+
+                            <label class="col-xs-1" style="margin-right:50px;">Mediador</label>
+
+
+                            @Html.DropDownListFor(m => m.NombreMediador, Model.Mediadores, "", new { @class = "col-xs-1 form-control", id = "comboMediadoresModal", style = "width:280px;" })
+                            <br />
+                        </div>
+                    </form>
+                    <br />
+                    <div id="divExisteDomicilioMediador" style="color:white">
+
+                    </div>
+                </div>
+
+            </div>
+            <div class="modal-footer">
+                <div class="row" id="nuevoDMContent">
+                    <span style="margin-right:50px;" class="col-md-offset-3"></span>
+                    <input id="guardarNuevo" type="button" class="btn btn-sm btn-primary col-xs-3" value="Guardar" onclick=" existeDomicilioMediador()" />
+                    <input type="button" class="btn btn-sm btn-toolbar col-xs-3" value="Cancelar" data-dismiss='modal' />
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@*----------- Fin Popup Nuevo ----------*@
+
+
+@*inicio Popup Edit*@
+<div class="modal fade" id="editModalDomiciliosMediadores" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+
+                <button type="button" class="close" data-dismiss="modal" id="btnCloseEditDomicilios">×</button>
+                <h4 class="modal-title" id="myModalLabel">Editar Domicilio Mediador</h4>
+            </div>
+            <div class="modal-body center-block">
+
+                <div id="editBodyContent">
+
+                    <form>
+                        @Html.AntiForgeryToken()
+                        <input type="hidden" id="idElementEdit" />
+                        <br />
+                        <div class="row col-lg-offset-2">
+                            <label class="col-xs-1" style="margin-right:50px;">Nombre</label>
+                            <input class="input-sm form-control col-xs-1" type="text" id="NombreEdicion" />
+                        </div>
+
+                        <div class="row col-lg-offset-2">
+                            <label class="col-xs-1" style="margin-right:50px;">Mediador</label>
+                            @Html.DropDownListFor(m => m.NombreMediador, Model.Mediadores, "", new { @class = "col-xs-1 form-control", id = "comboEditMediadoresModal", style = "width:280px;" })
+
+                        </div>
+
+                        <br />
+                        <div class="row col-lg-offset-2">
+                            <label class="col-xs-1">Activo</label>
+                            <input style="margin-left:35px;" class="col-xs-1" type="checkbox" id="campoActivacion" name="checkActivo" />
+                        </div>
+                    </form>
+                </div>
+
+            </div>
+            <div class="modal-footer">
+                <div class="row" id="editFooterContent">
+                    <span style="margin-right:50px;" class="col-md-offset-3"></span>
+                    <input type="button" class="btn btn-sm btn-primary col-xs-3" value="Guardar" onclick="guardarDomicilioMediadorEditado()" id="guardarEdicion"/>
+                    <input type="button" class="btn btn-sm btn-toolbar col-xs-3" value="Cancelar" data-dismiss='modal' />
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@*----------- Inicio Popup Edit ----------*@
+
+<div class="modal fade" id="deleteModalDomiciliosMediadores" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" id="btnCerrarModalEliminarDomicilioMediador">×</button>
+            </div>
+            <div id="deletePopupContent" class="modal-body center-block">
+                <h4>Está a punto de eliminar al Domicilio con Id : </h4>
+                <form>
+                    @Html.AntiForgeryToken()
+                    <h4 id="idDeleteHidden"></h4>
+                </form>
+            </div>
+            <div id="divExisteRelacionesDomicilioMediador" style="color:white;">
+
+            </div>
+            <div id="deleteFooterContent" class="modal-footer">
+                <button type="button" class="btn btn-danger" id="btnDelete" onclick="validarRelaciones()">Eliminar</button>
+                <button type="button" class="btn btn-toolbar" data-dismiss="modal">Cancelar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+
+    $("#filtroNombre").keypress(function (e) {
+        if (e.which == 13) {
+            e.preventDefault();
+            existeDomicilioMediador();
+            //return false;
+        }
+    });
+
+    $("#NombreEdicion").keypress(function (e) {
+        if (e.which == 13) {
+            e.preventDefault();
+            guardarDomicilioMediadorEditado();
+            //return false;
+        }
+    });
+   
+    
+    $("#nombreDomicilio").keypress(function (e) {
+        if (e.which == 13) {
+            e.preventDefault();
+            BuscarDomicilioMediador();
+        }
+    });
+    
+     function cleanInputsDomicilios() {
+        $('#filtroNombre').val('');
+        $('#comboMediadoresModal')[0].selectedIndex = 0;
+         $('#guardarNuevo').removeAttr('data-dismiss', 'modal');
+         $('#divExisteDomicilioMediador').empty();
+     }
+    
+    function losFiltrosSonValidados() {
+        var mensaje = "Ingrese algún Fltro de Búsqueda";
+        if (($('#nombreDomicilio').val().trim().length == 0) && ($('#comboMediadores')[0].selectedIndex == 0)) {
+            //toastr.options.positionClass = 'Top-Center';
+            toastr.warning(mensaje);
+            return false;
+        }
+        else {
+            //$('#guardarLocalidad').attr('data-dismiss', 'modal');
+            return true;
+        }
+    }
+    function BuscarDomicilioMediador() {        
+        $('#elementos').empty();
+        //if (losFiltrosSonValidados()) {
+            mostrarLoading();
+            $('#BuscarDomicilioMediador').prop("disabled", true);
+            $.ajax({
+                url: '@Url.Action("BuscarDomicilioMediador", "Admin")',
+                type: "GET",
+                data: {
+                    nombre: $('#nombreDomicilio').val(),
+                    mediadorId: $('#comboMediadores').find('option:selected').val()
+                },
+                success: function (response) {
+                    ocultarLoading();
+                    $('#elementos').html(response);
+                    $('#BuscarDomicilioMediador').prop("disabled", false);
+                },
+                error: function (response) {
+                    ocultarLoading();
+                    toastr.error(response.responseText + ' ' + response.statusText);
+                    $('#BuscarDomicilioMediador').prop("disabled", false);
+
+                }
+            });
+            
+        //}
+        
+    }
+
+    function esValido() {
+        
+        var mensaje = "Todos los campos son obligatorios";
+        if (($('#filtroNombre').val().trim().length == 0) || ($('#comboMediadoresModal')[0].selectedIndex == 0)) {
+            //($('#comboMediadoresModal').find("option:selected").val() == null)
+            toastr.warning(mensaje);
+
+            return false;
+        } else {
+            $('#guardarNuevo').attr('data-dismiss', 'modal');
+            return true;
+        }
+    }
+
+     function esValidoDomicilioMediador() {
+        var mensaje = "Ingrese el domicilio";
+        if ($('#filtroNombre').val().trim().length == 0) {
+            toastr.warning(mensaje);
+            return false;
+        } else {
+            return true;
+        }
+    }
+
+    function existeDomicilioMediador() {
+        $('guardarNuevo').prop("disabled", true);
+        var token = '@Html.AntiForgeryToken()';
+        var ctoken = $(token).val();
+        if (esValidoDomicilioMediador()) {
+             $.ajax({
+                 url: '@Url.Action("ExisteDomicilioMediador","Admin")',
+                 type: "POST",
+                 data: {
+                     Nombre: $('#filtroNombre').val(),
+                     mediadorId: $('#comboMediadoresModal').find("option:selected").val(),
+                     __RequestVerificationToken: ctoken
+                 },
+                 success: function (response) {
+                     $("#divExisteDomicilioMediador").html(response);
+                     $('guardarNuevo').prop("disabled",false);
+
+                 },
+                 error: function (response) {
+                     toastr.error(response.responseText + ' ' + response.status);
+                     $('guardarNuevo').prop("disabled", false);
+                 }
+             });
+        }
+        $('guardarNuevo').prop("disabled", false);
+    };
+
+    function guardarNuevoDomicilioMediador() {
+        if (esValido()) {
+              var token = '@Html.AntiForgeryToken()';
+              var gndomMedtoken = $(token).val();
+            $.ajax({
+                url: '@Url.Action("CrearDomicilioMediador", "Admin")',
+                type: "POST",
+                data: {
+                    domicilio: $('#filtroNombre').val(),
+                    mediadorId: $('#comboMediadoresModal').find("option:selected").val(),
+                    __RequestVerificationToken: gndomMedtoken
+                },
+                success: function (response) {
+                    //toastr.success("Registro guardado correctamente");
+                    $('#elementos').html(response);
+                    $('#btnCerrarModalNuevoDomicilioMediador').click();
+                },
+                error: function (response) {
+                    toastr.error(response.responseText + ' ' + response.status);
+                }
+            });
+        }
+
+    }
+
+    function deshabilitarGuardarEdicion() {
+        $('#guardarEdicion').removeAttr('data-dismiss', 'modal');
+    }
+
+    function habilitarGuardarEdicion() {
+        $('#guardarEdicion').attr('data-dismiss', 'modal');
+    }
+    
+
+    function esValidoNombreEdicion() {   
+
+        if (($('#NombreEdicion').val().trim().length == 0) || ($('#comboEditMediadoresModal')[0].selectedIndex == 0)) { 
+            console.log($('#NombreEdicion').val().trim().length == 0);
+            console.log($('#comboEditMediadoresModal')[0].selectedIndex == 0);
+            toastr.warning('Nombre y Mediador son obligatorios');
+            deshabilitarGuardarEdicion();
+            return false;
+        } else {
+            //habilitarGuardarEdicion();
+            return true;
+        }
+    }
+        
+    @*function guardarDomicilioMediadorEditado() {
+        
+        if (esValidoNombreEdicion()) {
+             var token = '@Html.AntiForgeryToken()';
+             var gndomMedEditoken = $(token).val();
+            $.ajax({
+                url: '@Url.Action("guardarDomicilioMediadorEditado", "Admin")',
+                type: "POST",
+                data: {
+                    id: $('#idElementEdit').val(),
+                    nombre: $('#NombreEdicion').val(),
+                    mediadorSeleccionado: $('#comboEditMediadoresModal').find("option:selected").val(),
+                    campoActivacion: $('input:checkbox[name=checkActivo]:checked').val(),
+                    __RequestVerificationToken: gndomMedEditoken
+                },
+                success: function (response) {
+                    toastr.success("Registro guardado correctamente");
+                    $('#elementos').html(response);
+                },
+                error: function (response) {
+                    toastr.error(response.responseText + ' ' + response.status);
+                }
+            });
+        }
+       
+    }*@
+
+    function guardarDomicilioMediadorEditado() {
+        if (esValidoNombreEdicion()) {
+            var token = '@Html.AntiForgeryToken()';
+            var atoken = $(token).val();
+            $('#guardarEdicion').prop("disabled",true);
+            $.ajax({
+                url: '@Url.Action("guardarDomicilioMediadorEditado", "Admin")',
+                type: "POST",
+                data: {
+                    id: $('#idElementEdit').val(),
+                    nombre: $('#NombreEdicion').val(),
+                    mediadorSeleccionado: $('#comboEditMediadoresModal').find("option:selected").val(),
+                    campoActivacion: $('input:checkbox[name=checkActivo]:checked').val(),
+                    __RequestVerificationToken: atoken
+
+                },
+                success: function (response) {                 
+                    try {
+                        if (response == "ACTUALIZADO") {                           
+                            GetDomicilioActualizado(); 
+                            $('#btnCloseEditDomicilios').click();
+                            $('#guardarEdicion').prop("disabled", false);
+                        }
+                        else
+                            if (response == "El Mediador ya tiene asignado el Domicilio</br>Se cancela la Edición.") {
+                                toastr.warning(response);
+                            }
+                            else {
+                                toastr.error(response);   
+                                //toastr.error("Verifique si la Sesión sigue activa.</br>Verifique si los datos fueron actualizados.");            
+                            }
+                    } catch (error) {
+                        toastr.error(error);
+                    }
+                    
+                },
+                error: function (response) {
+                    toastr.error(response.responseText + ' ' + response.status);
+                }
+            });
+            $('#guardarEdicion').prop("disabled", false);
+        }
+        
+    }
+
+    function GetDomicilioActualizado() {
+        $.ajax({
+                url: '@Url.Action("GetDomicilioMediadorActualizado", "Admin")',
+                type: "GET",
+                data: {
+                    id: $('#idElementEdit').val()
+                   
+            }, success: function (result) {
+                    $('#elementos').html(result);
+
+            }, error: function (result) {
+                    toastr.error(result.responseText + ' ' + result.status);
+            }
+        });
+
+    }
+
+    //$("#NombreEdicion").keypress(function (e) {
+    //    if (e.which == 13) {
+    //        e.preventDefault();
+    //        return false;
+    //    }
+    //});
+
+
+    
+    function editarDomicilioMediador(Id) {
+        deshabilitarGuardarEdicion(); 
+        $.ajax({
+            url: '@Url.Action("EditarDomicilioMediador","Admin")',
+            type: "GET",
+            data: {
+                id: Id
+            },
+            success: function (response) {
+                try {
+                    $('#idElementEdit').val(response.Id);
+                    $('#NombreEdicion').val(response.Domicilio);
+                    var mediadorId = response.MediadorId;
+                    //$('#comboProvinciasEditModal')[0].selectedIndex = provinciaId;
+                    //$('#comboProvinciasEditModal')
+                    $('#campoActivacion').prop('checked', response.Activo);
+                    $("#comboEditMediadoresModal option").each(function (i, valor) {
+                        //console.log(i + ' : ' + $(valor).val())
+                        if ($(valor).val() == mediadorId) {
+                            $(valor).prop('selected', true);
+                            //console.log('son iguales');                          
+                        }
+                    });
+
+                    
+                
+                    
+                } catch (response) {
+                    toastr.error(response);
+                }
+            },
+            error: function (response) {
+                toastr.error(response.responseText + ' ' + response.status);
+            }
+        });
+    }
+
+
+    @*function eliminarDomicilioMediador() {
+            var idOculto = document.getElementById('idDeleteHidden');
+            var Id = parseInt(idOculto.innerText);
+            
+
+            $.ajax({
+                url: '@Url.Action("EliminarDomicilioMediador","Admin")',
+                type: "Post",
+                data: {
+                    id: Id
+                },
+                success: function (result) {
+                    try {
+                        if (result == "Registro eliminado con éxito") {
+                            filaARemover.remove();
+                            filaARemover = undefined;
+                        }
+                        toastr.info(result);
+                    } catch (error) {
+                        toastr.error(error);
+                    }
+                },
+                error: function (result) {
+                    toastr.error(result.responseText);
+                }
+            });
+
+    }*@
+
+    function EliminarDomicilioMediador() {
+        var idOculto = document.getElementById('idDeleteHidden');
+        var Id = parseInt(idOculto.innerText);
+       var token = '@Html.AntiForgeryToken()';
+         var eptoken = $(token).val();
+         $('#btnCerrarModalEliminarDomicilioMediador').click();  
+        $.ajax({
+            url: '@Url.Action("EliminarDomicilioMediador", "Admin")',
+            type: "Post",
+            data: {
+                id: Id,
+                __RequestVerificationToken: eptoken
+            },
+            success: function (result) {
+                try {
+                    
+                    if (result == "Registro eliminado con éxito") {
+                        filaARemover.remove();
+                        filaARemover = undefined;
+                        toastr.success(result);
+                    } else {
+                        toastr.error(result);
+                    }
+                } catch (error) {
+                    toastr.error(error);
+                }
+            },
+            error: function (result) {
+                toastr.error(result.responseText);
+            }
+        });
+
+    }
+
+   
+
+    function validarRelaciones() {
+        
+         var idOculto = document.getElementById('idDeleteHidden');
+         var Id = parseInt(idOculto.innerText);
+          var token = '@Html.AntiForgeryToken()';
+          var vrtoken = $(token).val();
+        
+        $('#btnDelete').prop("disabled",false);
+            $.ajax({
+                url: '@Url.Action("TieneRelacionesElDomicilio", "Admin")',
+                type: "Post",
+                data: {
+                    domicilioId: Id,
+                    __RequestVerificationToken: vrtoken  
+                },
+                success: function (result) {
+                    $('#divExisteRelacionesDomicilioMediador').html(result);
+                    $('#btnDelete').prop("disabled",true);
+                },
+                error: function (result) {
+                    toastr.error(result.responseText);
+                }
+            });
+        $('#btnDelete').prop("disabled", false);
+    }
+
+    function cargarIdModalDelete(id, element) {
+        $('#idDeleteHidden').html(id);
+        filaARemover = $(element).parent().parent();
+        $('#divExisteRelacionesDomicilioMediador').empty();
+        $('#btnDelete').prop("disabled", false);
+    }
+
+    function LimpiarTodo() {
+        $('#elementos').empty();
+        $('#nombreDomicilio').val('');
+        $('#comboMediadores')[0].selectedIndex = 0;
+    }
+
+
+</script>
+
+
+

@@ -1,0 +1,122 @@
+﻿@using Greco2.Models.Evento
+@model IEnumerable<EventoSP>
+
+<style>
+    table > tbody > td,th {
+    font-size:11px;
+    }
+
+</style>
+
+@if (Model.Any())
+{
+    <table class="table table-responsive list-group-item" id="listaEventos" style="width:100%;margin-left:-10px;margin-right:-20px;">
+        
+    <thead>
+        <tr style="background-color:#f9f9f9;">
+            <th></th>
+            <th class="thCentrado" nowrap>Fecha Vencimiento</th>
+            <th nowrap>Tipo Evento</th>
+            <th>Observaciones</th>
+            <th>Contestado</th>
+            <th>Solucionado</th>
+            <th>Req.Informe</th>
+            <th>Editar</th>
+            <th>Eliminar</th>
+        </tr>
+    </thead>
+    <tbody style="text-align:left;">
+
+
+        @foreach (var item in @Model)
+        {
+        <tr>
+            <td class="text-primary" style="width:80px;text-align:right !important;">
+                @Html.DisplayFor(i => @item.EventoId)
+
+            </td>
+
+            <td style="width:150px;text-align:left;">
+                @Convert.ToString(string.Format("{0:dd/MM/yyyy HH:mm}", item.Fecha))
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.tipoEvento)
+            </td>
+            <td>
+                @Html.TextAreaFor(modelItem => item.observacion, new { style = "background-color:lavender;max-width:280px;max-height:80px;border-style:none;" })
+            </td>
+
+            @{
+
+                @*var esContestado = (@item.contestado) ? "SI" : "NO";
+            if (@item.contestado)
+            {
+                <td>
+                    @esContestado
+                </td>
+            }
+            else
+            {
+                <td style="background-color:#ffff66;color:brown;">
+                    @esContestado
+                </td>
+
+            }*@
+
+                
+                if (@item.contestado == 1)
+                {
+                    <td>
+                        SI
+                    </td>
+                }
+                else
+                {
+                    <td style="background-color:#ffff66;color:brown;">
+                       NO
+                    </td>
+
+                }
+
+            }
+            @{
+                //var estaSolucionado = (@item.SOLUCIONADO.Equals(true)) ? "SI" : "NO";
+                //var estaSolucionado = (@item.SOLUCIONADO) ? "SI" : "NO";
+                <td style="width:200px;">
+                    @item.Solucionado
+                </td>
+            }
+
+
+            <td style="width:220px;">
+                @Html.DisplayFor(modelItem => item.RequerimientoInforme)
+            </td>
+            <td>
+
+                @*<a href="#" id="btn-editEvent" onclick="return getEventobyId(@item.EventoId)" data-toggle="modal" data-target="#editEventModal"><i class="glyphicon glyphicon-pencil"></i></a>*@
+
+
+            </td>
+            <td class="columnaIcono">
+
+                @*<a href="#" onclick="ConfirmarEliminarEvento(@item.EventoId,this)" data-toggle="modal" data-target="#deleteModalEvento">
+                <span class="glyphicon glyphicon-trash" id="DeleteElement"></span>
+            </a>*@
+            </td>
+            <td hidden id="eventoDenunciaId">
+                @Html.DisplayFor(modelItem => item.DenunciaId)
+            </td>
+
+        </tr>
+
+        }
+
+    </tbody>
+</table>
+
+
+
+
+
+}
+

@@ -1,0 +1,153 @@
+﻿@using Greco2.Models.Denunciante
+@model IEnumerable<DenuncianteDto>
+
+<style>
+
+    /*table {
+        margin-left: 80px;
+        margin-right: 80px;
+    }*/
+    /*th {
+        text-align: center;
+    }*/
+
+    td {
+        text-align: left;
+    }
+
+    td * {
+       font-size:11px;
+    }
+
+    .check {
+        width: 20px;
+    }
+
+    span {
+        text-align: center;
+    }
+
+    .infoResult {
+        border-radius: 4px;
+    }
+
+    .list-group-item {
+        border-radius: 4px;
+        margin-left: 8px;
+    }
+
+    .alert-info {
+    border-radius:4px;
+    }
+</style>
+
+@if (Model.Any())
+{
+    <table class="table table-bordered table-hover " style="width:100%;"> @*list-group-item*@
+        <thead style="background-color:#f5f5f5;">
+            <tr>
+                <th></th>
+                <th>Nombre</th>
+                <th>Apellido</th>
+                <th>Dni</th>
+                <th>Seleccionar</th>
+
+            </tr>
+        </thead>
+
+
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td style="text-align:right">
+                    @Html.DisplayFor(i => item.DenuncianteId)
+                </td>
+                <td style="max-width:300px;">
+                    @Html.DisplayFor(i => item.nombre)
+                </td>
+                <td style="max-width:300px;">
+                    @Html.DisplayFor(i => item.apellido)
+                </td>
+                <td style="width:100px;">
+                    @Html.DisplayFor(i => item.NroDocumento)
+                </td>
+                <td style="width:40px;">
+                    <button class="btn-primary" style="border-radius:4px;max-width:50px;" onclick="GetDenuncianteJson(@item.DenuncianteId)" data-dismiss="modal"><i class="glyphicon glyphicon-ok"></i></button>
+                </td>
+
+
+            </tr>
+        }
+
+    </table>
+
+}
+else
+{
+
+    <div id="infoResult" class="alert-info text-center col-xs-12">
+        <h4>No se encontraron coincidencias</h4>
+    </div>
+
+}
+
+<script>
+        @*function GetDenunciante(denuncianteId) {
+            $.ajax({
+                url: '@Url.Action("GetDenunciante", "Denuncias")' /*+ EventID */,
+                type: "POST",
+                data: { id: denuncianteId},
+
+                    success: function (result) {
+                        $('#denuncianteSeleccionado').html(result);
+                        $('#denuncianteId').val($('#idDenuncianteResult').val());
+                        limpiarFiltrosBusqueda();
+
+                    },
+                    error: function (result) {
+                        toastr.error(result.responseText)
+                    }
+            });
+        };*@
+
+    function GetDenuncianteJson(denuncianteId) {
+            $.ajax({
+                url: '@Url.Action("GetDenuncianteJson", "Denunciantes")' /*+ EventID */,
+                type: "POST",
+                data: { id: denuncianteId},
+
+                success: function (result) {
+                    var nombreDenunciante = result.apellido + ", " + result.nombre;                    
+                    var dniDenunciante = result.NroDocumento;
+                    var denuncianteId = result.DenuncianteId;
+
+                    $('#nombreDenunciante').text(nombreDenunciante);
+                    $('#dniDenunciante').text(dniDenunciante);
+                    $('#denuncianteId').val(denuncianteId);
+                   
+                        //$('#denuncianteSeleccionado').html(result);
+                        //$('#denuncianteId').val($('#idDenuncianteResult').val());
+                        limpiarFiltrosBusqueda();
+
+                    },
+                    error: function (result) {
+                        toastr.error(result.responseText)
+                    }
+            });
+        };
+
+
+        function seleccionarDenunciante(elem) {
+            var fila = $(elem).parent().parent().children();
+            $.each(fila, function (index, elem) {
+                console.log($(elem).index())
+                console.log($(elem).text())
+                index++;
+            });
+        }
+</script>
+
+
+
+
+

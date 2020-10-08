@@ -1,0 +1,73 @@
+﻿@using Greco2.Models.Log
+
+@model List<LogErrorDto>
+
+@*<style>
+        tr {
+        height:50px;
+        overflow:auto;
+        }
+    </style>*@
+
+@if (Model.Any())
+{
+    <div style="height:250px;overflow:auto;">
+        <table class="table table-bordered table-responsive" style="margin-right:-100px;background-color:white;">
+
+
+            <thead style="background-color:#f5f5f0;">
+                <tr>
+
+                    <th>Fecha</th>
+                    <th>URL Request</th>
+                    <th>Usuario</th>
+                    <th>Descripcion</th>
+                    <th>Id</th>
+
+
+                </tr>
+            </thead>
+            <tbody style="text-align:left;">
+
+
+                @foreach (var item in @Model)
+                {
+                    <tr style="height:50px;overflow:auto;">
+
+                        <td style="max-width:400px;color:#262626;" nowrap>
+                            @Html.DisplayFor(i => @item.Fecha)
+                        </td>
+                        <td class="text-primary" style="width:80px;text-align:center;">
+
+                            @Html.DisplayFor(i => @item.UrlRequest)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.UserId)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Error)
+                        </td>
+                        <td>
+                            <a onclick="getErrorById(@item.Id)">@item.Id</a>
+                            @*@Html.DisplayFor(modelItem => item.Id)*@
+                        </td>
+                    </tr>
+                }
+
+
+            </tbody>
+        </table>
+
+    </div>
+    <div class="text-center text-primary">Total: @Model.Count()</div>
+
+
+}
+else
+{
+
+    <div id="sinResultados">
+        <h5 class="text-primary text-center">No se encontraron coincidencias</h5>
+    </div>
+
+}

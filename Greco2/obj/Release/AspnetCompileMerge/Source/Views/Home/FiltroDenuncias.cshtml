@@ -1,0 +1,650 @@
+﻿
+@model Greco2.Models.Denuncia.FiltroDenunciasModelView
+
+
+<style>
+    #ParentContainer select, input {
+        max-height: 28px;
+        max-width: 220px;
+        font-size: 12px;
+    }
+    footer {
+        background-color: #F2F2F2;
+    }
+
+    body {
+    background-color:#F2F2F2;
+    } 
+
+</style>
+
+
+    
+
+    <div>
+        <div id="ParentContainer" class="panel panel-default" style="font-size:12px;margin-left:-80px;margin-right:-80px;">
+
+            <div class="panel-heading" style="padding-bottom:-30px;"><span class="text-primary" style="margin-left:50px;font-size:16px;"> Gestion de Denuncias</span> <button style="margin-left:800px;" class="btn btn-sm btn-primary" onclick="Volver()"><i style="margin-right:15px;" class="glyphicon glyphicon-arrow-left"></i>Volver</button></div>
+
+            <div>
+                <form class="container" style="padding-left:50px;">
+                    <br />
+
+                    @Html.AntiForgeryToken()
+
+                    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+                    <div class="row">
+
+                        <label class="col-xs-3">Fecha Desde:</label>
+                        <input class="form-control col-xs-3" type="date" name="fechaDesde" id="fechaDesde" value="@Model.fechaNotifDesde" />
+                        <label class="col-xs-3">Fecha Hasta:</label>
+                        <input class="form-control col-xs-3" type="date" id="fechaHasta" value="@Model.fechaNotifHasta" />
+
+                    </div>
+                    <div class="row">
+                        <label class="col-xs-3">Fecha Notif. Gcia desde:</label>
+                        <input class="form-control col-xs-3" type="date" id="fechaGciaDesde" value="@Model.fechaNotifGciaDesde" />
+
+                        <label class="col-xs-3">Fecha Notif. Gcia hasta:</label>
+                        <input class="form-control col-xs-3" type="date" id="fechaGciaHasta" value="@Model.fechaNotifGciaHasta" />
+
+                    </div>
+
+                    <div class="row">
+                        <label class="col-xs-3">N° de Expediente</label>
+                        <input class="form-control col-xs-3" value="@Model.nroExpediente" id="nroExpediente" style="margin-right:50px" />
+                        <label class="col-xs-3">Etapa Procesal</label>
+                        @Html.DropDownList("comboEtapaProcesal", Model.etapasProcesales, "", new { @class = "form-control" })
+
+                    </div>
+
+                    <div class="row">
+
+                        <label class="col-xs-3">Organismo</label>
+                        @Html.DropDownList("comboOrganismos", Model.Organismos, "", new { @class = "form-control col-xs-1", style = "margin-right:50px" })
+
+                        <label class="col-xs-3">Region</label>
+                        @Html.DropDownList("comboRegiones", Model.Regiones, "", new { @class = "form-control col-xs-1" })
+
+                    </div>
+                    <div class="row">
+                        <label class="col-xs-3">Provincia</label>
+                        @Html.DropDownList("comboProvincias", Model.Provincias, "", new { @class = "form-control col-xs-1", style = "margin-right:50px" })
+
+                        <label class="col-xs-3">Localidad</label>
+                        @Html.DropDownList("comboLocalidades", Model.Localidades, "", new { @class = "form-control col-xs-1" })
+                    </div>
+                    <div class="row">
+                        <label class="col-xs-3">Servicio</label>
+                        @Html.DropDownList("comboServicios", Model.Servicios, "", new { @class = "form-control col-xs-1", style = "margin-right:50px" })
+                        <label class="col-xs-3">id Denuncia</label>
+                        <input class="form-control col-xs-3" id="idDenuncia" type="number" value="@Model.idDenuncia" />
+                    </div>
+
+                    <div class="row">
+                        <label class="col-xs-3">Estudio Juridico</label>
+                        @Html.DropDownList("comboEstudios", Model.Estudios, "", new { @class = "form-control col-xs-1", style = "margin-right:50px" })
+                        <label class="col-xs-3">ver Denuncias Eliminadas</label>
+                        @Html.CheckBox("verDenunciasEliminadas", new { id = "verDenunciasEliminadas", style = "margin-left:0px;", disabled = "disabled" })
+                    </div>
+
+                    <div class="row">
+                        <label class="col-xs-3">Apellido:</label>
+                        <input class="form-control col-xs-3" id="apellidoDenunciante" value="@Model.apellidoDenunciante" style="margin-right:50px" />
+
+                        <label class="col-xs-3">Nombre:</label>
+                        <input class="form-control col-xs-3" id="nombreDenunciante" value="@Model.nombreDenunciante" />
+
+                    </div>
+
+                    <div class="row">
+                        <label class="col-xs-3">Tipo Documento:</label>
+                        <input class="form-control col-xs-3" id="tipoDocumento" style="margin-right:50px" disabled />
+
+                        <label class="col-xs-3">N° de Documento:</label>
+                        <input class="form-control col-xs-3" id="dniDenunciante" type="number" value="@Model.dniDenunciante" />
+                    </div>
+                    <div class="row">
+                        <label class="col-xs-3">Estado Conciliacion:</label>
+                        @Html.DropDownList("comboEstados", Model.estadosDeConciliacion, "", new { @class = "form-control col-xs-1", style = "margin-right:50px" })
+
+                        <label class="col-xs-3">Linea</label>
+                        <input class="form-control col-xs-3" id="nroLinea" type="number" value="@Model.nroLinea" />
+                    </div>
+                    <div class="row">
+                        <label class="col-xs-3">Tramite CRM:</label>
+                        <input class="form-control col-xs-3" id="tramiteCRM" value="@Model.tramiteCRM" style="margin-right:50px" />
+
+                        <label class="col-xs-3">Motivo de Reclamo</label>
+                        @Html.DropDownList("comboMotivosDeReclamo", Model.MotivosDeReclamo, "", new { @class = "form-control col-xs-1" })
+                    </div>
+                    <div class="row">
+                        <label class="col-xs-3">Responsable Interno:</label>
+                        <select class="form-control col-xs-3" id="responsableInterno" style="margin-right:50px">
+                            <option value="0"></option>
+                            <option value="1">Quiroga,Marcela Alejandra (u194486)</option>
+                            <option value="2">Aguirre Zanardi,Mario Matias (u551212)</option>
+                            <option value="3">Centurion,Sandra (u597852)</option>
+                            <option value="4">Delgado,Paola (u597856)</option>
+                        </select>
+
+                        <label class="col-xs-3">Id Denuncia Original:</label>
+                        <input class="form-control col-xs-3" id="idDenunciaOriginal" style="margin-right:50px" disabled />
+
+                    </div>
+                    <br />
+                </form>
+            </div>
+            <div class="text-center list-group-item" style="margin-top:-15px;background-color:#f2f2f2;">
+
+
+                <div class="btn-group">
+                    <button type="button" class="btn btn-primary btn-sm dropdown-toggle"
+                            data-toggle="dropdown">
+                        Nueva
+                        <span class="caret"></span>
+                    </button>
+
+                    <ul class="dropdown-menu" role="menu">
+                        <li>@Html.ActionLink("Denuncia", "GetNuevaDenuncia", "Denuncias", new { tipoProceso = "DENUNCIA" }, new { target = "_self" })</li>
+                        <li>@Html.ActionLink("Denuncia Preventiva", "GetNuevaDenuncia", "Denuncias", new { tipoProceso = "DENUNCIA PREVENTIVA" }, new { target = "_self" })</li>
+                        <li>@Html.ActionLink("Actuación Especial", "GetNuevaDenuncia", "Denuncias", new { tipoProceso = "ACTUACION ESPECIAL" }, new { target = "_self" })</li>
+                    </ul>
+                </div>
+                @*<input type="button" class="btn-primary btn-sm" value="Nueva" id="nuevaDenuncia" onclick="traerDenuncia()" />*@
+                <input type="button" class="btn btn-primary btn-sm" value="Buscar Denuncias"  onclick="listarDenuncias()" />
+                <input type="button" class="btn btn-primary btn-sm" value="Limpiar Busqueda" onclick="limpiarFiltros()" />
+                <input type="button" class="btn btn-primary btn-sm" value="Exportar a Excel" @*onclick="exportToSpreadSheet()"*@ onclick="ExportarAExcel()"/>
+                <input type="button" class="btn btn-primary btn-sm" value="Reporte por Correo" />
+                <input type="button" class="btn btn-primary btn-sm" value="Exportar a Xslx" @*onclick="exportToSpreadSheet()"*@ onclick="ExportarAXslx()" />
+
+                @Html.ActionLink("Exportar a Excel", "ExportListToExcel", "Denuncias")
+                @*<a onclick="downloadSpreadsheet()" class="btn btn-primary"><i class="glyphicon glyphicon-download-alt" id="downloadSpreadsheet"></i> Download Spreadsheet</a>*@
+                <a onclick="ExportarAExcel()" class="btn btn-primary"><i class="glyphicon glyphicon-download-alt" id="downloadSpreadsheet"></i> Download Spreadsheet</a>
+            </div>
+
+        </div>
+        
+        
+        
+
+
+
+        <div id="tableContainer" class="tableContainer" style="max-width:1200px; max-height:300px;overflow:auto;overflow-x:auto;margin-right:-150px;margin-left:-25px;background-color:#e6e6ff">
+
+        </div>
+        
+    </div>
+
+
+
+
+    @section Scripts {
+        
+
+        <script>
+            function exportToSpreadSheet() {
+                $.ajax({
+                    type: "Post",
+                    contentType: "application/json; charset=utf-8",
+                    url: '@Url.Action("Export", "FiltroDenuncias")',
+                    data: {
+
+                    },
+                    success(response) {
+                        //var blob = new Blob([response], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' }); /*type: 'application/ms-excel'*/
+                        //var downloadUrl = URL.createObjectURL(blob);
+                        //var a = document.createElement('a');
+                        //a.href = downloadUrl;
+                        //a.download = "Sample.xlsx";/*"ReportFile.xls";*/
+                        //document.body.appendChild(a);
+                        //a.click();
+                        //window.open('data:application/vnd.ms-excel,' + encodeURIComponent(response));
+                        window.open('application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,' + encodeURIComponent(response));
+                    },
+                    error(response) {
+                        toastr.error(response.responseText);
+                    }
+
+
+                });
+
+            }
+
+ function ExportarAXslx() {
+                $.ajax({
+                    type: "POST",
+                    contentType: "application/json; charset=utf-8",
+                    @*url: '@Url.Action("ExportListToExcel", "Home")',*@
+                    url: '@Url.Action("ExportListToExcel", "FiltroDenuncias")',
+                    data: {
+                        fechaNotifDesde: $('#fechaDesde').val(),
+                        fechaNotifHasta: $('#fechaHasta').val(),
+                        fechaNotifGciaDesde: $('#fechaGciaDesde').val(),
+                        fechaNOtifGciaHasta: $('#fechaGciaHasta').val(),
+                        nroExpediente: $('#nroExpediente').val(),
+                        etapaProcesalSeleccionada: $('#comboEtapaProcesal option:selected').val(),
+                        organismoSeleccionado: $('#comboOrganismos option:selected').val(),
+                        regionSeleccionada: $('#comboRegiones option:selected').val(),
+                        provinciaSeleccionada: $('#comboProvincias option:selected').val(),
+                        localidadSeleccionada: $('#comboLocalidades option:selected').val(),
+                        servicioSeleccionado: $('#comboServicios option:selected').val(),
+                        idDenuncia: $('#idDenuncia').val(),
+                        estudioSeleccionado: $('#comboEstudios option:selected').val(),
+                        verDenunciasEliminadas: $('#verDenunciasEliminadas').prop('checked'),
+                        apellidoDenunciante: $('#apellidoDenunciante').val(),
+                        nombreDenunciante: $('#nombreDenunciante').val(),
+                        //tipoDocumento: $('#tipoDocumento').val(),
+                        dniDenunciante: $('#dniDenunciante').val(),
+                        estadoSeleccionado: $('#comboEstados option:selected').val(),
+                        nroLinea: $('#nroLinea').val(),
+                        tramiteCRM: $('#tramiteCRM').val(),
+                        motivoDeReclamoSeleccionado: $('#comboMotivosDeReclamo option:selected').val(),
+                        responsableInterno: $('#responsableInterno').val(),
+                        idDenunciaOriginal: $('#idDenunciaOriginal').val(),
+                        exportarAExcel:true
+                    },
+                    success(response) {
+                        //var blob = new Blob([response], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' }); /*type: 'application/ms-excel'*/
+                        //var downloadUrl = URL.createObjectURL(blob);
+                        //var a = document.createElement('a');
+                        //a.href = downloadUrl;
+                        //a.download = "Sample.xlsx";/*"ReportFile.xls";*/
+                        //document.body.appendChild(a);
+                        //a.click();
+                        window.location.href = "@Url.RouteUrl(new 
+              { Controller = "FiltroDenuncias", Action = "Download"})/?file=" + 'Archivo';
+                         @*window.location.href = "@Url.RouteUrl(new 
+              { Controller = "FiltroDenuncias", Action = "Download"})/?file=" + data.fileName;*@
+   // }
+                        //window.location.href = "DownloadSpreadsheet/?file=" + response.fileName;
+                       // window.open('data:application/vnd.ms-excel,' + encodeURIComponent(response));
+                    },
+                    error(response) {
+                        toastr.error(response.responseText);
+                    }
+
+
+                });
+
+            }
+            
+
+            function ExportarAExcel() {
+                $.ajax({
+                    type: "POST",
+                    contentType: "application/json; charset=utf-8",
+                    @*url: '@Url.Action("ExportListToExcel", "Home")',*@
+                    url: '@Url.Action("ExportListToExcel", "FiltroDenuncias")',
+                    data: {
+                        fechaNotifDesde: $('#fechaDesde').val(),
+                        fechaNotifHasta: $('#fechaHasta').val(),
+                        fechaNotifGciaDesde: $('#fechaGciaDesde').val(),
+                        fechaNOtifGciaHasta: $('#fechaGciaHasta').val(),
+                        nroExpediente: $('#nroExpediente').val(),
+                        etapaProcesalSeleccionada: $('#comboEtapaProcesal option:selected').val(),
+                        organismoSeleccionado: $('#comboOrganismos option:selected').val(),
+                        regionSeleccionada: $('#comboRegiones option:selected').val(),
+                        provinciaSeleccionada: $('#comboProvincias option:selected').val(),
+                        localidadSeleccionada: $('#comboLocalidades option:selected').val(),
+                        servicioSeleccionado: $('#comboServicios option:selected').val(),
+                        idDenuncia: $('#idDenuncia').val(),
+                        estudioSeleccionado: $('#comboEstudios option:selected').val(),
+                        verDenunciasEliminadas: $('#verDenunciasEliminadas').prop('checked'),
+                        apellidoDenunciante: $('#apellidoDenunciante').val(),
+                        nombreDenunciante: $('#nombreDenunciante').val(),
+                        //tipoDocumento: $('#tipoDocumento').val(),
+                        dniDenunciante: $('#dniDenunciante').val(),
+                        estadoSeleccionado: $('#comboEstados option:selected').val(),
+                        nroLinea: $('#nroLinea').val(),
+                        tramiteCRM: $('#tramiteCRM').val(),
+                        motivoDeReclamoSeleccionado: $('#comboMotivosDeReclamo option:selected').val(),
+                        responsableInterno: $('#responsableInterno').val(),
+                        idDenunciaOriginal: $('#idDenunciaOriginal').val(),
+                        exportarAExcel:true
+                    },
+                    success(response) {
+                        //var blob = new Blob([response], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' }); /*type: 'application/ms-excel'*/
+                        //var downloadUrl = URL.createObjectURL(blob);
+                        //var a = document.createElement('a');
+                        //a.href = downloadUrl;
+                        //a.download = "Sample.xlsx";/*"ReportFile.xls";*/
+                        //document.body.appendChild(a);
+                        //a.click();
+                        window.location.href = "@Url.RouteUrl(new 
+              { Controller = "FiltroDenuncias", Action = "Download"})/?file=" + 'Archivo';
+                         @*window.location.href = "@Url.RouteUrl(new 
+              { Controller = "FiltroDenuncias", Action = "Download"})/?file=" + data.fileName;*@
+   // }
+                        //window.location.href = "DownloadSpreadsheet/?file=" + response.fileName;
+                       // window.open('data:application/vnd.ms-excel,' + encodeURIComponent(response));
+                    },
+                    error(response) {
+                        toastr.error(response.responseText);
+                    }
+
+
+                });
+
+            }
+
+            function verResponsable(elem) {
+                alert($(elem).find('option:selected').val());
+            }
+
+            $('#comboTipoDenuncia').change(function () {
+                var seleccion = $('#comboTipoDenuncia option:selected').text();
+                $.ajax({
+                    type: "POST",
+                    url: '@Url.Action("Denuncia","Home")',
+                    data: { tipoDenuncia: seleccion },
+                    success(response) {
+                        $(this)[0].selectedIndex = 0;
+                    },
+                    error(response) {
+                        $(this)[0].selectedIndex = 0;
+                        toastr.error(response.responseText);
+                    }
+                });
+                $(this)[0].selectedIndex = 0;
+            });
+
+           
+            function traerDenuncia() {
+               
+                var url = '@Url.Action("GetNuevaDenuncia", "Denuncias")';
+                window.open(url,'_blank');
+                
+            }
+
+        function mostrarDenuncia(e) {
+
+            var idDen = $(e).find("td:eq(0)").text();
+            console.log(idDen);
+
+            $.ajax({
+                type: "POST",
+                url: '@Url.Action("GetDenunciaById","Denuncias")',
+                data: { id: idDen }
+                ,success: function (response) {
+                    window.open(urlDenuncia,'_blank');
+
+                },
+                error: function (response) {
+                    alert(response);
+                }
+            });
+        };
+
+        
+
+
+
+        function showModal() {
+            $('#DeleteInfo').fadeIn(1000);
+            $('#DeleteInfo').fadeOut(2200);
+
+
+        }
+        
+        
+        //------------------------//
+
+        $('#fildivo').dblclick(function () {
+            $('#divFildivos').hide()
+        });
+
+        $('#fildivo').click(function () {
+            $('#divFildivos').show();
+            //$('#divSeparador').show();
+        });
+
+            function limpiarFiltros() {
+                $('#fechaDesde').val('');
+                $('#fechaHasta').val('');
+                $('#fechaGciaDesde').val('');
+                $('#fechaGciaHasta').val('');
+                $('#nroExpediente').val('');
+                $('#comboEtapaProcesal')[0].selectedIndex = 0;
+                $('#comboOrganismos')[0].selectedIndex = 0;
+                $('#comboRegiones')[0].selectedIndex = 0;
+                $('#comboProvincias')[0].selectedIndex = 0;
+                $('#comboLocalidades')[0].selectedIndex = 0;
+                $('#comboServicios')[0].selectedIndex = 0;
+                $('#comboEtapaProcesal')[0].selectedIndex = 0;
+                $('#idDenuncia').val('');   
+                $('#comboEstudios')[0].selectedIndex = 0;                  
+                $('#verDenunciasEliminadas').prop('checked', false);
+                $('#apellidoDenunciante').val('');
+                $('#nombreDenunciante').val('');
+                //$('#tipoDocumento').val('');
+                $('#dniDenunciante').val('');
+                $('#comboEstados')[0].selectedIndex = 0;
+                $('#nroLinea').val('');
+                $('#tramiteCRM').val('');
+                $('#comboMotivosDeReclamo')[0].selectedIndex = 0;                    
+                $('#responsableInterno').val('');
+                $('#idDenunciaOriginal').val('');
+                $('#tableContainer').empty();
+            }
+
+
+            function existeAlgúnFiltroVálido() {
+                var existe = false;
+                if ($('#fechaDesde').val().trim().length > 0) {                  
+                    existe = true;
+                }
+                if ($('#fechaHasta').val().trim().length > 0) {
+                    existe = true;
+                }
+                if ($('#fechaGciaDesde').val().trim().length > 0) {
+                    existe = true;
+                }
+                if ($('#fechaGciaHasta').val().trim().length > 0) {
+                    existe = true;
+                }
+                if ($('#nroExpediente').val().trim().length > 0) {
+                    existe = true;
+                }      
+                if ($('#comboEtapaProcesal')[0].selectedIndex != 0) {
+                    existe = true;
+                }
+                if ($('#comboOrganismos')[0].selectedIndex != 0) {
+                    existe = true;
+                }
+                if ($('#comboRegiones')[0].selectedIndex != 0) {
+                    existe = true;
+                }
+                if ($('#comboProvincias')[0].selectedIndex != 0) {
+                    existe = true;
+                }   
+                if ($('#comboLocalidades')[0].selectedIndex != 0) {
+                    existe = true;
+                }     
+                if ($('#comboServicios')[0].selectedIndex != 0) {
+                    existe = true;
+                }   
+                if ($('#idDenuncia').val().trim().length > 0) {
+                    existe = true;
+                }   
+                if ($('#comboEstudios')[0].selectedIndex != 0) {
+                    existe = true;
+                }        
+                if ($('#verDenunciasEliminadas').is(':checked')) {
+                    existe = true;
+                }                    
+                if ($('#apellidoDenunciante').val().trim().length > 0) {
+                    existe = true;
+                }
+                if ($('#nombreDenunciante').val().trim().length > 0) {
+                    existe = true;
+                }
+                if ($('#dniDenunciante').val().trim().length > 0) {
+                    existe = true;
+                }    
+                if ($('#comboEstados')[0].selectedIndex != 0) {
+                    existe = true;
+                }
+                if ($('#nroLinea').val().trim().length > 0) {
+                    existe = true;
+                }
+                if ($('#tramiteCRM').val().trim().length > 0) {
+                    existe = true;
+                }
+                if ($('#comboMotivosDeReclamo')[0].selectedIndex != 0) {
+                    existe = true;
+                }
+                if ($('#responsableInterno')[0].selectedIndex != 0) {
+                    existe = true;
+                }
+                if ($('#idDenunciaOriginal').val().trim().length > 0) {
+                    existe = true;
+                }
+                return existe;
+                
+            } 
+
+            function listarDenuncias() {
+                if (existeAlgúnFiltroVálido()) {
+                   
+                    $.ajax({
+                        @*url: '@Url.Action("GetDenuncias","Denuncias")', /*"/Home/GetDenuncias"*/*@
+                        url: '@Url.Action("GetDenuncias","FiltroDenuncias")', /*"/Home/GetDenuncias"*/
+                        type: "Post",
+                        data: {
+                            fechaNotifDesde: $('#fechaDesde').val(),
+                            fechaNotifHasta: $('#fechaHasta').val(),
+                            fechaNotifGciaDesde: $('#fechaGciaDesde').val(),
+                            fechaNOtifGciaHasta: $('#fechaGciaHasta').val(),
+                            nroExpediente: $('#nroExpediente').val(),
+                            etapaProcesalSeleccionada: $('#comboEtapaProcesal option:selected').val(),
+                            organismoSeleccionado: $('#comboOrganismos option:selected').val(),
+                            regionSeleccionada: $('#comboRegiones option:selected').val(),
+                            provinciaSeleccionada: $('#comboProvincias option:selected').val(),
+                            localidadSeleccionada: $('#comboLocalidades option:selected').val(),
+                            servicioSeleccionado: $('#comboServicios option:selected').val(),
+                            idDenuncia: $('#idDenuncia').val(),
+                            estudioSeleccionado: $('#comboEstudios option:selected').val(),
+                            verDenunciasEliminadas: $('#verDenunciasEliminadas').prop('checked'),
+                            apellidoDenunciante: $('#apellidoDenunciante').val().toUpperCase(),
+                            nombreDenunciante: $('#nombreDenunciante').val().toUpperCase(),
+                            //tipoDocumento: $('#tipoDocumento').val(),
+                            dniDenunciante: $('#dniDenunciante').val(),
+                            //estadoSeleccionado: $('#comboEstados option:selected').val(),
+                            estadoSeleccionado: $('#comboEstados option:selected').text(),
+                            nroLinea: $('#nroLinea').val(),
+                            tramiteCRM: $('#tramiteCRM').val(),
+                            motivoDeReclamoSeleccionado: $('#comboMotivosDeReclamo option:selected').val(),
+                            responsableInterno: $('#responsableInterno').val(),
+                            idDenunciaOriginal: $('#idDenunciaOriginal').val(),
+                            exportarAExcel: false
+
+                        },
+                        success: function (response) {
+                            $('#tableContainer').html(response);
+
+                        },
+                        error: function (response) {
+                            toastr.error(response);
+                        }
+                    });
+                } else {
+                    toastr.warning('Seleccione </br> alguno de </br>los Filtros');
+                }
+            }
+
+            
+
+
+        window.addEventListener("keyup", function (e) {
+            if (e.keyCode == 27) {
+                document.getElementById("divFildivos").style.display = "none";
+
+            }
+        });
+
+        function excelReport() {
+            var tab_text = "<table border='2px'><div bgcolor='#87AFC6'>";
+            var texdivange; var j = 0;
+            tab = document.getElementById('tb'); // id of table
+
+            for (j = 0; j < tab.rows.length; j++) {
+                tab_text = tab_text + tab.rows[j].innerHTML + "</div>";
+                //tab_text=tab_text+"</div>";
+            }
+
+            tab_text = tab_text + "</table>";
+
+
+            var ua = window.navigator.userAgent;
+            var msie = ua.indexOf("MSIE ");
+
+            if (msie > 0 || !!navigator.userAgent.match(/divident.*rv\:11\./))      // If Internet Explorer
+            {
+                txtArea1.document.open("txt/html", "replace");
+                txtArea1.document.write(tab_text);
+                txtArea1.document.close();
+                txtArea1.focus();
+                sa = txtArea1.document.execCommand("SaveAs", divue, "Global View Task.xls");
+            }
+            else //other browser not tested on IE 11
+                sa = window.open('data:application/vnd.ms-excel,' + encodeURIComponent(tab_text));
+            return (sa);
+        }
+
+            function Volver() {
+                history.back();
+            }
+
+            $("#comboProvincias").change(function () {
+
+            if ($(this)[0].selectedIndex != 0) {
+
+                $.ajax({
+                    url: '@Url.Action("GetLocalidadesPorProvincia", "FiltroDenuncias")',
+                    type: "Post",
+                    data: {
+                        idProvincia: $('#comboProvincias option:selected').val()
+                    },
+                    success: function (response) {
+                        $('#comboLocalidades').empty();
+                        $('#comboLocalidades').append('<option value=0/>');
+                        $(response).each(function () {
+                            $('#comboLocalidades').append(
+                                $('<option/>', { value: this.Id }).html(this.Nombre)
+                            );
+                        });
+                        //$('#comboDomiciliosMediadores').attr("disabled",false);
+
+                    },
+                    error: function (response) {
+                        toastr.error(response);
+                    }
+                });
+            }
+        });
+
+            function downloadSpreadsheet() {
+                $.ajax({
+                    type: "POST",
+                    url: '/Home/GenerateSpreadsheet', //call your controller and action
+                    success: function (data) {
+                        if (data != null && (data.errorMessage == null || data.errorMessage === "")) {
+
+                            // Get the file name for download
+                            if (data.fileName != "") {
+                                // use window.location.href for redirect to download action for download the file
+                                window.location.href = "DownloadSpreadsheet/?file=" + data.fileName;
+                            }
+                        } else {
+                            alert("An error ocurred", data.errorMessage);
+                        }
+                    }
+                });
+            }
+
+            
+
+        </script>
+    }

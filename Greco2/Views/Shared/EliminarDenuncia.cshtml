@@ -1,0 +1,16 @@
+﻿@model Greco2.Models.Denuncia.EliminarDenunciaModelView
+
+<div class="row">
+    <h4 class="col-xs-8">Si Desea eliminar la Denuncia con Id : </h4>
+    <h4 class="col-xs-1" id="IdDenunciaAEliminar"></h4>
+</div>
+
+<h6>
+    Seleccione el motivo de Baja y presione Eliminar,
+    en caso contrario
+    utilice el botón Cancelar.
+</h6>
+
+
+<br />
+@Html.DropDownListFor(m => m.motivoSeleccionado, Model.motivosDeBaja, "", new { @class = "form-control", id = "comboMotivosDeBaja", style="margin-left:20px;" })

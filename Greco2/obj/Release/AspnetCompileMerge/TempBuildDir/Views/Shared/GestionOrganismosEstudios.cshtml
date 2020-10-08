@@ -1,0 +1,485 @@
+﻿@using Greco2.Models.OrganismosEstudiosRel
+@model OrganismoEstudioRelModelView
+
+<style>
+    input[type=text],select {
+        height: 30px;
+        max-width: 280px;
+    }
+    .row {
+    margin-top:5px;
+    }
+
+    input[type=button] {
+        height: 30px;
+    }
+    label {
+        text-align: left;
+        margin-right:60px;
+        font-size:12px;
+    }
+    option {
+        font-size: 12px;
+    
+    }
+
+</style>
+
+<div>
+    <div class="jumbotron">
+        <h4 class="text-primary">Gestión de Relaciones entre Organismos y Estudios</h4>
+    </div>
+    
+    <div class="row col-lg-offset-3">
+        
+        <label class="col-xs-1" style="margin-left:-25px;">Organismos:</label>
+        @Html.DropDownListFor(m => m.organismoSeleccionado, Model.Organismos, "", new { @class = "col-xs-1 form-control", @id = "comboOrganismosRel" })
+        <input style="margin-left:10px;" type="button" value="Nuevo" class="btn btn-sm btn-primary col-xs-1" 
+               data-toggle="modal" data-target="#nuevoModalOrganismosEstudiosRel" onclick="cleanNuevoModal()"/>
+
+    </div>
+
+    <div class="row col-lg-offset-3">
+
+        <label class="col-xs-1" style="margin-left:-25px;">Estudios:</label>
+        @Html.DropDownListFor(m => m.estudioSeleccionado, Model.Estudios, "", new { @class = "col-xs-1 form-control", @id = "comboEstudiosRel" })
+        <input style="margin-left:10px;" type="button" value="Buscar" class="btn btn-sm btn-primary col-xs-1" onclick="BuscarRelacionOrganismoEstudio()" />
+        <input style="margin-left:5px;" type="button" value="Limpiar" class="btn btn-sm btn-primary col-xs-1" onclick="cleanBusqueda()" />
+    </div>
+
+    <br />
+    <br />
+    <div class="container-fluid"  id="elementos">
+
+    </div>
+
+</div>
+
+@*inicio Popup Nuevo*@
+<div class="modal fade" id="nuevoModalOrganismosEstudiosRel" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+
+                <button type="button" class="close" data-dismiss="modal" id="btnCerrarModalNuevaRelacion">×</button>
+                <h4 class="modal-title" id="myModalLabel">Nueva Relación Organismo - Estudio</h4>
+            </div>
+            <div class="modal-body center-block">
+                <div id="nuevoBodyContent">
+                    <br />
+
+                    <form>
+                        @Html.AntiForgeryToken()
+
+                        <div class="row">
+                            <span class="col-xs-2"></span>
+                            <label class="col-xs-1">Organismo:</label>
+                            @Html.DropDownListFor(m => m.organismoSeleccionado, Model.Organismos, "", new { @class = "col-xs-1 form-control", @id = "comboOrganismosNuevaRel" })
+
+
+                        </div>
+
+                        <div class="row">
+                            <span class="col-xs-2"></span>
+                            <label class="col-xs-1">Estudio:</label>
+                            @Html.DropDownListFor(m => m.estudioSeleccionado, Model.Estudios, "", new { @class = "col-xs-1 form-control", @id = "comboEstudiosNuevaRel" })
+
+
+                        </div>
+                    </form>
+                    <br />
+                    <div id="divExisteRelacionOrganismoEstudio" style="color:white">
+
+                    </div>
+                </div>
+                
+
+            </div>
+            <div class="modal-footer">
+                <div class="row" id="nuevoEstudioContent">
+                    <span style="margin-right:50px;" class="col-md-offset-3"></span>
+                    <input id="guardarNuevo" type="button" class="btn btn-sm btn-primary col-xs-3" value="Guardar" onclick="existeRelacionOrganismoEstudio()" />
+                    <input type="button" class="btn btn-sm btn-toolbar col-xs-3" value="Cancelar" data-dismiss='modal' />
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@*----------- Fin Popup Nuevo ----------*@
+
+
+@*inicio Popup Edit*@
+<div class="modal fade" id="editModalRelacionOrganismoEstudio" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+
+                <button type="button" class="close" data-dismiss="modal">×</button>
+                <h4 class="modal-title" id="myModalLabel">Editar Relación entre Organismo y Estudio</h4>
+            </div>
+            <div class="modal-body center-block">
+
+                <div id="editBodyContent">
+                    <form>
+                        @Html.AntiForgeryToken()
+                        <input type="hidden" id="idElementEdit" />
+                        <br />
+                        <div class="row">
+                            <span class="col-xs-3"></span>
+                            <label class="col-xs-1">Organismos</label>
+                            @Html.DropDownListFor(m => m.organismoSeleccionado, Model.Organismos, "", new { @class = "col-xs-1 form-control", @id = "comboOrganismosEditRel" })
+                            <input style="margin-left:50px;" type="button" value="Limpiar" class="btn btn-sm btn-primary col-xs-1" />
+
+                        </div>
+
+                        <div class="row">
+                            <span class="col-xs-3"></span>
+                            <label class="col-xs-1">Estudios</label>
+                            @Html.DropDownListFor(m => m.estudioSeleccionado, Model.Estudios, "", new { @class = "col-xs-1 form-control", @id = "comboEstudiosEditRel" })
+                            <input style="margin-left:50px;" type="button" value="Limpiar" class="btn btn-sm btn-primary col-xs-1" />
+
+                        </div>
+                    </form>
+
+                    <br />
+                    @*<div class="row col-lg-offset-2">
+            <label class="col-xs-2">Activo</label>
+            <input style="margin-left:-15px;" class="col-xs-1" type="checkbox" id="campoActivacion" name="checkActivo" />
+        </div>*@
+                </div>
+
+            </div>
+            <div class="modal-footer">
+                <div class="row" id="editFooterContent">
+                    <span style="margin-right:50px;" class="col-md-offset-3"></span>
+                    <input type="button" class="btn btn-sm btn-primary col-xs-3" value="Guardar" onclick="guardarEdicion('guardarMotivoDeReclamoEditado','ListarMotivoDeReclamo')" data-dismiss='modal' />
+                    <input type="button" class="btn btn-sm btn-toolbar col-xs-3" value="Cancelar" data-dismiss='modal' />
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@*----------- Inicio Popup Delete ----------*@
+
+<div class="modal fade" id="deleteModalOrganismoEstudioRel" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">×</button>
+            </div>
+            <div id="deletePopupContent" class="modal-body center-block">
+                <h4>Está seguro que desea eliminar la Relación ?</h4>
+                <h4 id="idDeleteHidden"></h4>
+                <h6 hidden id="organismoAEliminar"></h6>
+                <h6 hidden id="estudioAEliminar"></h6>
+
+            </div>
+            <div id="deleteFooterContent" class="modal-footer">
+                <button type="button" class="btn btn-danger" id="btnDelete" onclick="eliminarRelacionOrganismoEstudio()" data-dismiss="modal">Eliminar</button>
+                <button type="button" class="btn btn-toolbar" data-dismiss="modal">Cancelar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    //function traerMotivosDeReclamo(e) {
+    //    var key = e.keyCode || e.which;
+    //    console.log(e.keyCode);
+    //    if (key === 13) {
+    //        GetElements('BuscarMotivoDeReclamo');
+    //    };
+    //}
+
+    //-comboOrganismosRel
+    //    - comboEstudiosRel
+     function cleanBusqueda() {
+         $('#comboOrganismosRel')[0].selectedIndex = 0;
+         $('#comboEstudiosRel')[0].selectedIndex = 0;
+         $('#guardarNuevo').removeAttr('data-dismiss', 'modal');
+         $('#elementos').empty();
+    }
+
+    function cleanNuevoModal() {
+        $('#comboOrganismosNuevaRel')[0].selectedIndex = 0;
+        $('#comboEstudiosNuevaRel')[0].selectedIndex = 0;
+        $('#divExisteRelacionOrganismoEstudio').empty();
+    }
+   
+    function losFiltrosSonValidados() {
+        var mensaje = "Ingrese algún Filtro de Búsqueda";
+        if ($('#comboOrganismosRel')[0].selectedIndex == 0 &&
+            ($('#comboEstudiosRel')[0].selectedIndex == 0)) {
+            toastr.warning(mensaje);
+            return false;
+        }
+        else {
+            //toastr.success('OK');
+            $('#guardarLocalidad').attr('data-dismiss', 'modal');
+            return true;
+        }
+    }
+    function BuscarRelacionOrganismoEstudio() {        
+        $('#elementos').empty();
+        //if (losFiltrosSonValidados()) {
+            mostrarLoading();
+            DesHabilitarBuscar();
+            $.ajax({
+                url: '@Url.Action("BuscarRelacionOrganismoEstudio", "Admin")',
+                type: "GET",
+                data: {
+                    organismoId: $('#comboOrganismosRel').find('option:selected').val(),
+                    estudioId: $('#comboEstudiosRel').find('option:selected').val()
+                },
+                success: function (response) {
+                    ocultarLoading();
+                    $('#elementos').html(response);
+                    HabilitarBuscar();
+                },
+                error: function (response) {
+                    ocultarLoading();
+                    toastr.error(response.responseText + ' ' + response.statusText);
+                    HabilitarBuscar();
+
+                }
+            });
+            
+        //}
+        
+    }
+
+    function esValido() {
+        
+        var mensaje = "Todos los campos son obligatorios";
+        
+        if ($('#comboOrganismosNuevaRel')[0].selectedIndex == 0||
+            $('#comboEstudiosNuevaRel')[0].selectedIndex == 0)    {
+           
+            toastr.warning(mensaje);
+
+            return false;
+        } else {
+            //toastr.success("OK");
+            $('#guardarNuevo').attr('data-dismiss', 'modal');
+            return true;
+        }
+    }
+
+    function GetNuevaRelacionOrganismoEstudio() {
+        $('#btnCerrarModalNuevaRelacion').click();
+        $.ajax({
+                url: '@Url.Action("GetNuevaRelacionOrganismoEstudio", "Admin")',
+                type: "GET",
+                data: {
+                    organismoId: $('#comboOrganismosNuevaRel').find("option:selected").val(),
+                    estudioId: $('#comboEstudiosNuevaRel').find("option:selected").val()
+                   
+            }, success: function (result) {
+                    $('#elementos').html(result);
+
+            }, error: function (result) {
+                    toastr.error(result.responseText + ' ' + result.status);
+            }
+        });
+
+    }
+
+    function guardarNuevaRelacionOrganismoEstudio() {
+        if (esValido()) {
+            var token = '@Html.AntiForgeryToken()';
+            var gnroetoken = $(token).val();
+            $('#btnCerrarModalNuevaRelacion').click();
+            $.ajax({
+                url: '@Url.Action("CrearRelacionOrganismoEstudio", "Admin")',
+                type: "POST",
+                data: {
+                    organismoId: $('#comboOrganismosNuevaRel').find("option:selected").val(),
+                    estudioId: $('#comboEstudiosNuevaRel').find("option:selected").val(),
+                    __RequestVerificationToken: gnroetoken
+                },
+                success: function (response) {
+                    
+                    $('#elementos').html(response);
+                },
+                error: function (response) {
+                    toastr.error(response.responseText + ' ' + response.status);
+                }
+            });
+        }
+
+    }
+
+    function esValidaRelacion() {
+
+        var mensaje = "Todos los campos son obligatorios";
+
+        if ($('#comboOrganismosNuevaRel')[0].selectedIndex == 0 ||
+            $('#comboEstudiosNuevaRel')[0].selectedIndex == 0) {
+
+            toastr.warning(mensaje);
+
+            return false;
+        } else {
+          
+            return true;
+        }
+    }
+
+     function existeRelacionOrganismoEstudio() {
+        if (esValidaRelacion()) {
+                 var token = '@Html.AntiForgeryToken()';
+                 var gnroetoken = $(token).val();
+            $.ajax({
+                url: '@Url.Action("CrearRelacionOrganismoEstudio", "Admin")',
+                type: "POST",
+                data: {
+                    organismoId: $('#comboOrganismosNuevaRel').find("option:selected").val(),
+                    estudioId: $('#comboEstudiosNuevaRel').find("option:selected").val(),
+                    __RequestVerificationToken: gnroetoken
+                },
+                success: function (response) {
+                    
+                    $('#divExisteRelacionOrganismoEstudio').html(response);
+                },
+                error: function (response) {
+                    toastr.error(response.responseText + ' ' + response.status);
+                }
+            });
+        }
+
+    }
+
+    function deshabilitarGuardarEdicion() {
+        $('#guardarEdicion').removeAttr('data-dismiss', 'modal');
+    }
+
+    function habilitarGuardarEdicion() {
+        $('#guardarEdicion').attr('data-dismiss', 'modal');
+    }
+    
+
+    function esValidoNombreEdicion() {   
+
+        if (($('#NombreEdicion').val().length == 0) || ($('#comboEditMediadoresModal')[0].selectedIndex == 0)) { 
+            console.log($('#NombreEdicion').val().length == 0);
+            console.log($('#comboEditMediadoresModal')[0].selectedIndex == 0);
+            toastr.warning('Nombre y Mediador son obligatorios');
+            deshabilitarGuardarEdicion();
+            return false;
+        } else {
+            habilitarGuardarEdicion();
+            return true;
+        }
+    }
+        
+    function guardarDomicilioMediadorEditado() {
+        
+        if (esValidoNombreEdicion()) {
+            $.ajax({
+                url: '@Url.Action("guardarDomicilioMediadorEditado", "Admin")',
+                type: "POST",
+                data: {
+                    id: $('#idElementEdit').val(),
+                    nombre: $('#NombreEdicion').val(),
+                    mediadorSeleccionado: $('#comboEditMediadoresModal').find("option:selected").val(),
+                    campoActivacion: $('input:checkbox[name=checkActivo]:checked').val()
+                },
+                success: function (response) {
+                    toastr.success("Registro guardado correctamente");
+                    $('#elementos').html(response);
+                },
+                error: function (response) {
+                    toastr.error(response.responseText + ' ' + response.status);
+                }
+            });
+        }
+       
+    }
+
+    
+    function editarDomicilioMediador(Id) {
+        deshabilitarGuardarEdicion(); 
+        $.ajax({
+            url: '@Url.Action("EditarDomicilioMediador","Admin")',
+            type: "POST",
+            data: {
+                id: Id
+            },
+            success: function (response) {
+                try {
+                    $('#idElementEdit').val(response.Id);
+                    $('#NombreEdicion').val(response.Nombre);
+                    var mediadorId = response.MediadorId;
+                    //$('#comboProvinciasEditModal')[0].selectedIndex = provinciaId;
+                    //$('#comboProvinciasEditModal')
+                    $('#campoActivacion').prop('checked', response.Activo);
+                    $("#comboEditMediadoresModal option").each(function (i, valor) {
+                        //console.log(i + ' : ' + $(valor).val())
+                        if ($(valor).val() == mediadorId) {
+                            $(valor).prop('selected', true);
+                            //console.log('son iguales');                          
+                        }
+                    });
+
+                    
+                
+                    
+                } catch (response) {
+                    toastr.error(response);
+                }
+            },
+            error: function (response) {
+                toastr.error(response.responseText + ' ' + response.status);
+            }
+        });
+    }
+
+    var filaARemover;
+    function cargarIdModalDeleteRelacion(idOrganismo, idEstudio, element) {
+        filaARemover = $(element).parent().parent();
+        console.log(idOrganismo);
+        console.log(idEstudio);
+        $('#organismoAEliminar').val(idOrganismo);
+        $('#estudioAEliminar').val(idEstudio);
+    }
+       
+
+    function eliminarRelacionOrganismoEstudio() {
+        
+        var token = '@Html.AntiForgeryToken()';
+        var eroetoken = $(token).val();
+            $.ajax({
+                url: '@Url.Action("EliminarRelacionOrganismoEstudio", "Admin")',
+                type: "Post",
+                data: {
+                    organismoId: $('#organismoAEliminar').val(),
+                    estudioId: $('#estudioAEliminar').val(),
+                    __RequestVerificationToken: eroetoken
+                },
+                success: function (result) {
+                    try {
+                        if (result == "Registro eliminado con éxito") {
+                            filaARemover.remove();
+                            filaARemover = undefined;
+                            toastr.success(result);
+                        } else {
+                            toastr.error(result);
+                        }
+
+                    } catch (error) {
+                        toastr.error(error);
+                    }
+                },
+                error: function (result) {
+                    toastr.error(result.responseText);
+                }
+            });
+
+        }
+
+</script>
+
+
+

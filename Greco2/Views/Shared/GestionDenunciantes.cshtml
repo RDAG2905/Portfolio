@@ -1,0 +1,690 @@
+﻿@*@using Greco2.Models.Localidad
+    @model LocalidadModelView*@
+
+<style>
+
+    label {
+        text-align: left;
+        font-size:12px;
+    }
+</style>
+
+<div>
+    <div class="jumbotron">
+        <h4 class="text-primary">Gestión de Denunciantes</h4>
+    </div>
+
+    <div class="row" style="margin-bottom:1px;">
+        <span class="col-xs-3"></span>
+        <label class="col-xs-1" style="margin-left:20px;">Nombre:</label>
+        <input type="text" class="form-control col-xs-1" id="filtroNombre"  />
+        <input type="button" value="Nuevo" class="btn-primary col-xs-1" id="btnNuevoModal" onclick="limpiarNuevo()" data-toggle="modal" data-target="#nuevoDenuncianteModal" style="margin-left:10px;"/>
+    </div>
+    <div class="row" style="margin-bottom:1px;">
+        <span class="col-xs-3"></span>
+        <label class="col-xs-1" style="margin-left:20px;">Apellido:</label>
+        <input type="text" class="form-control col-xs-1" id="filtroApellido"  />
+        <input type="button" value="Limpiar" class="btn-primary col-xs-1" onclick="limpiarFiltrosBusqueda()" style="margin-left:10px;"/>
+    </div>
+    <div class="row" style="margin-bottom:1px;">
+        <span class="col-xs-3"></span>
+        <label class="col-xs-1" style="margin-left:20px;">Dni:</label>
+        <input type="text" class="form-control col-xs-1" id="filtroDni"  />
+        <input type="button" value="Buscar" class="btn-primary col-xs-1" id="" onclick="BuscarDenunciante();" style="margin-left:10px;"/>
+    </div>
+
+    <br />
+    <br />
+    <div class="container-fluid" style="display:flex" id="elementos">
+
+    </div>
+
+</div>
+
+
+@*inicio Popup Nuevo*@
+<div class="modal fade" id="nuevoDenuncianteModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+
+                <button type="button" class="close" data-dismiss="modal" id="btnCerrarModalNuevoDenunciante">×</button>
+                <h4 class="modal-title" id="myModalLabel">Nuevo Denunciante</h4>
+            </div>
+            <div class="modal-body center-block">
+                <div id="nuevoEstudioBodyContent">
+                    <br />
+                    <form>
+                        @Html.AntiForgeryToken()
+
+                        <div class="row col-lg-offset-2" style="margin-bottom:1px;">
+                            <label class="col-xs-1" style="margin-right:50px;">Nombre</label>
+                            <input class="form-control col-xs-1" type="text" id="nuevoNombre" />
+                        </div>
+                        @*<label type="text" class="text-danger" id="MensajeNombreInvalido" style="display:none;"></label>*@
+
+                        <div class="row col-lg-offset-2" style="margin-bottom:1px;">
+                            <label class="col-xs-1" style="margin-right:50px;">Apellido</label>
+                            <input class="form-control col-xs-1" type="text" id="nuevoApellido" />
+                        </div>
+                        @*<label type="text" class="text-danger" id="MensajeApellidoInvalido" style="display:none;"></label>*@
+
+                        <div class="row col-lg-offset-2" style="margin-bottom:1px;">
+                            <label class="col-xs-1" style="margin-right:50px;">Dni</label>
+                            <input class="form-control col-xs-1" type="text" id="nuevoDni" />
+                        </div>
+                        @*<label type="text" class="text-danger" id="MensajeDniInvalido" style="display:none;"></label>*@
+                        <br />
+                    </form> 
+                </div>
+                <div id="divSePuedeCrearDenunciante" style="color:white">
+
+                </div>
+            </div>
+            <div class="modal-footer">
+                <div class="row" id="nuevoEstudioContent">
+                    <span style="margin-right:50px;" class="col-md-offset-3"></span>
+                    <input id="guardarNuevo" type="button" class="btn btn-sm btn-primary col-xs-3" value="Guardar" onclick="existeDni()" />
+                    <input type="button" class="btn btn-sm btn-toolbar col-xs-3" value="Cancelar" data-dismiss='modal' />
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@*----------- Fin Popup Nuevo ----------*@
+
+
+@*inicio Popup Edit*@
+<div class="modal fade" id="editModalDenunciantes" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+
+                <button type="button" class="close" data-dismiss="modal" id="btnCloseEditDenunciante">×</button>
+                <h4 class="modal-title" id="myModalLabel">Editar Denunciante</h4>
+            </div>
+            <div class="modal-body center-block">
+
+                <div id="editBodyContent">
+                    <form>
+                        @Html.AntiForgeryToken()
+                        <input type="hidden" id="idElementEdit" />
+                        <br />
+                        <div class="row col-lg-offset-2" style="margin-bottom:1px;">
+                            <label class="col-xs-1" style="margin-right:50px;">Nombre</label>
+                            <input class="form-control col-xs-1" type="text" id="nombreEdicion" />
+                        </div>
+                        <div class="row col-lg-offset-2" style="margin-bottom:1px;">
+                            <label class="col-xs-1" style="margin-right:50px;">Apellido</label>
+                            <input class="form-control col-xs-1" type="text" id="apellidoEdicion" />
+                        </div>
+
+                        <div class="row col-lg-offset-2" style="margin-bottom:1px;">
+                            <label class="col-xs-1" style="margin-right:50px;">Dni</label>
+                            <input class="form-control col-xs-1" type="text" id="dniEdicion" />
+                        </div>
+
+                        <br />
+                        <div class="row col-lg-offset-2" style="margin-bottom:1px;">
+                            <label class="col-xs-1" style="margin-right:50px;">Activo</label>
+                            <input style="margin-left:-15px;" class="col-xs-1" type="checkbox" id="campoActivacion" name="checkActivo" />
+                        </div>
+                    </form>
+                </div>
+                <div id="sePuedeEditarDenunciante" style="color:white">
+
+                </div>
+            </div>
+            <div class="modal-footer">
+                <div class="row" id="editFooterContent">
+                    <span style="margin-right:50px;" class="col-md-offset-3"></span>
+                    <input type="button" class="btn btn-sm btn-primary col-xs-3" value="Guardar" onclick="guardarDenuncianteEditado()" id="guardarEdicion"/>
+                    <input type="button" class="btn btn-sm btn-toolbar col-xs-3" value="Cancelar" data-dismiss='modal' />
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@*----------- Inicio Popup Edit ----------*@
+
+<div class="modal fade" id="deleteModalDenunciantes" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" id="btnCerrarModalEliminarDenunciante">×</button>
+            </div>
+            <div id="deletePopupContent" class="modal-body center-block">
+                
+                    <h4>Está a punto de eliminar al Denunciante con Id : </h4>
+                    <form>
+                        @Html.AntiForgeryToken()
+                        <h4 id="idDeleteHidden"></h4>
+                    </form>
+
+            </div>
+            <div id="divExisteRelacionesDenunciante" style="color:white">
+
+            </div>
+            <div id="deleteFooterContent" class="modal-footer">
+                <button type="button" class="btn btn-danger" id="btnDelete" onclick="validarRelaciones();">Eliminar</button>
+                <button type="button" class="btn btn-toolbar" data-dismiss="modal">Cancelar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $("#nuevoOrganismo").keypress(function (e) {
+        if (e.which == 13) {
+            e.preventDefault();
+            return false;
+        }
+    });
+
+    $("#filtroNombre").keypress(function (e) {
+        if (e.which == 13) {
+            e.preventDefault();
+            BuscarDenunciante();
+        }
+    });
+    $("#filtroApellido").keypress(function (e) {
+        if (e.which == 13) {
+            e.preventDefault();
+            BuscarDenunciante();
+        }
+    });
+    $("#filtroDni").keypress(function (e) {
+        if (e.which == 13) {
+            e.preventDefault();
+            BuscarDenunciante();
+        }
+    });
+
+    $("#nuevoNombre").keypress(function (e) {
+        if (e.which == 13) {
+            e.preventDefault();
+            existeDni();
+        }
+    });
+
+    $("#nuevoApellido").keypress(function (e) {
+        if (e.which == 13) {
+            e.preventDefault();
+            existeDni();
+        }
+    });
+
+    $("#nuevoDni").keypress(function (e) {
+        if (e.which == 13) {
+            e.preventDefault();
+            existeDni();
+        }
+    });
+
+    $("#nombreEdicion").keypress(function (e) {
+        if (e.which == 13) {
+            e.preventDefault();
+            guardarDenuncianteEditado();
+        }
+    });
+
+    $("#apellidoEdicion").keypress(function (e) {
+        if (e.which == 13) {
+            e.preventDefault();
+            guardarDenuncianteEditado();
+        }
+    });
+
+    $("#dniEdicion").keypress(function (e) {
+        if (e.which == 13) {
+            e.preventDefault();
+            guardarDenuncianteEditado();
+        }
+    });
+
+
+    function limpiarFiltrosBusqueda() {
+        $('#filtroNombre').val('');
+        $('#filtroApellido').val('');
+        $('#filtroDni').val('');
+        $('#elementos').empty();
+    }
+
+    function limpiarNuevo() {
+        $('#filtroNombre').val('');
+        $('#filtroApellido').val('');
+        $('#filtroDni').val('');
+        $('#divSePuedeCrearDenunciante').empty();
+
+    }
+
+     function elDenuncianteEsValido() {
+        var mensaje = "Ingrese el Dni o Nombre y Apellido";
+         if (($('#filtroNombre').val().length == 0 &&
+             $('#filtroApellido').val().length == 0) &&
+             ($('#filtroDni').val().length == 0)) {
+             toastr.warning(mensaje);
+             return false;
+         } else if (($('#filtroDni').val().length == 0) &&
+             ($('#filtroApellido').val().length == 0 ||
+             ($('#filtroNombre').val().length == 0))) {
+             toastr.warning(mensaje);
+             return false;
+         }
+         else {
+             //toastr.success('OK');
+            //$('#guardarNuevo').attr('data-dismiss', 'modal');
+            return true;
+        }
+    }
+
+    function esValidaLaBusqueda() {
+        return ($('#filtroNombre').val().trim() != "" || $('#filtroApellido').val().trim() != "" || $('#filtroDni').val().trim() != "")
+
+    };
+
+    function BuscarDenunciante() {
+        if (esValidaLaBusqueda()) {
+        
+        $('#elementos').empty();
+        var paginaActual = $('#hfCurrentPageIndex').val();
+        console.log("2 : " + paginaActual);
+        if (paginaActual === undefined || paginaActual == null) {
+            paginaActual = 1;
+        };
+        
+        console.log(paginaActual);
+        //if (elDenuncianteEsValido()) {
+            mostrarLoading();
+                $.ajax({
+                    url: '@Url.Action("BuscarDenunciante", "Admin")',
+                    type: "post",
+                    data: {
+                        nombre: $('#filtroNombre').val(),
+                        apellido: $('#filtroApellido').val(),
+                        dni: $('#filtroDni').val(),
+                        CurrentPageIndex: paginaActual
+                    },
+                    success: function (response) {
+                        ocultarLoading();
+                        $('#elementos').html(response);
+                    },
+                    error: function (response) {
+                        ocultarLoading();
+                        toastr.info(response.responseText + ' ' + response.statusText);
+                    }
+                });
+        //}
+        } else {
+            toastr.warning("Ingrese algún filtro de Búsqueda");
+        }
+    }
+
+    function PagerClickDenunciantes(index) {
+        $('#hfCurrentPageIndex').val(index);
+        //document.getElementById("hfCurrentPageIndex").value = index;
+        console.log("1 : " + $('#hfCurrentPageIndex').val());
+        BuscarDenunciante();
+
+    }
+
+    function esValido() {
+        var mensaje = "Nombre y Apellido son obligatorios";
+        if (($('#nuevoNombre').val().trim().length == 0 ||
+            $('#nuevoApellido').val().trim().length == 0)){
+            toastr.warning(mensaje);
+            return false;
+        }else {
+
+            return true;
+        }
+    }
+
+    @*function guardarNuevoDenunciante() {
+        if (esValido()) {
+             var token = '@Html.AntiForgeryToken()';
+             var nmrtoken = $(token).val();
+            $.ajax({
+                url: '@Url.Action("CrearDenunciante","Admin")',
+                type: "POST",
+                data: {
+                    nombre: $('#nuevoNombre').val(),
+                    apellido: $('#nuevoApellido').val(),
+                    dni: $('#nuevoDni').val()
+                },
+                success: function (response) {
+                    toastr.success("Registro guardado correctamente");
+                    $('#elementos').html(response);
+                },
+                error: function (response) {
+                    toastr.error(response.responseText + ' ' + response.status);
+                }
+            });
+        }
+    }*@
+    
+    function existeDni() {
+         //if (esValido()) {
+        if (esValidoDenunciante()) {
+             var token = '@Html.AntiForgeryToken()';
+             var nmrtoken = $(token).val();
+            $.ajax({
+                url: '@Url.Action("ExisteDni", "Admin")',
+                type: "POST",
+                data: {
+                    dni: $('#nuevoDni').val(),
+                    __RequestVerificationToken: nmrtoken
+                },
+                success: function (response) {
+
+                    $('#divSePuedeCrearDenunciante').html(response);
+                    //$('#btnCerrarModalNuevoDenunciante').click();
+                },
+                error: function (response) {
+                    toastr.error(response.responseText + ' ' + response.status);
+                }
+            });
+        }
+
+    }
+
+     function GuardarNuevoDenunciante() {
+         //if (esValido()) {
+        if (esValidoDenunciante()) {
+             var token = '@Html.AntiForgeryToken()';
+             var nmrtoken = $(token).val();
+            $.ajax({
+                url: '@Url.Action("CrearDenunciante", "Admin")',
+                type: "POST",
+                data: {
+                    nombre: $('#nuevoNombre').val(),
+                    apellido: $('#nuevoApellido').val(),
+                    dni: $('#nuevoDni').val(),
+                    __RequestVerificationToken: nmrtoken
+                },
+                success: function (response) {
+
+                    $('#elementos').html(response);
+                    $('#btnCerrarModalNuevoDenunciante').click();
+                },
+                error: function (response) {
+                    toastr.error(response.responseText + ' ' + response.status);
+                }
+            });
+        }
+
+    }
+
+    function esValidoDenunciante() {
+        var control = true;
+        var reg = /^\d+(\d+)?$/;
+        var dni = $('#nuevoDni').val();
+
+        if ($('#nuevoNombre').val().trim().length == 0) {
+            toastr.warning("El nombre es Obligatorio");
+            control = false;
+        }
+        if ($('#nuevoApellido').val().trim().length == 0) {
+            toastr.warning("El apellido es Obligatorio");
+            control = false;
+        }
+        if (dni.trim().length > 0) {
+            //alert(reg.test(dni));
+            if (!reg.test(dni)) {
+                toastr.warning("El Nro. de documento <br/> solo puede contener números");
+                control = false;
+            }
+            
+        }
+       
+        return control;
+    }
+
+    
+
+
+     function EliminarDenunciante() {
+        var idOculto = document.getElementById('idDeleteHidden');
+        var Id = parseInt(idOculto.innerText);
+       var token = '@Html.AntiForgeryToken()';
+         var eptoken = $(token).val();
+         $('#btnCerrarModalEliminarDenunciante').click();  
+        $.ajax({
+            url: '@Url.Action("EliminarDenunciante","Admin")',
+            type: "Post",
+            data: {
+                id: Id,
+                __RequestVerificationToken: eptoken
+            },
+            success: function (result) {
+                try {
+                    
+                    if (result == "Registro eliminado con éxito") {
+                        filaARemover.remove();
+                        filaARemover = undefined;
+                        toastr.success(result);
+                    } else {
+                        toastr.error(result);
+                    }
+                } catch (error) {
+                    toastr.error(error);
+                }
+            },
+            error: function (result) {
+                toastr.error(result.responseText);
+            }
+        });
+
+    }
+
+    function validarRelaciones() {
+        
+         var idOculto = document.getElementById('idDeleteHidden');
+         var Id = parseInt(idOculto.innerText);
+          var token = '@Html.AntiForgeryToken()';
+        var vrtoken = $(token).val();
+        $('#btnDelete').prop("disabled", false);
+          
+            $.ajax({
+                url: '@Url.Action("TieneRelacionesElDenunciante", "Admin")',
+                type: "Post",
+                data: {
+                    denuncianteId: Id,
+                    __RequestVerificationToken: vrtoken  
+                },
+                success: function (result) {
+                    $('#divExisteRelacionesDenunciante').html(result);
+                    $('#btnDelete').prop("disabled", true);
+                },
+                error: function (result) {
+                    toastr.error(result.responseText);
+                }
+            });
+        $('#btnDelete').prop("disabled",false);
+    }
+
+
+    function cargarIdModalDelete(id, element) {
+        $('#idDeleteHidden').html(id);
+        filaARemover = $(element).parent().parent();
+        $('#divExisteRelacionesDenunciante').empty();
+        $('#btnDelete').prop("disabled",false);
+    }
+
+    function LimpiarTodo() {
+        $('#elementos').empty();
+        @*$('#filtroProvincias').val('');*@
+    }
+   
+
+@*function existeDenunciante() {
+        $('#guardarNuevo').prop("disabled", true);
+        var token = '@Html.AntiForgeryToken()';
+        var ctoken = $(token).val();
+        if (esValidoMotivoDeReclamo()) {
+             $.ajax({
+                 url: '@Url.Action("ExisteDenunciante","Admin")',
+                 type: "POST",
+                 data: {
+                     nombre: $('#NombreNuevoMR').val(),
+                     servicioId: $('#comboServiciosNuevoMR').find("option:selected").val(),
+                     tipoProcesoId: $('#comboTipoProcesoNuevoMR').find("option:selected").val(),
+                     __RequestVerificationToken: ctoken
+                 },
+                 success: function (response) {
+                     $("#divExisteMotivoDeReclamo").html(response);
+                     $('#guardarNuevo').prop("disabled", false);
+
+                 },
+                 error: function (response) {
+                     toastr.error(response.responseText + ' ' + response.status);
+                     $('#guardarNuevo').prop("disabled", false);
+                 }
+             });
+        }
+        $('#guardarNuevo').prop("disabled", false);
+    };*@
+
+    function esValidoNombreEdicion() {
+        if ($('#nombreEdicion').val().length == 0 ||
+            $('#apellidoEdicion').val().length == 0)
+        {
+            toastr.warning('Nombre y Apellido son obligatorios');
+            deshabilitarGuardarEdicion();
+            return false;
+        } else {
+         
+            return true;
+        }
+    }
+
+    function esValidoDenuncianteEdicion() {
+        var control = true;
+        var reg = /^\d+(\d+)?$/;
+        var dni = $('#dniEdicion').val();
+
+        if ($('#nombreEdicion').val().trim().length == 0) {
+            toastr.warning("El nombre es Obligatorio");
+            control = false;
+        }
+        if ($('#apellidoEdicion').val().trim().length == 0) {
+            toastr.warning("El apellido es Obligatorio");
+            control = false;
+        }
+        if (dni.trim().length > 0) {
+            //alert(reg.test(dni));
+            if (!reg.test(dni)) {
+                toastr.warning("El Nro. de documento <br/> solo puede contener números");
+                control = false;
+            }
+
+        }
+
+        return control;
+    }
+
+    function guardarDenuncianteEditado() {
+        if (esValidoDenuncianteEdicion()) {
+            var token = '@Html.AntiForgeryToken()';
+            var ctoken = $(token).val();
+               $.ajax({
+                    url: '@Url.Action("guardarDenuncianteEditado", "Admin")',
+                    type: "POST",
+                    data: {
+                        id: $('#idElementEdit').val(),
+                        nombre: $('#nombreEdicion').val(),
+                        apellido: $('#apellidoEdicion').val(),
+                        dni: $('#dniEdicion').val(),
+                        campoActivacion: $('input:checkbox[name=checkActivo]:checked').val(),
+                        __RequestVerificationToken: ctoken
+                    },
+                    success: function (response) {
+                      
+                        $('#sePuedeEditarDenunciante').html(response);
+                    },
+                    error: function (response) {
+                        toastr.error(response.responseText + ' ' + response.status);
+                    }
+               });
+        }
+    }
+
+    function GetDenuncianteActualizado() {
+        $('#btnCloseEditDenunciante').click();
+        $.ajax({
+                url: '@Url.Action("GetDenuncianteActualizado", "Admin")',
+                type: "GET",
+                data: {
+                    id: $('#idElementEdit').val()
+                   
+            }, success: function (result) {
+                    $('#elementos').html(result);
+
+            }, error: function (result) {
+                    toastr.error(result.responseText + ' ' + result.status);
+            }
+        });
+
+    }
+
+    function eliminarDenunciante() {
+            var idOculto = document.getElementById('idDeleteHidden');
+            var Id = parseInt(idOculto.innerText);
+
+            $.ajax({
+                url: '@Url.Action("EliminarDenunciante","Admin")',
+                type: "Post",
+                data: {
+                    id: Id
+                },
+                success: function (result) {
+                    try {
+                        if (result == "Registro eliminado con éxito") {
+                            filaARemover.remove();
+                            filaARemover = undefined;
+                        }
+                        toastr.info(result);
+                    } catch (error) {
+                        toastr.error(error);
+                    }
+                },
+                error: function (result) {
+                    toastr.error(result.responseText);
+                }
+            });
+
+    }
+
+    function editarDenunciante(Id) {
+        deshabilitarGuardarEdicion();
+        $.ajax({
+            url: '@Url.Action("EditarDenunciante", "Admin")',
+            type: "POST",
+            data: {
+                id: Id
+            },
+            success: function (response) {
+                try {
+                    $('#idElementEdit').val(response.DenuncianteId);
+                    $('#nombreEdicion').val(response.nombre);
+                    $('#apellidoEdicion').val(response.apellido);
+                    $('#dniEdicion').val(response.NroDocumento);
+                    $('#campoActivacion').prop('checked', response.Deleted);
+
+                } catch (response) {
+                    toastr.error(response);
+                }
+            },
+            error: function (response) {
+                toastr.error(response.responseText + ' ' + response.status);
+            }
+        });
+    }
+
+
+</script>
+
+
+

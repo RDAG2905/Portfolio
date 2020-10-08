@@ -1,0 +1,70 @@
+﻿@using Greco2.Models.Historial
+@model List<CambiosDenuncia>
+
+<style>
+    table {
+        background-color: white;
+        font-size: 11px;
+        padding: 2px,2px;
+        overflow:auto;
+        max-height:500px;
+        
+    }
+        table thead tr td {
+        
+        }
+
+    .alert-danger {
+        text-align: center;
+        padding-bottom: 10px;
+        padding-top: 10px;
+        border-radius: 6px;
+    }
+    table > tr {
+        min-height: 30px;
+    }
+    tr {
+        height: 20px;
+        padding: 2px,4px;
+        margin: 2px,2px;
+    }
+    td {
+        min-width: 95px;
+        padding-left:5px;
+    }
+    
+    
+
+</style>
+
+@if (Model.Count() > 0)
+{
+<table class="table-bordered table-responsive" style="width:100%;">
+    <thead >
+        <tr class="text-primary" style="background-color:#f9f9f9;">
+            <td style="min-width:120px;">Fecha del Cambio</td>
+            @*<td style="min-width:120px;">Elemento Modificado</td>*@
+            <td>Descripción</td>
+            <td>Valor Anterior</td>
+            <td>Valor Nuevo</td>
+            <td>Usuario</td>
+        </tr>
+    </thead>
+    @foreach (var item in Model)
+    {
+    <tr>
+        <td>@item.FechaCambio</td>
+        @*<td>@item.ObjetoModificado</td>*@
+        <td style="min-width:220px;text-align:left;">@item.Descripcion</td>
+        <td>@item.ValorAnterior</td>
+        <td>@item.ValorActual</td>
+        <td>@item.Usuario</td>
+    </tr>
+    }
+</table>
+}
+else {
+<div class="alert-danger">
+    La Denuncia no registra cambios hasta la fecha
+</div>
+}

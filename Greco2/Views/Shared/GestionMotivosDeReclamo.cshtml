@@ -1,0 +1,690 @@
+﻿@using Greco2.Models.MotivoDeReclamo
+@model MotivoDeReclamoModelView
+
+<style>
+    input[type=text],select {
+        height: 30px;
+        max-width: 280px;        
+    }
+        select option {
+            font-size: 12px;
+        }
+
+    .row {
+    margin-top:5px;
+    font-size:12px;
+    }
+    input[type=button] {
+        /*height: 26px;*/
+        width: 100px;
+    }
+
+    #elementos {
+        margin-left: -20px;
+        margin-right: -10px;
+    }
+    /*.form-control,label {
+    font-size:11px;
+    max-height:26px;
+    }*/
+    /*label {
+    margin-left:40px;
+    }*/
+    
+</style>
+<div>
+    <div class="jumbotron">
+        <h4 class="text-primary">Gestión de Motivos de Reclamo</h4>
+    </div>
+    
+    <div class="row col-lg-offset-3">
+       
+    
+        <label class="col-xs-1 labelLeft" style="margin-left:-20px;">Nombre:</label>
+        @Html.TextBoxFor(x=>x.MotivoDeReclamo,new {@class= "input-sm form-control col-xs-3",@id="nombreMotivoDeReclamo", onkeyup = "traerMotivosDeReclamo(event)", style = "margin-left:35px;" })
+        <input type="button" value="Nuevo" class="btn btn-sm btn-primary col-xs-1" style="margin-left:20px;"
+               data-toggle="modal" data-target="#nuevoModalMotivoDeReclamo" onclick="cleanInput();" />     
+    </div>
+    
+    <div class="row col-lg-offset-3">
+       
+        <label class="col-xs-1 labelLeft" style="margin-left:-20px;">Servicio:</label>
+       
+
+        @Html.DropDownListFor(m => m.servicioSeleccionado, Model.Servicios, "", new { @class = "col-xs-1 form-control", @id = "comboServicios", style = "margin-left:35px;" })
+        <input style="margin-left:20px;" type="button" value="Limpiar" class="btn btn-sm btn-primary col-xs-1" onclick="limpiarFiltrosBusqueda()"/>
+        
+    </div>
+    
+    <div class="row col-lg-offset-3">
+
+        <label class="col-xs-1 labelLeft" style="margin-left:-20px;">Proceso:</label>
+        @Html.DropDownListFor(m => m.tipoProcesoSeleccionado, Model.TiposDeProceso, "", new { @class = "col-xs-1 form-control", @id = "comboTipoProceso" , style = "margin-left:35px;" })
+        @*@Html.EnumDropDownListFor(m => m.TipoDeProceso, "", new { @class = "col-xs-1 form-control", @id = "comboTipoProceso" })*@
+
+        <input style="margin-left:20px;" type="button" value="Buscar" class="btn btn-sm btn-primary col-xs-2" onclick="BuscarMotivoDeReclamo();" />
+    </div>
+    <br />
+   
+    <div class="container-fluid"  id="elementos" >
+
+    </div>
+
+</div>
+
+@*inicio Popup Nuevo*@
+<div class="modal fade" id="nuevoModalMotivoDeReclamo" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+
+                <button type="button" class="close" data-dismiss="modal" id="btnCerrarModalNuevoMotivoDeReclamo">×</button>
+                <h4 class="modal-title" id="myModalLabel">Nuevo Motivo de Reclamo</h4>
+            </div>
+            <div class="modal-body center-block">
+                <div id="nuevoEstudioBodyContent">
+                    <br />
+                    <form>
+                        @Html.AntiForgeryToken()
+
+                        
+                        <div class="row col-lg-offset-2">
+                            @Html.LabelFor(x => x.MotivoDeReclamo, null, new { @class = "col-xs-2" })
+                            @Html.TextBoxFor(x => x.MotivoDeReclamo, new { @class = "input-sm form-control col-xs-3", id = "NombreNuevoMR",maxlength="30" })
+                        </div>
+                        
+
+                        <div class="row col-lg-offset-2">
+                            @Html.LabelFor(x => x.Servicios, null, new { @class = "col-xs-2" })
+                            @Html.DropDownListFor(m => m.servicioSeleccionado, Model.Servicios, "", new { @class = "col-xs-1 form-control", id = "comboServiciosNuevoMR" })
+                        </div>
+                        <div class="row col-lg-offset-2">
+                            @Html.ValidationMessageFor(x => x.Servicios)
+                        </div>
+                        <div class="row col-lg-offset-2">
+                           
+                            <label class="col-xs-2">Proceso</label>
+                            @Html.DropDownListFor(m => m.tipoProcesoSeleccionado, Model.TiposDeProceso, "", new { @class = "col-xs-1 form-control", @id = "comboTipoProcesoNuevoMR" })
+                            
+                        </div>
+                        <div class="row col-lg-offset-2">
+                            
+                        </div>
+                    </form>
+                    <br />
+                    <div id="divExisteMotivoDeReclamo" style="color:white">
+
+                    </div>
+                </div>
+                
+
+            </div>
+            <div class="modal-footer">
+                <div class="row" id="nuevoEstudioContent">
+                    <span  class="col-md-offset-2"></span>
+                    <input id="guardarNuevo" type="button" class="btn btn-sm btn-primary col-xs-3" value="Guardar" onclick="existeMotivoDeReclamo()" />
+                    <input type="button" class="btn btn-sm btn-toolbar col-xs-3" value="Cancelar" data-dismiss='modal' />
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@*----------- Fin Popup Nuevo ----------*@
+
+
+@*inicio Popup Edit*@
+<div class="modal fade" id="editModalMotivoDeReclamo" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+
+                <button type="button" class="close" data-dismiss="modal" id="btnCloseEditMotivoDeReclamo">×</button>
+                <h4 class="modal-title" id="myModalLabel">Editar Motivo De Reclamo</h4>
+            </div>
+            <div class="modal-body center-block">
+
+                <div id="editBodyContent">
+                    <form>
+                        @Html.AntiForgeryToken()
+                        <input type="hidden" id="idElementEdit" />
+                        <br />
+
+                        <div class="row col-lg-offset-2">
+                            <label class="col-xs-2">Nombre</label>
+                            <input class="form-control col-xs-1" type="text" id="NombreEdicion" maxlength="30"/>
+                        </div>
+                        <div class="row col-lg-offset-2">
+
+                            @Html.LabelFor(x => x.Servicios, null, new { @class = "col-xs-2" })
+                            @Html.DropDownListFor(m => m.servicioSeleccionado, Model.Servicios, "", new { @class = "col-xs-1 form-control", id = "comboServiciosEditMR" })
+                        </div>
+
+                        <div class="row col-lg-offset-2">
+                            <label class="col-xs-2">Proceso</label>
+                            @Html.DropDownListFor(m => m.tipoProcesoSeleccionado, Model.TiposDeProceso, "", new { @class = "col-xs-1 form-control", @id = "comboTipoProcesoEditMR" })
+                            
+                        </div>
+
+
+                        <br />
+                        <div class="row col-lg-offset-2">
+                            <label class="col-xs-2">Inactivo</label>
+                            <input style="margin-left:-15px;" class="col-xs-1" type="checkbox" id="campoActivacion" name="checkActivo" />
+                        </div>
+                    </form>
+                </div>
+
+            </div>
+            <div class="modal-footer">
+                <div class="row" id="editFooterContent">
+                    <span class="col-md-offset-2"></span>
+                    <input type="button" class="btn btn-sm btn-primary col-xs-3" value="Guardar" onclick="guardarMotivoDeReclamoEditado()"id="guardarEdicion"/>
+                    <input type="button" class="btn btn-sm btn-toolbar col-xs-3" value="Cancelar" data-dismiss='modal' />
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@*----------- Inicio Popup Delete ----------*@
+
+<div class="modal fade" id="deleteModalMotivosDeReclamo" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" id="btnCerrarModalEliminarMotivoDeReclamo">×</button>
+            </div>
+            <div id="deletePopupContent" class="modal-body center-block">
+                <h4>Está a punto de eliminar el Motivo De Reclamo con Id : </h4>
+                <form>
+                    @Html.AntiForgeryToken()
+                    <h4 id="idDeleteHidden"></h4>
+                </form>
+
+            </div>
+            <div id="divExisteRelacionesMotivoDeReclamo" style="color:white">
+
+            </div>
+            <div id="deleteFooterContent" class="modal-footer">
+                <button type="button" class="btn btn-danger" id="btnDelete" onclick="validarRelaciones()">Eliminar</button>
+                <button type="button" class="btn btn-toolbar" data-dismiss="modal">Cancelar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+
+
+    $("#NombreNuevoMR").keypress(function (e) {
+        if (e.which == 13) {
+            e.preventDefault();
+            existeMotivoDeReclamo();
+            //return false;
+        }
+    });
+
+
+    function traerMotivosDeReclamo(e) {
+        var key = e.keyCode || e.which;
+        console.log(e.keyCode);
+        if (key === 13) {
+            //GetElements('BuscarMotivoDeReclamo');
+            BuscarMotivoDeReclamo()
+        };
+    }
+
+    function limpiarFiltrosBusqueda(){
+        $('#nombreMotivoDeReclamo').val('');
+        $('#comboServicios')[0].selectedIndex = 0;
+        $('#comboTipoProceso')[0].selectedIndex = 0;
+        $('#elementos').empty();
+    } 
+
+    
+    
+    
+    function cleanInput() {
+        $('#NombreNuevoMR').val('');
+        $('#comboServiciosNuevoMR')[0].selectedIndex = 0;
+        $('#comboTipoProcesoNuevoMR')[0].selectedIndex = 0;
+        $('#divExisteMotivoDeReclamo').empty();
+        $('#guardarNuevo').removeAttr('data-dismiss');
+    }
+
+    function losFiltrosSonValidados() {
+        var mensaje = "Ingrese algún Filtro de Búsqueda";
+        //console.log($('#nombreMotivoDeReclamo').val().length == 0);
+        //console.log($('#comboServicios')[0].selectedIndex == 0);
+        //console.log($('#comboTipoProceso')[0].selectedIndex == 0);
+        //console.log($('#comboTipoProceso')[0].selectedIndex);
+        if (($('#nombreMotivoDeReclamo').val().length == 0) &&
+            ($('#comboServicios')[0].selectedIndex == 0) &&
+            ($('#comboTipoProceso')[0].selectedIndex == 0)) {
+            toastr.warning(mensaje);
+            return false;
+        } else {
+            //toastr.success('OK');
+            return true;
+        }
+    }
+
+    
+
+    function BuscarMotivoDeReclamo() {
+        $('#elementos').empty();
+        //if (losFiltrosSonValidados()) {
+            mostrarLoading();
+            $('#BuscarMotivoDeReclamo').prop("disabled", true);
+            $.ajax({
+                url: '@Url.Action("BuscarMotivoDeReclamo", "Admin")' ,
+                type: "GET",
+                data: {
+                    nombre: $('#nombreMotivoDeReclamo').val(),
+                    servicioId: $('#comboServicios').find('option:selected').val(),
+                    tipoDeProcesoId: $('#comboTipoProceso').find('option:selected').val()
+                },
+                success: function (response) {
+                    
+                    ocultarLoading();
+                    $('#elementos').html(response);
+                    $('#BuscarMotivoDeReclamo').prop("disabled", false);
+                },
+                error: function (response) {
+                    ocultarLoading();
+                    toastr.error(response.responseText + ' ' + response.statusText);
+                    $('#BuscarMotivoDeReclamo').prop("disabled", false);
+                }
+            });
+        //}
+    }
+
+    function esValido() {
+            var mensaje = "Todos los campos son obligatorios";
+        if (($('#NombreNuevoMR').val().length == 0) ||
+            ($('#comboServiciosNuevoMR')[0].selectedIndex == 0) ||
+            ($('#comboTipoProcesoNuevoMR')[0].selectedIndex == 0)){
+            toastr.warning(mensaje);
+            return false;
+        } else {
+           
+            $('#guardarNuevo').attr('data-dismiss', 'modal');
+            return true;
+        }
+       
+    }
+
+     function esValidoMotivoDeReclamo() {
+         var mensaje = "Todos los campos son obligatorios";
+         if (($('#NombreNuevoMR').val().length == 0) ||
+             ($('#comboServiciosNuevoMR')[0].selectedIndex == 0) ||
+             ($('#comboTipoProcesoNuevoMR')[0].selectedIndex == 0)) {
+             toastr.warning(mensaje);
+             return false;
+         } else {
+             return true;
+         }
+    }
+
+    function existeMotivoDeReclamo() {
+        $('#guardarNuevo').prop("disabled", true);
+        var token = '@Html.AntiForgeryToken()';
+        var ctoken = $(token).val();
+        if (esValidoMotivoDeReclamo()) {
+             $.ajax({
+                 url: '@Url.Action("ExisteMotivoDeReclamo","Admin")',
+                 type: "POST",
+                 data: {
+                     nombre: $('#NombreNuevoMR').val(),
+                     servicioId: $('#comboServiciosNuevoMR').find("option:selected").val(),
+                     tipoProcesoId: $('#comboTipoProcesoNuevoMR').find("option:selected").val(),
+                     __RequestVerificationToken: ctoken
+                 },
+                 success: function (response) {
+                     $("#divExisteMotivoDeReclamo").html(response);
+                     $('#guardarNuevo').prop("disabled", false);
+                   
+                 },
+                 error: function (response) {
+                     toastr.error(response.responseText + ' ' + response.status);
+                     $('#guardarNuevo').prop("disabled", false);
+                 }
+             });
+        }
+        $('#guardarNuevo').prop("disabled", false);
+    };
+
+
+    function guardarNuevoMotivoDeReclamo() {
+        if (esValido()) {
+             var token = '@Html.AntiForgeryToken()';
+             var nmrtoken = $(token).val();
+            $.ajax({
+                url: '@Url.Action("CrearMotivoDeReclamo", "Admin")',
+                type: "POST",
+                data: {
+                    nombre: $('#NombreNuevoMR').val(),
+                    servicioId: $('#comboServiciosNuevoMR').find("option:selected").val(),
+                    tipoProcesoId: $('#comboTipoProcesoNuevoMR').find("option:selected").val(),
+                    __RequestVerificationToken: nmrtoken
+                },
+                success: function (response) {
+                    //toastr.success("Registro guardado correctamente");
+                    $('#elementos').html(response);
+                    $('#btnCerrarModalNuevoMotivoDeReclamo').click();
+                },
+                error: function (response) {
+                    toastr.error(response.responseText + ' ' + response.status);
+                }
+            });
+        }
+
+    }
+
+    function deshabilitarGuardarEdicion() {
+        $('#guardarEdicion').removeAttr('data-dismiss', 'modal');
+    }
+
+    function habilitarGuardarEdicion() {
+        $('#guardarEdicion').attr('data-dismiss', 'modal');
+    }
+    
+
+    function esValidoNombreEdicion() {   
+
+        if (($('#NombreEdicion').val().trim().length == 0) ||
+            ($('#comboServiciosEditMR')[0].selectedIndex == 0) ||
+            ($('#comboTipoProcesoEditMR')[0].selectedIndex == 0)){ 
+             toastr.warning('Todos los campos son obligatorios');
+            deshabilitarGuardarEdicion();
+            return false;
+        } else {
+            return true;
+        }
+    }
+
+
+    @*function guardarMotivoDeReclamoEditado() {
+        if (esValidoNombreEdicion()) {
+            
+            $.ajax({
+                url: '@Url.Action("guardarOrganismoEditado","Admin")',
+                type: "POST",
+                data: {
+                    id: $('#idElementEdit').val(),
+                    Nombre: $('#NombreEdicion').val(),
+                    servicioId: $('#comboServiciosEditMR').find("option:selected").val(),
+                    tipoProcesoId: $('#comboTipoProcesoEditMR').find("option:selected").val(),                    
+                    campoActivacion: $('input:checkbox[name=checkActivo]:checked').val()
+
+                },
+                success: function (response) {
+                    toastr.success("Registro guardado correctamente");
+                    $('#elementos').html(response);
+                    //GetOrganismos();
+                },
+                error: function (response) {
+                    toastr.error(response.responseText + ' ' + response.status);
+                }
+            });
+        }
+    }*@
+
+
+    @*function guardarMotivoDeReclamoEditado() {
+        
+        if (esValidoNombreEdicion()) {
+            var token = '@Html.AntiForgeryToken()';
+             var emrtoken = $(token).val();
+            $.ajax({
+                url: '@Url.Action("guardarMotivoDeReclamoEditado", "Admin")',
+                type: "POST",
+                data: {
+                    id: $('#idElementEdit').val(),
+                    nombre: $('#NombreEdicion').val(),
+                    servicioId: $('#comboServiciosEditMR').find("option:selected").val(),
+                    tipoProcesoId: $('#comboTipoProcesoEditMR').find("option:selected").val(),
+                    campoActivacion: $('input:checkbox[name=checkActivo]:checked').val(),
+                    __RequestVerificationToken: emrtoken
+                },
+                success: function (response) {
+                    toastr.success("Registro guardado correctamente");
+                    $('#elementos').html(response);
+                },
+                error: function (response) {
+                    //toastr.options.positionClass = 'toast-bottom-right';
+                    //toastr.options.hideDuration = 8000;
+                    toastr.error(response.responseText + ' ' + response.status);
+                }
+            });
+        }
+       
+    }*@
+
+    function guardarMotivoDeReclamoEditado() {
+        if (esValidoNombreEdicion()) {
+            var token = '@Html.AntiForgeryToken()';
+            var atoken = $(token).val();
+            $('#guardarEdicion').prop("disabled",true);
+            $.ajax({
+                url: '@Url.Action("guardarMotivoDeReclamoEditado", "Admin")',
+                type: "POST",
+                data: {
+                    id: $('#idElementEdit').val(),
+                    nombre: $('#NombreEdicion').val(),
+                    servicioId: $('#comboServiciosEditMR').find("option:selected").val(),
+                    tipoProcesoId: $('#comboTipoProcesoEditMR').find("option:selected").val(),
+                    campoActivacion: $('input:checkbox[name=checkActivo]:checked').val(),
+                    __RequestVerificationToken: atoken
+
+                },
+                success: function (response) {                 
+                    try {
+                        if (response == "ACTUALIZADO") {                           
+                            GetMotivoDeReclamoActualizado(); 
+                            $('#btnCloseEditMotivoDeReclamo').click();
+                            $('#guardarEdicion').prop("disabled", false);
+                        }
+                        else
+                            if (response == "No se pueden actualizar los datos.</br>Ya existe el Motivo de Reclamo para este Servicio</br> y Tipo de Proceso.") {
+                                toastr.warning(response);
+                            }
+                            else {
+                                toastr.error(response);   
+                                //toastr.error("Verifique si la Sesión sigue activa.</br>Verifique si los datos fueron actualizados.");            
+                            }
+                    } catch (error) {
+                        toastr.error(error);
+                    }
+                    
+                },
+                error: function (response) {
+                    toastr.error(response.responseText + ' ' + response.status);
+                }
+            });
+            $('#guardarEdicion').prop("disabled", false);
+        }
+        
+    }
+
+    function GetMotivoDeReclamoActualizado() {
+        $.ajax({
+                url: '@Url.Action("GetMotivoDeReclamoActualizado", "Admin")',
+                type: "GET",
+                data: {
+                    id: $('#idElementEdit').val()
+                   
+            }, success: function (result) {
+                    $('#elementos').html(result);
+
+            }, error: function (result) {
+                    toastr.error(result.responseText + ' ' + result.status);
+            }
+        });
+
+    }
+
+    $("#NombreEdicion").keypress(function (e) {
+        if (e.which == 13) {
+            e.preventDefault();
+            guardarMotivoDeReclamoEditado();
+            //return false;
+        }
+    });
+
+
+
+    function limpiarCamposEdicion() {
+        $('#NombreEdicion').val('');
+        $('#comboServiciosEditMR')[0].selectedIndex = 0;
+        $('#comboTipoProcesoEditMR')[0].selectedIndex = 0;
+    }
+
+    function editarMotivoDeReclamo(Id) {
+        deshabilitarGuardarEdicion();
+        limpiarCamposEdicion();
+        $.ajax({
+            url: '@Url.Action("EditarMotivoDeReclamo","Admin")',
+            type: "GET",
+            data: {
+                id: Id
+            },
+            success: function (response) {
+                try {
+                    $('#idElementEdit').val(response.Id);
+                    $('#NombreEdicion').val(response.Nombre);
+                    var servicioId = response.servicioId;
+                    var tipoProcesoId = response.tipoProcesoId;
+                     $("#comboServiciosEditMR option").each(function (i, valor) {
+                        //console.log(i + ' : ' + $(valor).val())
+                        if ($(valor).val() == servicioId) {
+                            $(valor).prop('selected', true);
+                            //console.log('son iguales');                          
+                        }
+                    });
+                    $("#comboTipoProcesoEditMR option").each(function (i, valor) {
+                        //console.log(i + ' : ' + $(valor).val())
+                        if ($(valor).val() == tipoProcesoId) {
+                            $(valor).prop('selected', true);
+                            //console.log('son iguales');                          
+                        }
+                    });
+                    $('#campoActivacion').prop('checked', response.Deleted);
+
+                } catch (response) {
+                    toastr.error(response);
+                }
+            },
+            error: function (response) {
+                toastr.error(response.responseText + ' ' + response.status);
+            }
+        });
+    }
+
+
+    @*function eliminarMotivoDeReclamo() {
+            var idOculto = document.getElementById('idDeleteHidden');
+            var Id = parseInt(idOculto.innerText);
+            console.log(Id);
+
+            $.ajax({
+                url: '@Url.Action("EliminarMotivoDeReclamo","Admin")',
+                type: "Post",
+                data: {
+                    id: Id
+                },
+                success: function (result) {
+                    try {
+                        if (result == "Registro eliminado con éxito") {
+                            filaARemover.remove();
+                            filaARemover = undefined;
+                        }
+                        toastr.info(result);
+                    } catch (error) {
+                        toastr.error(error);
+                    }
+                },
+                error: function (result) {
+                    toastr.error(result.responseText);
+                }
+            });
+
+        }*@
+
+    function EliminarMotivoDeReclamo() {
+        var idOculto = document.getElementById('idDeleteHidden');
+        var Id = parseInt(idOculto.innerText);
+       var token = '@Html.AntiForgeryToken()';
+         var eptoken = $(token).val();
+         $('#btnCerrarModalEliminarMotivoDeReclamo').click();  
+        $.ajax({
+            url: '@Url.Action("EliminarMotivoDeReclamo","Admin")',
+            type: "Post",
+            data: {
+                id: Id,
+                __RequestVerificationToken: eptoken
+            },
+            success: function (result) {
+                try {
+                    
+                    if (result == "Registro eliminado con éxito") {
+                        filaARemover.remove();
+                        filaARemover = undefined;
+                        toastr.success(result);
+                    } else {
+                        toastr.error(result);
+                    }
+                } catch (error) {
+                    toastr.error(error);
+                }
+            },
+            error: function (result) {
+                toastr.error(result.responseText);
+            }
+        });
+
+    }
+
+   
+
+    function validarRelaciones() {
+        
+         var idOculto = document.getElementById('idDeleteHidden');
+         var Id = parseInt(idOculto.innerText);
+          var token = '@Html.AntiForgeryToken()';
+        var vrtoken = $(token).val();
+        $('#btnDelete').prop("disabled",false);
+            $.ajax({
+                url: '@Url.Action("TieneRelacionesElMotivoDeReclamo", "Admin")',
+                type: "Post",
+                data: {
+                    reclamoId: Id,
+                    __RequestVerificationToken: vrtoken  
+                },
+                success: function (result) {
+                    $('#divExisteRelacionesMotivoDeReclamo').html(result);
+                    $('#btnDelete').prop("disabled",true);
+                },
+                error: function (result) {
+                    toastr.error(result.responseText);
+                }
+            });
+        $('#btnDelete').prop("disabled", false);
+    }
+
+    function cargarIdModalDelete(id, element) {
+        $('#idDeleteHidden').html(id);
+        filaARemover = $(element).parent().parent();
+        $('#divExisteRelacionesMotivoDeReclamo').empty();
+        $('#btnDelete').prop("disabled", false);
+    }
+
+    function LimpiarTodo() {
+        $('#elementos').empty();
+        $('#filtroProvincias').val('');
+    }
+  
+</script>
+
+

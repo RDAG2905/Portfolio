@@ -1,0 +1,103 @@
+﻿@using Greco2.Models.Denunciante
+@model IEnumerable<DenuncianteDto>
+
+<style>
+
+    /*table {
+        margin-left: 80px;
+        margin-right: 80px;
+    }*/
+    /*th {
+        text-align: center;
+    }*/
+
+    td {
+        text-align: left;
+        font-size: 12px;
+    }
+
+    .check {
+        width: 20px;
+    }
+
+    span {
+        text-align: center;
+    }
+
+    .infoResult {
+        border-radius: 4px;
+    }
+
+    .list-group-item {
+        border-radius: 4px;
+        margin-left: 8px;
+    }
+</style>
+
+@if (Model.Any())
+{
+    <table class="table table-hover list-group-item" style="width:100%;">
+        <thead>
+            <tr>
+                <th></th>
+                <th>Nombre</th>
+                <th>Apellido</th>
+                <th>Dni</th>
+                <th>Seleccionar</th>
+
+            </tr>
+        </thead>
+
+
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td style="width:100px;">
+                    @Html.DisplayFor(i => item.DenuncianteId)
+                </td>
+                <td style="max-width:300px;">
+                    @Html.DisplayFor(i => item.nombre)
+                </td>
+                <td style="max-width:300px;">
+                    @Html.DisplayFor(i => item.apellido)
+                </td>
+                <td style="width:150px;">
+                    @Html.DisplayFor(i => item.NroDocumento)
+                </td>
+                <td>
+                    <button class="btn-info" style="border-radius:4px;max-width:50px;" onclick="GetDenuncianteTR(this)" data-dismiss="modal"><i class="glyphicon glyphicon-ok"></i></button>
+                </td>
+
+
+            </tr>
+        }
+
+    </table>
+
+}
+else
+{
+
+    <div id="infoResult" class="alert-info text-center col-xs-12">
+        <h4>Sin resultados</h4>
+    </div>
+
+}
+
+<script>
+    
+
+        function seleccionarDenunciante(elem) {
+            var fila = $(elem).parent().parent().children();
+            $.each(fila, function (index, elem) {
+                console.log($(elem).index())
+                console.log($(elem).text())
+                index++;
+            });
+        }
+</script>
+
+
+
+
+

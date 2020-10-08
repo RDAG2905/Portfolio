@@ -1,0 +1,162 @@
+﻿@*@using Greco2.Models.Evento
+@model EventoModelView*@
+
+@*inicio Popup Nuevo*@
+
+<style>
+    /*.form-control {
+    background-color:#f9f9f9;
+    }*/
+    label,option{
+        font-size:12px;
+    }
+
+    option {
+    background-color:white;
+    }
+    
+</style>
+
+<div class="modal fade" id="nuevoEventoModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="border-radius:4px;">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header" style="background-color:#337ab7;color:whitesmoke;">
+                
+
+                <button type="button" class="close" data-dismiss="modal" id="btnCerrarModalNuevoEvento" style="color:white;margin-right:30px;">×</button>
+
+                <h4 class="modal-title" id="myModalLabel" style="margin-left:70px;">Nuevo Hito</h4>
+               
+
+
+            </div>
+            <div class="modal-body center-block">
+                <div id="BodyContent">
+                    <br />
+                    @using (Html.BeginForm())
+                    {
+                        @Html.AntiForgeryToken()
+
+                        <input type="text" id="idTipoEventoSeleccionado" hidden />
+
+                        <div class="form-horizontal" style="margin-left:70px;">
+
+                            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+                            <input type="hidden" id="idDenunciaSeleccionada" />
+                            <input type="hidden" id="idResponsableDenuncia" />
+                            @*<input type="text" id="fechaNotificacionDenuncia" />*@
+                            @*@Html.HiddenFor(model => model.DenunciaId)*@
+
+                            <div class="row">
+                                <div class="col-md-5 col-xs-5">
+                                    <label>Contestado</label>
+                                </div>
+                                <div class="col-md-5 col-xs-5">
+                                    <input type="checkbox" value="" id="contestadoEN" style="margin-left:-5px;"/>
+                                </div>
+                            </div>
+
+
+                            <div class="row">
+                                <div class="col-md-5 col-xs-5">
+
+                                    <label>Tipo de Evento</label>
+                                </div>
+                                <div class="col-md-5 col-xs-5">
+
+                                    <select id="comboTipoEventoNuevo" class="form-control"></select>
+                                </div>
+                            </div>
+                            <div class="row">
+
+                                <div class="col-md-5 col-xs-5">
+
+                                    <label>Fecha</label>
+                                </div>
+                                <div class="col-md-5 col-xs-5">
+                                    <input type="date" class="form-control" id="fechaVencimientoEN" />
+
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-5 col-xs-5">
+                                    <label>Hora Vencimiento:</label>
+                                </div>
+                                <div class="col-md-5 col-xs-5">
+                                    <input type="time" id="horaVencimientoEN" class="form-control" />
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-5 col-xs-5">
+
+                                    <label>Req. Informe</label>
+
+                                </div>
+                                <div class="col-md-5 col-xs-5">
+
+                                    <select id="comboRequerimientoInformeEN" class="form-control"></select>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-5 col-xs-5">
+
+                                    <label>Solucionado</label>
+                                </div>
+                                <div class="col-md-5 col-xs-5">
+
+                                    <select id="comboSolucionadoEN" class="form-control"></select>
+                                </div>
+
+                            </div>
+                            <div class="row">
+                                <div class="col-md-5 col-xs-5">
+                                    <label>Responsable:</label>
+                                </div>
+                                <div class="col-md-5 col-xs-5">
+
+                                    <select id="responsableInternoEventoNuevo" class="form-control"></select>
+                                </div>
+
+                            </div>
+
+
+                            <div class="row">
+
+
+                                <div class="col-md-5 col-xs-5">
+                                    <label>Observación</label>
+                                </div>
+                                <div class="col-md-5 col-xs-5">
+                                    <textarea class=" form-control col-xs-3" style="max-height:100px;" id="observacionesEN" rows="5"></textarea>
+                                </div>
+
+                            </div>
+
+
+                        </div>
+                    }
+                    <br />
+                    <div id="divEventoValido">
+
+                    </div>
+                    @*<br />
+                    <br />*@
+                </div>
+                <div class="modal-footer">
+                    <div class="row">
+                        
+                        <input id="guardarNuevoEvento" type="button" class="btn btn-sm btn-primary col-xs-3" value="Guardar" onclick="guardarNuevoEvento()" style="margin-left:250px;" />
+                        <input type="button" class="btn btn-sm btn-toolbar col-xs-3" @*style="background-color:#cccccc;"*@ value="Cancelar" data-dismiss='modal'/>
+                    </div>
+                    @*<div>
+                        @ViewBag.Message
+                    </div>*@
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+    @*----------- Fin Popup Nuevo ----------*@

@@ -1,0 +1,495 @@
+﻿<style>
+    input,label {
+    font-size:12px;
+    }
+
+</style>
+
+<div>
+    <div class="jumbotron">
+        <h4 class="text-primary">Gestión de Provincias</h4>
+    </div>
+
+    <div class="row">
+        <span class="col-xs-3"></span>
+        <label class="col-xs-1" style="margin-right:10px;margin-left:10px;">Nombre:</label>
+        <input type="text" class="input-sm form-control col-xs-3" id="filtroProvincias" onkeyup="traerProvincias(event)" />
+
+        
+    </div>
+    <div class="row" style="margin-top:12px;">
+        <input type="button" value="Nuevo" class="btn btn-sm btn-primary col-xs-1" id="NuevaProvincia" style="margin-left:340px;margin-right:10px;"
+               data-toggle="modal" data-target="#nuevoModalProvincia" onclick="cleanInput();" />
+        <input type="button" value="Limpiar" class="btn btn-primary btn-sm col-xs-1" id="btnLimpiar" onclick="LimpiarTodo()"
+               style="
+        margin-right:10px;" />
+        <input type="button" value="Buscar" class="btn btn-primary btn-sm col-xs-1" id="" onclick="GetProvincias()"
+               style="
+        margin-right:10px;" />
+    </div>
+    <br />
+    <br />
+    <div class="container-fluid" id="elementos">
+
+    </div>
+</div>
+
+@*inicio Popup Nuevo*@
+<div class="modal fade" id="nuevoModalProvincia" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+
+                <button type="button" class="close" data-dismiss="modal" id="btnCerrarModalNuevaProvincia">×</button>
+                <h4 class="modal-title" id="myModalLabel">Nueva Provincia</h4>
+            </div>
+            <div class="modal-body center-block">
+                <div id="nuevaProvinciaBodyContent">
+                    <form>
+                        <br />
+                        @Html.AntiForgeryToken()
+                        <div class="row col-lg-offset-2">
+                            <label class="col-xs-1" style="font-size:13px;">Nombre</label>
+                            <input class="form-control col-xs-1" type="text" id="nombreNuevo" style="margin-left:45px;" />
+                        </div>
+                        <label type="text" class="text-danger" id="MensajeNombreInvalido" style="display:none;"></label>
+                    </form>
+
+                    <br />
+                    <div id="divExisteProvincia" style="color:white">
+
+                    </div>
+                </div>
+
+            </div>
+            <div class="modal-footer">
+                <div class="row" id="nuevaProvinciaContent">
+                    <span style="margin-right:50px;" class="col-md-offset-3"></span>
+                    <input id="guardarNuevo" type="button" class="btn btn-sm btn-primary col-xs-3" value="Guardar" onclick="existeProvincia()" />
+                    <input type="button" class="btn btn-sm btn-toolbar col-xs-3" value="Cancelar" data-dismiss='modal' />
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@*----------- Fin Popup Nuevo ----------*@
+
+
+@*inicio Popup Edit*@
+<div class="modal fade" id="editModalProvincias" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+
+                <button type="button" class="close" data-dismiss="modal" id="btnCloseEditProvincias">×</button>
+                <h4 class="modal-title" id="myModalLabel">Editar Provincia</h4>
+            </div>
+            <div class="modal-body center-block">
+
+                <div id="editBodyContent">
+                    <form>
+                        @Html.AntiForgeryToken()
+                        <input type="hidden" id="idElementEdit" />
+                        <br />
+                        <div class="row col-lg-offset-2">
+                            <label class="col-xs-1">Nombre</label>
+                            <input class="form-control col-xs-1" type="text" id="NombreEdicion" style="margin-left:55px;" />
+                        </div>
+                        
+                        <br />
+                        <div class="row col-lg-offset-2">
+                            <label class="col-xs-1">Inactivo</label>
+                            <input style="margin-left:40px;" class="col-xs-1" type="checkbox" id="campoActivacion" name="checkActivo" />
+                        </div>
+                    </form>
+                </div>
+
+            </div>
+            <div class="modal-footer">
+                <div class="row" id="editFooterContent">
+                    <span style="margin-right:50px;" class="col-md-offset-3"></span>                                         
+                    <input id="guardarEdicion" type="button" class="btn btn-sm btn-primary col-xs-3" value="Guardar" onclick="guardarProvinciaEditada()" />
+                    <input type="button" class="btn btn-sm btn-toolbar col-xs-3" value="Cancelar" data-dismiss='modal' />
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@*----------- Fin Popup Edit ----------*@
+
+<div class="modal fade" id="deleteModalProvincias" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" id="btnCerrarModalEliminarProvincia">×</button>
+            </div>
+            <div id="deletePopupContent" class="modal-body center-block">
+                <h4>Está a punto de eliminar la Provincia con Id : </h4>
+                <form>
+                    @Html.AntiForgeryToken()
+                    <h4 id="idDeleteHidden"></h4>
+                </form>
+            </div>
+            <br />
+            <div id="divExisteRelacionesProvincia" style="color:white;">
+
+            </div>
+            <div id="deleteFooterContent" class="modal-footer">
+                <button type="button" class="btn btn-danger" id="btnDeleteProvincia" onclick="validarRelaciones()">Eliminar</button>
+                <button type="button" class="btn btn-toolbar" data-dismiss="modal">Cancelar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    var filaARemover;
+
+    function cleanInput() {
+        $('#nombreNuevo').val('');
+        $('#guardarNuevo').removeAttr('data-dismiss');
+        $('#divExisteProvincia').empty();
+    }
+
+
+    function validarBusqueda(e) {
+        $('#elementos').empty();
+        var mensaje = "Ingrese algún filtro de Búsqueda";
+        if ($('#filtroProvincias').val().length == 0) {
+            toastr.warning(mensaje);
+            //e.preventDefault();
+            return false;
+        } else {
+            $('#guardarNuevo').attr('data-dismiss', 'modal');
+            return true;
+        }
+    }
+
+    function traerProvincias(e) {
+        var key = e.keyCode || e.which;
+        console.log(e.keyCode);
+        if (key === 13) {
+            //if (validarBusqueda(e)) { 
+                GetProvincias();
+            //}
+        };
+    }
+
+    function GetProvincias() {
+        var mifiltro = $('#filtroProvincias').val();
+        mostrarLoading();
+        $.ajax({
+            url: '@Url.Action("ListarProvincias", "Admin")',
+            type: "GET",
+            data: {
+                filtro: mifiltro
+            },
+            success: function (response) {
+                ocultarLoading();
+                $('#elementos').html(response);
+            },
+            error: function (response) {
+                
+                ocultarLoading();
+                toastr.error(response.responseText + ' ' + response.statusText);
+
+            }
+        });
+    }
+    function esProvinciaValida() {
+        var mensaje = "Ingrese el nombre";
+        if ($('#nombreNuevo').val().trim().length == 0) {
+            toastr.warning(mensaje);
+            return false;
+        } else {
+            $('#guardarNuevo').attr('data-dismiss', 'modal');
+            return true;
+        }
+    }
+
+    function guardarNuevaProvincia() {
+        if (esProvinciaValida()) {
+             var token = '@Html.AntiForgeryToken()';
+             var gnptoken = $(token).val();
+            $.ajax({
+                url: '@Url.Action("crearProvincia","Admin")',
+                type: "POST",
+                data: {
+                    Nombre: $('#nombreNuevo').val(),
+                    __RequestVerificationToken: gnptoken
+                },
+                success: function (response) {
+                    //toastr.success("Registro guardado correctamente");
+                    $('#elementos').html(response);
+                    limpiaryCerrarModal();
+                },
+                error: function (response) {
+                    toastr.error(response.responseText + ' ' + response.status);
+                }
+            });
+        }
+    }
+
+    function esValidoNombreProvincia() {
+        var mensaje = "Ingrese el nombre de la Provincia";
+        if ($('#nombreNuevo').val().trim().length == 0) {
+            toastr.warning(mensaje);
+            return false;
+        } else {
+            return true;
+        }
+    }
+
+    function existeProvincia() {
+        $('guardarNuevo').prop("disabled", true);
+        var token = '@Html.AntiForgeryToken()';
+        var ctoken = $(token).val();
+        if (esValidoNombreProvincia()) {
+             $.ajax({
+                 url: '@Url.Action("ExisteProvincia","Admin")',
+                 type: "POST",
+                 data: {
+                     Nombre: $('#nombreNuevo').val(),
+                     __RequestVerificationToken: ctoken
+                 },
+                 success: function (response) {
+                     $("#divExisteProvincia").html(response);
+                     $('guardarNuevo').prop("disabled",false);
+
+                 },
+                 error: function (response) {
+                     toastr.error(response.responseText + ' ' + response.status);
+                     $('guardarNuevo').prop("disabled", false);
+                 }
+             });
+        }
+
+        $('guardarNuevo').prop("disabled", false);
+    };
+
+    $("#nombreNuevo").keypress(function (e) {
+        if (e.which == 13) {
+            e.preventDefault();
+            existeProvincia();
+            //return false;
+        }
+    });
+
+    function limpiaryCerrarModal() {
+        $('#btnCerrarModalNuevaProvincia').click();
+    }
+
+
+    function editarProvincia(Id) {
+        deshabilitarGuardarEdicion();
+        $.ajax({
+            url: '@Url.Action("EditarProvincia","Admin")',
+            type: "GET",
+            data: {
+                id: Id
+            },
+            success: function (response) {
+                try {
+                    $('#idElementEdit').val(response.Id);
+                    $('#NombreEdicion').val(response.Nombre);
+                    $('#campoActivacion').prop('checked', response.Deleted);
+                    
+                } catch (response) {
+                    toastr.error(response);
+                }
+            },
+            error: function (response) {
+                toastr.error(response.responseText + ' ' + response.status);
+            }
+        });
+    }
+
+    
+
+    function esValidoNombreEdicion() {
+        if ($('#NombreEdicion').val().trim().length == 0) {
+            toastr.warning('El nombre es obligatorio');
+            deshabilitarGuardarEdicion();
+            return false;
+        } else {
+            //habilitarGuardarEdicion();
+            return true;
+        }
+    }
+
+   
+    @*function guardarProvinciaEditada() {
+        if (esValidoNombreEdicion()) {
+            var token = '@Html.AntiForgeryToken()';
+            var gpetoken = $(token).val();
+            $.ajax({
+                url: '@Url.Action("guardarProvinciaEditada","Admin")',
+                type: "POST",
+                data: {
+                    id: $('#idElementEdit').val(),
+                    Nombre: $('#NombreEdicion').val(),
+                    campoActivacion: $('input:checkbox[name=checkActivo]:checked').val(),    //$('input:checkbox[name=colorfavorito]:checked').val()
+                    __RequestVerificationToken: gpetoken
+                },
+                success: function (response) {
+                    toastr.success("Registro guardado correctamente");
+                    $('#elementos').html(response);
+                },
+                error: function (response) {
+                    toastr.error(response.responseText + ' ' + response.status);
+                }
+            });
+        }
+    }*@
+
+    //
+    function guardarProvinciaEditada() {
+        if (esValidoNombreEdicion()) {
+            var token = '@Html.AntiForgeryToken()';
+            var atoken = $(token).val();
+            $('#guardarEdicion').prop("disabled",true);
+            $.ajax({
+                url: '@Url.Action("guardarProvinciaEditada", "Admin")',
+                type: "POST",
+                data: {
+                    id: $('#idElementEdit').val(),
+                    Nombre: $('#NombreEdicion').val(),
+                    campoActivacion: $('input:checkbox[name=checkActivo]:checked').val(),    //$('input:checkbox[name=colorfavorito]:checked').val()
+                    __RequestVerificationToken: atoken
+
+                },
+                success: function (response) {                 
+                    try {
+                        if (response == "ACTUALIZADO") {                           
+                            GetProvinciaActualizada(); 
+                            $('#btnCloseEditProvincias').click();
+                            $('#guardarEdicion').prop("disabled", false);
+                        }
+                        else
+                            if (response == "No se pueden actualizar los datos.</br>Existe otra Provincia con el mismo Nombre.") {
+                                toastr.warning(response);
+                            }
+                            else {
+                                toastr.error(response);   
+                                //toastr.error("Verifique si la Sesión sigue activa.</br>Verifique si los datos fueron actualizados.");            
+                            }
+                    } catch (error) {
+                        toastr.error(error);
+                    }
+                    
+                },
+                error: function (response) {
+                    toastr.error(response.responseText + ' ' + response.status);
+                }
+            });
+            $('#guardarEdicion').prop("disabled", false);
+        }
+        
+    }
+
+    function GetProvinciaActualizada() {
+        $.ajax({
+                url: '@Url.Action("GetProvinciaActualizada", "Admin")',
+                type: "GET",
+                data: {
+                    id: $('#idElementEdit').val()
+                   
+            }, success: function (result) {
+                    $('#elementos').html(result);
+
+            }, error: function (result) {
+                    toastr.error(result.responseText + ' ' + result.status);
+            }
+        });
+
+    }
+
+    $("#NombreEdicion").keypress(function (e) {
+        if (e.which == 13) {
+            e.preventDefault();
+            guardarProvinciaEditada();
+            //return false;
+        }
+    });
+
+    //
+
+
+    function eliminarProvincia() {
+        var idOculto = document.getElementById('idDeleteHidden');
+        var Id = parseInt(idOculto.innerText);
+       var token = '@Html.AntiForgeryToken()';
+         var eptoken = $(token).val();
+         $('#btnCerrarModalEliminarProvincia').click();  
+        $.ajax({
+            url: '@Url.Action("EliminarProvincia","Admin")',
+            type: "Post",
+            data: {
+                provinciaId: Id,
+                __RequestVerificationToken: eptoken
+            },
+            success: function (result) {
+                try {
+                    
+                    if (result == "Registro eliminado con éxito") {
+                        filaARemover.remove();
+                        filaARemover = undefined;
+                        toastr.success(result);
+                    } else {
+                        toastr.error(result);
+                    }
+                } catch (error) {
+                    toastr.error(error);
+                }
+            },
+            error: function (result) {
+                toastr.error(result.responseText);
+            }
+        });
+
+    }
+
+   
+
+    function validarRelaciones() {
+        
+         var idOculto = document.getElementById('idDeleteHidden');
+         var Id = parseInt(idOculto.innerText);
+          var token = '@Html.AntiForgeryToken()';
+          var vrtoken = $(token).val();
+        $('#btnDeleteProvincia').prop("disabled",false)
+            $.ajax({
+                url: '@Url.Action("TieneRelacionesLaProvincia", "Admin")',
+                type: "Post",
+                data: {
+                    provinciaId: Id,
+                    __RequestVerificationToken: vrtoken  
+                },
+                success: function (result) {
+                    $('#divExisteRelacionesProvincia').html(result);
+                    $('#btnDeleteProvincia').prop("disabled",true)
+                },
+                error: function (result) {
+                    toastr.error(result.responseText);
+                }
+            });
+        $('#btnDeleteProvincia').prop("disabled", false)
+    }
+
+    function cargarIdModalDelete(id, element) {
+        $('#idDeleteHidden').html(id);
+        filaARemover = $(element).parent().parent();
+        $('#divExisteRelacionesProvincia').empty();
+        $('#btnDeleteProvincia').prop("disabled", false)
+    }
+
+    function LimpiarTodo() {
+        $('#elementos').empty();
+        $('#filtroProvincias').val('');
+    }
+
+</script>
+
+

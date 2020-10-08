@@ -1,0 +1,22 @@
+﻿@model Greco2.Models.Denunciante.DenuncianteDto
+
+<tr class="row">
+    <td style="width:100px;">
+        
+    </td>
+    <td style="max-width:300px;">
+        <input type="text" maxlength="25" onfocus="removeErrorClass(this)" class="form-control" value=" @Model.nombre" /> 
+       
+    </td>
+    <td style="max-width:300px;">
+        <input type="text" maxlength="25" onfocus="removeErrorClass(this)" class="form-control" value=" @Model.apellido" />
+        @Model.apellido
+    </td>
+    <td style="width:150px;">
+        <input type="number" class="form-control" value="@Model.NroDocumento" />
+        
+    </td>
+    <td>
+        
+    </td>
+</tr>

@@ -1,0 +1,61 @@
+﻿@model Greco2.Models.Denunciante.DenuncianteDto
+
+<style>
+    input[type=text] {
+        font-size: 12px;
+    }
+
+    /*label {
+    margin-left:80px;
+    }*/
+</style>
+<form>
+    @Html.AntiForgeryToken()
+    <div class="row">
+        <div class="col-md-5 col-xs-5">
+            <label id="nombreDenuncianteEditado" style="margin-left:100px;">Nombre</label>
+        </div>
+
+        <div class="col-md-4 col-xs-4">
+            <input class="form-control" type="text" id="nombreEdicion" value="@Model.nombre" style="width:300px !important;" />
+        </div>
+
+    </div>
+    <div class="row">
+        <div class="col-md-5 col-xs-5">
+            <label id="apellidoDenuncianteEditado" style="margin-left:100px;">Apellido</label>
+        </div>
+
+        <div class="col-md-4 col-xs-4">
+            <input class="form-control" type="text" id="apellidoEdicion" value="@Model.apellido" style="width:300px !important;"/>
+        </div>
+    </div>
+
+
+    <div class="row">
+        <div class="col-md-5 col-xs-5">
+            <label id="dniDenuncianteEditado" style="margin-left:100px;">Dni</label>
+        </div>
+        <div class="col-md-4 col-xs-4">
+            <input class="form-control" type="text" id="dniEdicion" value="@Model.NroDocumento" maxlength="15" style="width:300px !important;"/>
+        </div>
+    </div>
+
+    <input type="hidden" value="@Model.DenuncianteId" id="DenuncianteIdEdicion" />
+    <span id="existeDni" hidden style="background-color:white;"></span>
+    <br />
+</form>
+@*<div class="row col-lg-offset-2">
+    <label class="col-xs-1">Nombre</label>
+    <input class="input-lg form-control col-xs-1" type="text" id="nombreEdicion" value="@Model.nombre" />
+</div>
+<div class="row col-lg-offset-2">
+    <label class="col-xs-1">Apellido</label>
+    <input class="input-lg form-control col-xs-1" type="text" id="apellidoEdicion" value="@Model.apellido" />
+</div>
+
+<div class="row col-lg-offset-2">
+    <label class="col-xs-1">Dni</label>
+    <input class="input-lg form-control col-xs-1" type="text" id="dniEdicion" value="@Model.NroDocumento" />
+</div>*@
+

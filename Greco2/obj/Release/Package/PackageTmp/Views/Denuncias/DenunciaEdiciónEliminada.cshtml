@@ -1,0 +1,3954 @@
+﻿
+@using Greco2.Models.DatosCoprec
+@using Greco2.Models.Evento
+@model Greco2.Models.Denuncia.DenunciasContainerModel
+
+<style>
+    body {
+        background-image: linear-gradient(#f2f2f2 9%,white 0.1%,white 90%,white);
+        /*#f6f6f6 0.1%*/
+    }
+
+
+    tr:hover {
+        background-color: #f2f2f2;
+    }
+
+    #BotoneraPrincipal > input, button {
+        width: 160px;
+    }
+
+    .fondoError {
+        background-color: mistyrose;
+    }
+
+    .error {
+        border: 2px solid #b30000;
+        /*background-color: #ffe6e6;*/
+    }
+
+    .completar {
+        border-color: orangered;
+    }
+
+    input[type=text], input[type=date], input[type=time], label {
+        max-width: 280px;
+        height: 30px;
+        margin-right: 50px;
+    }
+
+    text {
+        color: dodgerblue;
+        margin-left: 10px;
+        /*margin-top: 15px;*/
+        max-width: 220px;
+        /*background-color:lightgray;*/
+    }
+
+    .leftText {
+        text-align: left;
+    }
+
+    input[type=checkbox] {
+        margin-left: 80px;
+        margin-right: 1px;
+    }
+
+    /*#comboOrganismos, #comboEstudios, #comboModalidadGestion, #comboSubTipoProceso, #comboMediador, #comboDomicilioMediador,
+    #comboMotivoReclamo, #comboServicioDenunciado, #comboEstadoConciliacion, #comboTipoEvento, #comboReqInforme,
+    #comboListaTipoEvento {
+        width: 180px;
+    }*/
+
+    input[type=button] {
+        border-radius: 4px;
+    }
+
+    .h-divider {
+        margin-top: 25px;
+        /*margin-bottom: 5px;*/
+        height: 1px;
+        width: 100%;
+        border-top: 1px solid #0066ff;
+    }
+
+    .borde {
+        /*display:flex;*/
+        /*border-style: solid;*/
+        background-color: white;
+        /*border-color: #cccccc;*/
+        /*border-color: #808080;*/
+        /*border-color: #999999;
+        border-color: lightgray;*/
+        border-width: 1px;
+        border-radius: 4px;
+        margin-top: 5px;
+        margin-bottom: 5px;
+        /*margin-left: -25px;*/
+        padding-left: 40px;
+        padding-right: 20px;
+        padding-top: 30px;
+        padding-bottom: 30px;
+    }
+
+    /*, #grupoDenunciantesContainer*/
+    #ParentContainer, #Parent {
+        background-color: #e6e6e6;
+        border-radius: 4px;
+        padding-top: 10px;
+        padding-left: 50px;
+        padding-right: 50px;
+        /*margin-left: -10px auto;
+        margin-right: -10px auto;*/
+        /*width:1200px;*/
+    }
+
+    #grupoDenunciantesContainer {
+        padding-left: 30px;
+        padding-right: 30px;
+        padding-bottom: 30px;
+        display: flex;
+        justify-content: center;
+    }
+
+    #Buscador, #Cleaner, #alta {
+        margin-left: -30px;
+        height: 25px;
+        /*width:25px;*/
+        justify-content: center;
+        padding-left: 7px;
+        padding-right: 7px;
+    }
+
+    #checkEvento {
+        margin-left: 10PX;
+    }
+
+    .bordeBotonera {
+        border-radius: 4px;
+        padding-left: 25px;
+        padding-top: 6px;
+        padding-bottom: 6px;
+        text-align: center;
+        background-color: white;
+        height: 42px;
+    }
+
+    .btnGuardar {
+        padding-left: 50px;
+        padding-right: 50px;
+    }
+
+    .container-fluid {
+        margin: 0 auto;
+    }
+
+    th {
+        max-width: 200px;
+        padding: 5px 5px 5px 5px;
+    }
+
+    table {
+        text-align: center;
+    }
+
+    .menu {
+        /*background-color: #00547E;*/
+        /*background-color: #002966;*/
+        background-color: #337ab7; /*#0066ff #0047b3 #262626 #666666 #d9d9d9 #bfbfbf #337ab7*/
+        /*background:linear-gradient(#002966,#0047b3);*/
+        /*border-bottom: 8px solid #04A3ED;*/
+        border-bottom: 4px solid #04A3ED;
+        /*border-bottom: 4px solid #d9d9d9;*/
+        border-radius: 4px;
+        width: 120%;
+        height: 40px;
+        /*padding: 10px 10px;*/
+        position: static;
+        margin-top: -20px;
+        /*margin: 0px;*/
+        margin-left: -110px;
+        /*margin-right: -50px;*/
+        z-index: 1;
+        /*height: 35px;*/
+        /*opacity: 0.9;*/
+    }
+
+        .menu .navbar-nav > .active > a {
+            background-color: #04A3ED;
+            color: white;
+            font-weight: bold;
+        }
+
+        .menu .navbar-nav > li > a {
+            font-size: 13px;
+            color: white;
+            padding: 10px 35px;
+        }
+
+            .menu .navbar-nav > li > a:hover {
+                background-color: #04A3ED;
+            }
+
+    .navbar-header > a {
+        font-family: 'Ubuntu Condensed', sans-serif;
+        padding: 0px;
+        margin: 0px;
+        text-decoration: none;
+        color: white;
+        font-size: 25px;
+        /*font-size: 20px;*/
+        padding: 5px 30px;
+    }
+
+        .navbar-header > a:hover {
+            text-decoration: none;
+            color: #04A3ED;
+        }
+
+    .form-control {
+        max-height: 30px;
+    }
+
+    .row {
+        max-height: 55px;
+    }
+
+    input[type=button]:hover {
+        -webkit-box-shadow: 0px 1px 10px 0px rgba(0,0,0,0.25);
+        -moz-box-shadow: 0px 1px 10px 0px rgba(0,0,0,0.25);
+        box-shadow: 0px 1px 10px 0px rgba(0,0,0,0.25);
+    }
+
+    button:hover {
+        -webkit-box-shadow: 0px 1px 10px 0px rgba(0,0,0,0.25);
+        -moz-box-shadow: 0px 1px 10px 0px rgba(0,0,0,0.25);
+        box-shadow: 0px 1px 10px 0px rgba(0,0,0,0.25);
+    }
+
+    .btnCerrarModal {
+        margin-left: 500px;
+    }
+    #navHeader {
+        display:none;
+    }
+    #navHeaderMin * {
+        display: block;
+        width: 500px;
+    }
+
+    @@media(min-width: 800px) {
+        #btnVolver {
+            width: 150px;
+        }
+
+        #navHeader {
+            display: inline-block;
+        }
+
+        #navHeaderMin {
+            display: none;
+        }
+
+        .btn, .btn-default, .btn-secondary, .fileinput-upload, .fileinput-upload-button {
+            width: 100%;
+        }
+
+
+        #nombreDenuncianteEditado, #apellidoDenuncianteEditado, #dniDenuncianteEditado {
+            margin-left: 80px;
+        }
+
+        #btnGuardarEdicionDenunciante {
+            margin-left: 50px;
+        }
+    }
+
+    @@media(min-width: 850px) {
+        #btnVolver {
+            width: 150px;
+        }
+
+        #navHeader {
+            display: inline-block;
+        }
+
+        #navHeaderMin {
+            display: none;
+        }
+
+        .btn, .btn-default, .btn-secondary, .fileinput-upload, .fileinput-upload-button {
+            width: 100%;
+        }
+
+        #btnGuardarEdicionDenunciante {
+            margin-left: 50px;
+        }
+    }
+
+    @@media(min-width: 900px) {
+        /*#btnVolver, #btnEditarDenuncia, #btnFormalizarDenuncia, #btnVisualizarModificaciones {
+        display:none;
+        }*/
+        #navHeaderMin {
+            display: none;
+        }
+
+        #navHeader {
+            display: inline-block;
+        }
+
+        #btnGuardarEdicionDenunciante {
+            margin-left: 50px;
+        }
+    }
+
+    @@media(min-width: 1000px) {
+        #navHeader {
+            display: block;
+        }
+
+        #btnVolver, #btnEditarDenuncia, #btnFormalizarDenuncia, #btnVisualizarModificaciones {
+            display: inline-block;
+        }
+
+        #navHeaderMin {
+            display: none;
+        }
+
+        #navHeader {
+            display: inline-block;
+        }
+
+        #btnGuardarEdicionDenunciante {
+            margin-left: 50px;
+        }
+    }
+
+
+    @@media(min-width: 1200px) {
+
+        .btn, .btn-default, .btn-secondary, .fileinput-upload, .fileinput-upload-button {
+            width: 150px;
+        }
+
+        #btnVolver {
+            margin-left: 500px;
+        }
+
+        #navHeaderMin {
+            display: none;
+        }
+
+        #btnGuardarEdicionDenunciante {
+            margin-left: 110px;
+        }
+
+        #btnCancelarEdicionDenunciante {
+            margin-left: 70px;
+        }
+    }
+</style>
+
+
+<div class="container">
+    <div id="navHeader" class="navbar navbar-default navbar-header" style="height:20px;width:120%;margin-left:-120px;margin-bottom:0px;background-color:#d4d4f7;">
+        <div class="row" id="BotoneraPrincipal">
+            <input style="margin-left:150px;" type="button" name="name" value="Visualizar Modificaciones" class="btn btn-sm btn-primary" id="btnVisualizarModificaciones" onclick="getHistorialDeModificaciones()" data-toggle="modal" data-target="#visualizarModificacionesModal" />
+
+            @*@if (Model.denunciasModelView.Inactivo || Model.denunciasModelView.laDenunciaEstaCerrada)
+                {
+                    <input type="button" name="name" value="Formalizar Denuncia" onclick="getConfigFormalizar()" class="btn btn-sm btn-primary" id="btn
+                       nuncia" data-toggle="modal" data-target="#visualizarModificacionesModal" disabled />
+                    <input type="button" name="name" value="Editar Denuncia" onclick="HabilitarEdicion()" class="btn btn-sm btn-primary" id="btnEditarDenuncia" disabled />
+                }
+                else
+                {*@
+            <input type="button" name="name" value="Formalizar Denuncia" onclick="getConfigFormalizar()" class="btn btn-sm btn-primary" id="btnFormalizarDenuncia" @*data-toggle="modal" data-target="#visualizarModificacionesModal"*@ />
+            <input type="button" name="name" value="Editar Denuncia" onclick="HabilitarEdicion()" class="btn btn-sm btn-primary" id="btnEditarDenuncia" />
+            @*}*@
+            <button @*style="margin-left:500px;"*@ class="btn btn-sm btn-primary" id="btnVolver" onclick="Volver()"><i style="margin-right:15px;" class="glyphicon glyphicon-arrow-left" ></i>Volver</button>
+            <input type="hidden" id="idCoprec" />
+        </div>
+    </div>
+    <div id="navHeaderMin" class="navbar navbar-default navbar-header" style="width:120%;margin-left:-50px;margin-right:-50px;margin-bottom:0px;background-color:lavender;">
+        <div class="container" style="height:150px;">
+            <div class="row">
+                <div class="col-xs-12">
+                    <button id="btnVolver" class="btn btn-sm btn-toolbar" onclick="Volver()"><i style="margin-right:15px;" class="glyphicon glyphicon-arrow-left"></i>Volver</button>
+                    <input type="hidden" id="idCoprec" />
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-xs-12">
+                    <input type="button" name="name" value="Visualizar Modificaciones" class="btn btn-sm btn-info" id="btnVisualizarModificaciones" onclick="getHistorialDeModificaciones()" data-toggle="modal" data-target="#visualizarModificacionesModal" />
+                </div>
+            </div>
+            @if (Model.denunciasModelView.Inactivo || Model.denunciasModelView.laDenunciaEstaCerrada)
+            {
+                <div class="row">
+                    <div class="col-xs-12">
+                        <input type="button" name="name" value="Formalizar Denuncia" class="btn btn-sm btn-info" id="btnFormalizarDenuncia" data-toggle="modal" data-target="#visualizarModificacionesModal" disabled />
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-xs-12">
+                        <input type="button" name="name" value="Editar Denuncia" class="btn btn-sm btn-info" id="btnEditarDenuncia" disabled />
+                    </div>
+                </div>
+            }
+            else
+            {
+                <div class="row">
+                    <div class="col-xs-12">
+                        <input type="button" id="btnFormalizarDenuncia" value="Formalizar Denuncia" onclick="getConfigFormalizar()" class="btn btn-sm btn-info" id="btnFormalizarDenuncia" data-toggle="modal" data-target="#visualizarModificacionesModal" />
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-xs-12">
+                        <input type="button" value="Editar Denuncia" onclick="HabilitarEdicion()" class="btn btn-sm btn-info" id="btnEditarDenuncia" />
+                    </div>
+                </div>
+            }
+
+        </div>
+    </div>
+    <ul class="nav nav-tabs">
+        <li class="active"><a data-toggle="tab" href="#home" onmouseover="copiarIdCoprec()">Datos Generales</a></li>
+        <li id="solapaDenunciantes" style="display:none;" onclick="GetGrupoDenunciantesView()"><a data-toggle="tab" href="#menu1">Denunciantes</a></li>
+        <li id="solapaDatosCoprec" @*onclick="getDatosCoprec()"*@><a data-toggle="tab" href="#menu2">Datos Coprec</a></li>
+        <li style="display:none;"><a data-toggle="tab" href="#menu3">Previsiones</a></li>
+        <li id="linkDocuments"><a data-toggle="tab" href="#menu4">Documentos</a></li>
+        <li>@Html.Label(Model.denunciasModelView.RESP_INT_ID.ToString(), null, new { @id = "responsableInternoId", style = "color:white;" })</li>
+    </ul>
+
+    <div class="tab-content">
+
+        <div id="home" class="tab-pane fade in active">
+
+            @Html.Partial("DatosDenunciaEliminada", Model.denunciasModelView)
+
+
+
+
+            <!-- Modal -->
+            <div id="erroresModal" class="modal fade" role="dialog">
+                <div class="modal-dialog">
+
+                    <!-- Modal content-->
+                    <div class="modal-content">
+                        <div class="modal-header" style="text-align:center;">
+                            <button type="button" class="close" data-dismiss="modal">&times;</button>
+                            <div class="row">
+                                <h4 class="modal-title text-primary">Atención : </h4>
+                            </div>
+                        </div>
+                        <div class="modal-body" style="background-color:#f2f2f2;">
+                            <h5 class="text-center">Error al guardar la Denuncia</h5>
+                            <ul id="ErrorBox"></ul>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Fin Modal Error -->
+        <!-- Inicio Modal Visualizar Modificaciones -->
+        <div id="visualizarModificacionesModal" class="modal fade" role="dialog">
+            <div class="modal-dialog">
+
+                <!-- Modal content-->
+                <div class="modal-content" style="min-width:780px;">
+                    <div class="modal-header" style="text-align:center;">
+                        <button type="button" class="close" data-dismiss="modal" style="margin-top:10px;max-width:150px;margin-right:6px;">&times;</button>
+                        <div class="row" style="background-color:#f2f2f2;padding-top:10px;padding-bottom:10px;margin-left:4px;margin-right:4px;border-radius:4px;">
+                            <h4 class="modal-title text-primary" id="modalTitle">@*Historial de Modificaciones*@</h4>
+                        </div>
+                    </div>
+                    <div class="modal-body" style="background-color:#f2f2f2;border-bottom:1px solid #e6e6e6;">
+                        <div id="divLoadingHistorialCambios" style="display:none;text-align:center;"><img src="@Url.Content("~/Images/4.gif")" /></div>
+                        <div id="visualizarModificacionesModalBody" style="max-height:400px;overflow:auto"></div>
+
+                    </div>
+                    <div style="height:15px;"></div>
+                    <div class="modal-footer" style="background-image:linear-gradient(#f2f2f2,#f9f9f9);border-radius:6px;">
+                        <button id="btnCerrarModal" type="button" class="btn btn-primary btn-sm" data-dismiss="modal" style="display:none;margin-left:550px;">Cerrar</button>
+                        <div class="row" id="divBotonesFormalizar" style="display:none;text-align:center;">
+                            <button id="btnFormalizar" type="button" class="btn btn-default btn-sm" onclick="formalizarDenuncia()" data-dismiss="modal">Si</button>
+                            <button id="btnNoFormalizar" type="button" class="btn btn-default btn-sm" data-dismiss="modal">No</button>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        @*</div>*@
+        <!-- Fin Modal Visualizar Modificaciones -->
+        <!-- Inicio Modal Denunciantes -->
+        <div class="modal fade" id="DenunciantesModal" role="dialog" data-collapsed="true">
+            <div class="modal-dialog">
+
+                <!-- Modal content-->
+                <div class="modal-content">
+                    <div class="modal-header"
+                         @*style="background-color:#e6e6e6"*@
+                         style="background-color:#337ab7; color:white;">
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+
+
+
+                        <h4 class="modal-title" id="myModalLabel" style="margin-left:200px;">Buscar Denunciante</h4>
+
+                    </div>
+
+                    <div class="modal-body" style="background-color:#f2f2f2;">
+
+                        <div id="divEventoAEditar">
+                            @Html.Partial("BusquedaDenunciantes")
+                        </div>
+
+                    </div>
+
+                    <div class="modal-footer" style="background-color:#f2f2f2;">
+                        <img src="@Url.Content("~/Images/4.gif")" id="loading" style="display:none;" />
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        @*inicio Popup Edit*@
+        <div class="modal fade" id="DenuncianteEdicionModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content" style="background-color:#f2f2f2;">
+                    <div class="modal-header">
+
+                        <button type="button" class="close text-right" data-dismiss="modal" id="btnCerrarDenuncianteEdicionModal">×</button>
+                        <h4 class="modal-title text-primary" style="margin-left:200px;" id="myModalLabel">Editar Denunciante</h4>
+                    </div>
+                    <div class="modal-body center-block" @*style="background-color:#f2f2f2;"*@>
+
+                        <div id="editDenuncianteBodyContent">
+                            <input type="hidden" id="idElementEdit" />
+
+
+                        </div>
+
+                    </div>
+                    <div class="modal-footer" @*style="background-color:#f2f2f2;"*@>
+                        <div class="row" id="editFooterContent">
+                            @*<input type="button" style="margin-left:150px;" class="btn btn-sm btn-primary col-xs-3" value="Guardar" onclick="guardarDenuncianteEdicion()" id="guardarEdicion" />*@
+                            <input type="button" style="margin-left:150px;" class="btn btn-sm btn-primary col-xs-3" value="Guardar" onclick="existeElDni()" id="guardarEdicion" />
+                            <input type="button" class="btn btn-sm btn-info col-xs-3" value="Cancelar" data-dismiss='modal' />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        @*inicio Popup Edit denuncianteGrupo*@
+        <div class="modal fade" id="GrupoDenuncianteEdicionModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+
+                        <button type="button" class="close text-right" data-dismiss="modal" id="btnCerrarDenuncianteGrupoEdicionModal">×</button>
+                        <h4 class="modal-title text-primary" style="margin-left:200px;" id="myModalLabel">Editar Denunciante</h4>
+                    </div>
+                    <div class="modal-body center-block" style="background-color:#f2f2f2;">
+
+                        <div id="editDenuncianteGrupoBodyContent">
+                            <input type="hidden" id="idElementEdit" />
+
+
+                        </div>
+
+                    </div>
+                    <div class="modal-footer" @*style="background-color:#f2f2f2;"*@>
+                        <div class="row" id="editFooterContent">
+                            @*<input type="button" style="margin-left:150px;" class="btn btn-sm btn-primary col-xs-3" value="Guardar" onclick="guardarDenuncianteEdicion()" id="guardarEdicion" />*@
+                            <input type="button" style="margin-left:150px;" class="btn btn-sm btn-primary col-xs-3" value="Guardar" onclick="existeElDniDG()" id="guardarEdicion" />
+                            <input type="button" class="btn btn-sm btn-info col-xs-3" value="Cancelar" data-dismiss='modal' />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+
+        @*fin Modal*@
+
+
+        <div id="menu1" class="tab-pane fade">
+
+            <br />
+            <div id="divGrupoDenunciantesDB"></div>
+            <div id="divGrupoDenunciantes"></div>
+
+        </div>
+
+        <div id="menu2" class="tab-pane fade">
+
+
+        </div>
+        <div id="menu3" class="tab-pane fade">
+            <h3>Previsiones</h3>
+
+        </div>
+        <div id="menu4" class="tab-pane fade">
+
+            @*<div class="jumbotron">
+            <form action="~/Home/SaveDropzoneJsUploadedFiles" class="dropzone" id="dropzoneJsForm"></form>
+            <br />
+            <input type="button" id="submit-all" class="btn btn-primary btn-sm" value="Agregar" />
+
+        </div>
+
+        <div id="FileList">
+
+        </div>*@
+
+            <div class="container">
+
+                <div style="margin-top:10PX;margin-bottom:-20PX;">
+                    @{
+                        if (@Model.denunciasModelView.denuncia.ECMID != null)
+                        {
+                            //var URL = "https://pwin0741.telecom.arg.telecom.com.ar/Telecom/livelink.exe/open/" + @Model.denunciasModelView.denuncia.ECMID.ToString();
+                            var URL = @Model.denunciasModelView.ecmUrl + @Model.denunciasModelView.denuncia.ECMID.ToString();
+                            <a href="@URL" target="_blank">Acceso ECM</a>
+                        }
+                    }
+
+                </div>
+                <form id="inputFileSection">
+                    @Html.AntiForgeryToken()
+                    <input type="hidden" id="aftFiles" />
+                </form>
+                <label for="file-es"></label>
+                <div class="file-loading">
+
+
+                    <input id="file-es" name="file-es[]" type="file" multiple>
+
+                    <br />
+                    <br />
+                </div>
+
+                <div id="divLoadingFiles" style="display:none;text-align:center;"><img src="@Url.Content("~/Images/4.gif")" /></div>
+            </div>
+            <div id="FileList">
+
+            </div>
+
+
+        </div>
+
+    </div>
+
+
+</div>
+
+
+@section scripts{
+    @*@Scripts.Render("~/bundles/jqueryval")*@
+
+    <script>
+
+            $(window).on('load', function () {
+                var proceso = $('#tipoProcesoSeleccionado').val();
+                $("#comboTiposProceso option").each(function (i, valor) {
+
+                    if ($(valor).text() == proceso) {
+                        $(valor).prop('selected', true);
+
+                    }
+                });
+                $("#comboEtapaProcesal option").each(function (i, valor) {
+
+                    if ($(valor).text() == 'Conciliación') {
+                        $(valor).prop('selected', true);
+
+                    }
+                });
+
+
+                if ($('#comboOrganismo option:selected').text().trim() == 'COPREC') {
+
+                    $('#bloqueCamposCoprec').css("display", "block");
+                    $('#solapaDatosCoprec').css("display", "block");
+
+
+                } else {
+                    $('#bloqueCamposCoprec').hide();
+                    $('#solapaDatosCoprec').css("display", "none");
+
+                }
+        
+                if ($('#checkboxDenuncianteIndividual').is(':checked')) {
+                    $('#solapaDenunciantes').css("display", "none");
+                } else {
+                    $('#solapaDenunciantes').css("display", "block");
+                }
+
+                $('#idCoprec').val($('#idDatosCoprec'));
+
+                if ($('#nroDenuncia').text() != '0') {
+                    $("#FormGroupDenuncia *").prop("disabled", true);
+                } else {
+                    $('#btnVisualizarModificaciones').prop("disabled",true);
+                    $('#btnFormalizarDenuncia').prop("disabled",true);
+                }
+
+                if ($('#cierraDenuncia').val() =='True') {
+                    $('#comboSubEstados').removeProp('disabled');
+                }
+                //var responsable = $("#respInter").val();
+                //var responsable = $("#respInt").val(); responsableInternoId
+                var responsable = parseInt($("#responsableInternoId").text());
+
+                $("#responsableInterno option").each(function (i, valor) {
+                    //console.log(i + ' : ' + $(valor).val())
+                    if ($(valor).val() == responsable) {
+                        $(valor).prop('selected', true);
+                        //console.log('son iguales');
+                    }
+                });
+
+                if ($('#comboTiposProceso option:selected').text() == 'DENUNCIA') {
+                    $('#btnFormalizarDenuncia').prop('disabled', true);
+                }
+
+                getDatosCoprec();
+                GetGrupoDenunciantesView();
+                SetParametersFileList();
+                verificarTiempoRestante();
+                toastr.options = {
+                    "closeButton": true,
+                    "debug": false,
+                    "newestOnTop": false,
+                    "progressBar": false,
+                    "positionClass": "toast-top-right",
+                    "preventDuplicates": false,
+                    "onclick": null,
+                    "showDuration": "300",
+                    "hideDuration": "1000",
+                    "timeOut": "5000",
+                    "extendedTimeOut": "1000",
+                    "showEasing": "swing",
+                    "hideEasing": "linear",
+                    "showMethod": "fadeIn",
+                    "hideMethod": "fadeOut"
+                }
+            });
+
+
+        function SetParametersFileList() {
+            $.ajax({
+                url: '@Url.Action("SetParametersFileList", "Checker")',
+                type: "POST",
+                data: {
+
+                },
+                success: function (response) {
+                    //$('#divCargaParámetrosOK').html(response);   
+                },
+                error: function (response) {
+                    toastr.error(response.responseText + ' ' + response.status);
+                }
+            });
+}
+
+          
+function renovar() {
+    laCuentaRegresivaContinua = false;
+    elModalEstaCerrado = true;
+
+    $.ajax({
+        url: '@Url.Action("Renovar", "Checker")',
+        type: "POST",
+        data: {
+
+        },
+        success: function (response) {
+            toastr.success(response);  
+            toastr.clear();
+            toastr.remove();            
+            horario = Date.now();
+            setHorarioInicial(horario);
+            initIntervalo();
+            toastr.options = {
+                "closeButton": true,
+                "debug": false,
+                "newestOnTop": false,
+                "progressBar": false,
+                "positionClass": "toast-top-right",
+                "preventDuplicates": false,
+                "onclick": null,
+                "showDuration": "300",
+                "hideDuration": "1000",
+                "timeOut": "5000",
+                "extendedTimeOut": "1000",
+                "showEasing": "swing",
+                "hideEasing": "linear",
+                "showMethod": "fadeIn",
+                "hideMethod": "fadeOut"
+            };
+        },
+        error: function (response) {
+            toastr.error(response.responseText + ' ' + response.status);
+        }
+        });
+
+    }
+        
+            function BackToLogin() {    
+                toastr.clear();
+                toastr.remove();       
+                window.location.href = "@Url.Action("CerrarSesion", "Home" )";
+            }
+
+            function visualizarBloqueCamposCoprec() {
+                if ($('#comboOrganismo option:selected').text().includes('COPREC')) {
+
+                    $('#bloqueCamposCoprec').css("display", "block");
+                    $('#solapaDatosCoprec').css("display", "block");
+
+
+                } else {
+                    $('#bloqueCamposCoprec').hide();
+                    $('#solapaDatosCoprec').css("display", "none");
+                }
+            }
+
+        function HabilitarEdicion() {
+            toastr.options.positionClass = "toast-bottom-right";
+            toastr.warning('La denuncia ha sido eliminada</br> y no es posible editarla');
+                //$("#FormGroupDenuncia *").prop("disabled", false);
+                //$("#comboTiposProceso").prop("disabled",true);
+                //$("#EditarDenuncia").prop("disabled", false);
+                //if (!$('#checkboxDenuncianteIndividual').is(':checked')) {
+                //    $('#btnBuscarDenuncianteIndividual').prop('disabled',true);
+                //    $('#btnEditarDenuncianteIndividual').prop('disabled', true);
+                //}
+            }
+
+            function Volver() {
+                history.back();
+            }
+
+            function verificarContenido(elem) {
+                var input = $(elem);
+                if (input.val().length > 0 &&
+                    ((input.val().length != 10)
+                        || input.val().toString().includes(".")
+                        || input.val().toString().includes(","))) {
+                    input.addClass('error');
+                    toastr.warning(' El número de Linea <br/> debe contener 10 dígitos');
+
+                };
+
+            }
+
+            function habilitarSolapaDenunciantes(elem) {
+                if (!$(elem).is(':checked')) {
+                    $('#solapaDenunciantes').css('display', 'block');
+                    $('#btnBuscarDenuncianteIndividual').attr("disabled", "disabled");
+                    $('#btnEditarDenuncianteIndividual').attr("disabled", "disabled");
+                }
+                else {
+                    $('#solapaDenunciantes').css('display', 'none');
+                    $('#btnBuscarDenuncianteIndividual').removeAttr("disabled");
+                    $('#btnEditarDenuncianteIndividual').removeAttr("disabled");
+                }
+            }
+
+
+
+            function traerDatosCoprec() {
+
+                var id = $('#idDatosCoprec').val();
+                if (id == '' || id == 0) {
+                    id = $('#idCoprec').val();
+                } else {
+                    id = $('#idDatosCoprec').val();
+                }
+                if ($('#nroDenuncia').text() != '0') {
+                    $.ajax({
+                        url: '@Url.Action("TraerDatosCoprec","Denuncias")',
+                        type: "Get",
+                        //data: { idDatosCoprec: $('#coprecValues').val() },
+                        //data: { idDatosCoprec: $('#datosCoprecId').val() },
+                        //data: { idDatosCoprec: $('#idDatosCoprec').val() },  // esta es la anterior y funciona con la edición.
+                        data: { idDatosCoprec: id },
+                        success(response) {
+                            $('#menu2').html(response);
+                        },
+                        error(response) {
+                            toastr.options.positionClass = 'toast-top-full-width';
+                            toastr.error(response.responseText);
+                        }
+                    });
+               }
+            }
+
+            function getDatosCoprec() {
+                if ($('#menu2').children().length == 0) {
+                 var id = $('#nroDenuncia').text();
+                    $.ajax({
+                        url: '@Url.Action("GetDatosCoprec","Denuncias")',
+                        type: "Get",
+
+                        data: { idDenuncia: id },
+                        success(response) {
+                            $('#menu2').html(response);
+                        },
+                        error(response) {
+                            toastr.options.positionClass = 'toast-top-right';
+                            toastr.error(response.responseText);
+                        }
+                    });
+               }
+
+            }
+     function editarDatosCoprec() {
+                var denunciaId = parseInt($('#nroDenuncia').text());
+                    $.ajax({
+                        url: '@Url.Action("EditarDatosCoprec","Denuncias")',
+                        type: "Get",
+                        data: {
+                            Id: $('#DatosCoprec').val(),
+                            Honorarios: $('#inputHonorarios').val(),
+                            NroGestion: $('#inputNroGestion').val(),
+                            FechaGestionHonorarios: $('#inputFechaGestionHonorarios').val(),
+                            MontoAcordado: $('#inputMontoAcordado').val(),
+                            Arancel: $('#inputArancel').val(),
+                            FechaGestionArancel: $('#inputFechaGestionArancel').val(),
+                            DenunciaId: denunciaId,
+                        },
+                        success(response) {
+                            toastr.success('Registro guardado correctamente');
+                            $('#menu2').html(response);
+                        },
+                        error(response) {
+                            toastr.options.positionClass = 'toast-top-full-width';
+                            toastr.error(response.responseText);
+                        }
+                    });
+
+            }
+
+            function copiarIdCoprec() {
+                $('#idCoprec').val($('#DatosCoprec').val());
+            }
+
+            function guardarDatosCoprec() {
+                var denunciaId = parseInt($('#nroDenuncia').text());
+                    $.ajax({
+                        url: '@Url.Action("GuardarDatosCoprec","Denuncias")',
+                        type: "Get",
+                        data: {
+                            Honorarios: $('#inputHonorarios').val(),
+                            NroGestion: $('#inputNroGestion').val(),
+                            FechaGestionHonorarios: $('#inputFechaGestionHonorarios').val(),
+                            MontoAcordado: $('#inputMontoAcordado').val(),
+                            Arancel: $('#inputArancel').val(),
+                            FechaGestionArancel: $('#inputFechaGestionArancel').val(),
+                            DenunciaId: denunciaId,
+                        },
+                        success(response) {
+                            toastr.success('Registro guardado correctamente');
+                            //$('#datosCoprecId').val($('#DatosCoprec').val());
+                            $('#idDatosCoprec').val($('#DatosCoprec').val());
+                            $('#idCoprec').val($('#DatosCoprec').val());
+                            //console.log('idcoprec:');
+                            //console.log($('#idDatosCoprec').val());
+                            //idDatosCoprec = $('#DatosCoprec').val();
+                            //$('#coprecValues').val($('#DatosCoprec').val());
+                            $('#menu2').html(response);
+                        },
+                        error(response) {
+                            toastr.options.positionClass = 'toast-top-full-width';
+                            toastr.error(response.responseText);
+                        }
+                    });
+
+            }
+
+
+
+            function eliminarFilasGrupo() {
+                var tbody = $('#lista tbody');
+                tbody.empty();
+                $('#cantidadDenunciantes').val('');
+                $('#cantidadDenunciantesASacar').val('');
+                $('#cantidadDenunciantes').prop('readonly', false);
+                $('#divGrupo').empty();
+            }
+
+              var listadoDenunciantes = [];
+
+        function guardarGrupoDenunciantes_OLD() {
+        var fila = [];
+                    var n = 0;
+                    $('#lista tbody tr').each(function (i, valor) {
+
+                        fila.push($(valor).find('td').eq(0).text());
+                        fila.push($(valor).find('td').eq(1).children().val());
+                        fila.push($(valor).find('td').eq(2).children().val());
+                        fila.push($(valor).find('td').eq(3).children().val());
+
+                        listadoDenunciantes.push(fila);
+                        fila = [];
+            });
+
+            //fallas = [];
+            //for (var i = 0; i < listadoDenunciantes.length; i++) {
+            //    if (listadoDenunciantes[i] == '') {
+            //        fallas.push(listadoDenunciantes[i]);
+            //    }
+            //}
+            //console.log(fallas.length);
+            //$.each(listadoDenunciantes, function (indice, valor) {
+
+            //    //($(valor).eq(1).val().trim() == '' || $(valor).eq(2).val().trim() == '')
+            //    //(valor[1] == '' || valor[2] == '')
+            //    //    ? toastr.warning('Posicion - ' + $(valor).eq(0).text()) /*fallas.push('posición' + $(valor).eq(0).text())*/
+            //    //    : toastr.success('OK');
+            //    console.log(indice + ' - ' + valor[0]);
+            //    console.log(indice + ' - ' + valor[1]);
+            //    console.log(indice + ' - ' + valor[2]);
+            //    console.log(indice + ' - ' + valor[3]);
+            //});
+
+                    console.log(listadoDenunciantes);
+                    console.log(listadoDenunciantes.length);
+                    if (listadoDenunciantes.length <= 1) {
+                        toastr.options.positionClass = 'toast-bottom-full-width'; /*'toast-bottom-right'*/
+                        toastr.warning('.......................................................................... Para crear un Grupo de Denunciantes se requieren al menos 2 Integrantes');
+                    }
+                    else {
+                        $.ajax({
+                            @*url: '@Url.Action("CrearGrupo","Denuncias")',*@
+                            url: '@Url.Action("CrearGrupo","Denunciantes")',
+                            type: 'Post',
+                            data: { lista: listadoDenunciantes },
+                            success(response) {
+
+                                $('#divGrupo').html(response);
+                                $('#lista tbody').empty();
+                                $('#grupoIdDenunciantes').val($('#grupoDenuncianteId').text())
+                                var nombrePrincipal = $('#nombreDenunciantePrincipal').val();
+                                var apellidoPrincipal = $('#apellidoDenunciantePrincipal').val();
+                                var dniPrincipal = $('#dniDenunciantePrincipal').val();
+                                console.log(nombrePrincipal);
+                                console.log(apellidoPrincipal);
+                                console.log(dniPrincipal);
+                                console.log($('#idDenunciantePrincipal').val());
+                                $('#denuncianteResult').html(nombrePrincipal + " " + apellidoPrincipal + " " + dniPrincipal);
+                                $('#denuncianteId').val($('#idDenunciantePrincipal').val());
+
+                                $('#btnClearTable').attr("disabled", true);
+                                $('#guardarGrupoDenunciantes').css("display", "none");
+                                $('#editarGrupoDenunciantes').css("display","block");
+                            },
+                            error(response) {
+                                toastr.error(response.responseText);
+                            }
+                        });
+                        listadoDenunciantes = [];
+                    }
+        };
+
+
+
+            function guardarGrupoDenunciantes() {
+                    var fila = [];
+                    var n = 0;
+                    $('#lista tbody tr').each(function (i, valor) {
+
+                        fila.push($(valor).find('td').eq(0).text());
+                        fila.push($(valor).find('td').eq(1).children().val());
+                        fila.push($(valor).find('td').eq(2).children().val());
+                        fila.push($(valor).find('td').eq(3).children().val());
+
+                        listadoDenunciantes.push(fila);
+                        fila = [];
+            });
+
+                    console.log(listadoDenunciantes);
+                    console.log(listadoDenunciantes.length);
+                    if (listadoDenunciantes.length <= 1) {
+                        toastr.options.positionClass = 'toast-bottom-full-width'; /*'toast-bottom-right'*/
+                        toastr.warning('.......................................................................... Para crear un Grupo de Denunciantes se requieren al menos 2 Integrantes');
+                    }
+                    else {
+                        $.ajax({
+                            url: '@Url.Action("CrearGrupo","Denuncias")',
+                            @*url: '@Url.Action("CrearGrupo","Denunciantes")',*@
+                            type: 'Post',
+                            data: { lista: listadoDenunciantes },
+                            success(response) {
+
+
+                                //$('#listaDeFallas').html(response);
+                                //if ($('#listaDeFallas').contents().length != 0) {
+                                //    toastr.warning($('#listaDeFallas').contents());
+                                //};
+                                $('#divGrupo').html(response);
+                                //$('#lista tbody').empty();
+                                //$('#grupoIdDenunciantes').val($('#grupoDenuncianteId').text())
+                                //var nombrePrincipal = $('#nombreDenunciantePrincipal').val();
+                                //var apellidoPrincipal = $('#apellidoDenunciantePrincipal').val();
+                                //var dniPrincipal = $('#dniDenunciantePrincipal').val();
+                                //console.log(nombrePrincipal);
+                                //console.log(apellidoPrincipal);
+                                //console.log(dniPrincipal);
+                                //console.log($('#idDenunciantePrincipal').val());
+                                //$('#denuncianteResult').html(nombrePrincipal + " " + apellidoPrincipal + " " + dniPrincipal);
+                                //$('#denuncianteId').val($('#idDenunciantePrincipal').val());
+
+                                //$('#btnClearTable').attr("disabled", true);
+                                //$('#guardarGrupoDenunciantes').css("display", "none");
+                                //$('#editarGrupoDenunciantes').css("display","block");
+                            },
+                            error(response) {
+                                toastr.error(response.responseText);
+                            }
+                        });
+                        listadoDenunciantes = [];
+                    }
+            };
+
+            function cargarListaDniAValidar() {
+                var listadoDni = [];
+                var fila = [];
+                var n = 0;
+                $('#lista tbody tr').each(function (i, valor) {
+                    fila.push($(valor).find('td').eq(0).text());
+                    fila.push($(valor).find('td').eq(1).children().val());
+                    fila.push($(valor).find('td').eq(2).children().val());
+                    fila.push($(valor).find('td').eq(3).children().val());
+                    fila.push($(valor).find('td').eq(5).text());
+                    listadoDni.push(fila);
+                    fila = [];
+                });
+                return listadoDni;
+            };
+
+            function cumpleLaCantidadMinimaDeDenunciantes() {
+                return cargarListaDniAValidar().length >= 2;
+            }
+
+    function validarDniDenunciantesNuevosGrupoExistente() {
+
+            if (losNombresyApellidosSonValidos()) {
+                $('#divGrupo').empty();
+                $('#validandoDniMessage').css("display", "block");
+                $('#loadingDG').css("display", "block");
+                $.ajax({
+                            url: '@Url.Action("validarDniDenunciantes", "Denunciantes")',
+                            type: 'Post',
+                            data: { documentosAValidar: cargarListaDniAValidar() },
+                            success(response) {
+                                $('#divGrupo').html(response);
+                                if ($('#divGrupo').children().length == 0) {
+                                    //validarListaDni();
+                                    validarNuevosDenunciantesGrupo();
+
+                                }
+
+                                $('#validandoDniMessage').css("display", "none");
+                                $('#loadingDG').css("display", "none");
+
+                            }, error(response) {
+                                toastr.error(response.responseText);
+                                $('#validandoDniMessage').css("display", "none");
+                                $('#loadingDG').css("display", "none");
+                            }
+                });
+                $('#loadingDG').hide();
+
+            }
+
+    }
+
+    function validarDniDenunciantes() {
+        if (cumpleLaCantidadMinimaDeDenunciantes()) {
+            if (losNombresyApellidosSonValidos()) {
+                $('#divGrupo').empty();
+                $('#validandoDniMessage').css("display", "block");
+                $('#loadingDG').css("display", "block");
+                $.ajax({
+                            url: '@Url.Action("validarDniDenunciantes", "Denunciantes")',
+                            type: 'Post',
+                            data: { documentosAValidar: cargarListaDniAValidar() },
+                            success(response) {
+                                $('#divGrupo').html(response);
+                                if ($('#divGrupo').children().length == 0) {
+                                    validarListaDni();
+                                }
+
+                                $('#validandoDniMessage').css("display", "none");
+                                $('#loadingDG').css("display", "none");
+
+                            }, error(response) {
+                                toastr.error(response.responseText);
+                                $('#validandoDniMessage').css("display", "none");
+                                $('#loadingDG').css("display", "none");
+                            }
+                });
+                $('#loadingDG').hide();
+
+            }
+        } else {
+            toastr.options.positionClass = 'toast-bottom-right';
+            toastr.warning('Para crear un Grupo de Denunciantes</br> se requieren al menos 2 Integrantes');
+        }
+    }
+
+            function validarListaDni() {
+
+                        $('#loadingDG').css("display","block");
+                        $('#creandoGrupo').css('display', 'block');
+                        $.ajax({
+                            url: '@Url.Action("validarListaDni", "Denunciantes")',
+                            type: 'Post',
+                            data: { documentosAValidar: cargarListaDniAValidar() },
+                            success(response) {
+
+                                $('#divGrupoDenunciantesDB').html(response);
+                                $('#validandoDniMessage').css('display', 'none');
+                                $('#denuncianteSeleccionado').html($('#datosDenunciantePrincipal').val());
+                                $('#denuncianteId').val($('#idDenunciantePrincipal').val());
+                                $('#denuncianteId').addClass('text-primary');
+                                $('#grupoIdDenunciantes').val($('#grupoDenuncianteId').val());
+
+                                $('#grupoDenunciantesContainer').empty();
+                                //$('#divListaDenunciantes').empty();
+
+                                $('#btnGuardarGrupoDenunciantes').css('display', 'none');
+                                $('#btnAgregarDenuncianteAlGrupo').css('display', 'block');
+                                $('#creandoGrupo').css('display', 'none');
+                                toastr.success('Grupo creado con éxito');
+
+                            }, error(response) {
+                                toastr.error(response.responseText);
+                                $('#creandoGrupo').css('display', 'none');
+                                $('#loadingDG').css('display', 'none');
+                            }
+                        });
+
+            }
+
+            function cargarPosicionesConError() {
+                var datosIncompletos = [];
+                var laPosiciónDebeSerCargada = false;
+                $('#lista tbody tr').each(function (i, valor) {
+
+                    if ($(valor).find('td').eq(1).children().val() !== undefined && $(valor).find('td').eq(1).children().val().trim().length < 2){
+                        var input = $(valor).find('td').eq(1).children();
+                        input.addClass('error');
+                        laPosiciónDebeSerCargada = true;
+                    }
+
+                    if ($(valor).find('td').eq(1).children().val() !== undefined && $(valor).find('td').eq(2).children().val().trim().length < 2){
+                        var input = $(valor).find('td').eq(2).children();
+                        input.addClass('error');
+                        laPosiciónDebeSerCargada = true;
+                    }
+                    if (laPosiciónDebeSerCargada) {
+                        var posición = $(valor).find('td').eq(0).text();
+                        datosIncompletos.push(posición);
+                    }
+                    laPosiciónDebeSerCargada = false;
+                });
+                return datosIncompletos;
+            }
+
+            function losNombresyApellidosSonValidos() {
+                var denunciantes = cargarPosicionesConError();
+                var cuadro = document.createElement('ul');
+                $(cuadro).addClass('text-danger');
+                $(cuadro).css('margin-left', '200px');
+                $(cuadro).css('margin-right', '200px');
+                $(cuadro).css('max-height', '80px');
+                $(cuadro).css('overflow', 'auto');
+                //cuadro.addClass('text-danger');
+                $(denunciantes).each(function (i, valor) {
+                    var li = document.createElement('li');
+                    li.innerText = 'Complete los datos faltantes del Denunciante en la posición : ' + ' ' + valor;
+                    cuadro.appendChild(li);
+                })
+                $('#divGrupo').html(cuadro);
+                if (denunciantes.length < 1) {
+                    return true;
+                }
+                return false
+            };
+
+            // a eliminar
+            function getNroDeDocumentos() {
+                $.ajax({
+                            @*url: '@Url.Action("CrearGrupo","Denuncias")',*@
+                    url: '@Url.Action("GetNroDocumentos", "Denunciantes")',
+                    type: 'Post',
+                    //data: { lista: listadoDenunciantes },
+                    success(response) {
+                        sessionStorage.setItem('nroDocumentos', JSON.stringify(response));
+                        var listaDni = sessionStorage.getItem('nroDocumentos');
+                        if (listaDni.includes('0210210')) {
+                            toastr.warning('Incluido');
+                        } else {
+                            toastr.info('No Incluido');
+                        }
+
+                        console.log(listaDni);
+                    }, error(response) {
+
+                    }
+                });
+            }
+
+            function agregarNuevosDenunciantes() {
+                var fila = [];
+                var n = 0;
+                $('#lista tbody tr').each(function (i, valor) {
+
+                    fila.push($(valor).find('td').eq(0).children().text());
+                    fila.push($(valor).find('td').eq(1).children().val());
+                    fila.push($(valor).find('td').eq(2).children().val());
+                    fila.push($(valor).find('td').eq(3).children().val());
+                    listadoDenunciantes.push(fila);
+                    fila = [];
+                });
+                if (listadoDenunciantes.length < 1) {
+                    toastr.options.positionClass = 'toast-bottom-full-width'; /*'toast-bottom-right'*/
+                    toastr.warning('.......................................................................... No hay denunciantes en la Lista');
+                }
+                else {
+                    listaFinal = [];
+                    $('#listaDenunciantesDB tbody tr').each(function (i, valor) {
+
+                        fila.push($(valor).find('td').eq(1).children().val());
+                        fila.push($(valor).find('td').eq(2).children().val());
+                        fila.push($(valor).find('td').eq(3).children().val());
+                        listaFinal.push(fila);
+                        fila = [];
+                    });
+
+                    listaFinal = listaFinal.concat(listadoDenunciantes);
+                    $.ajax({
+
+                        url: '@Url.Action("CrearGrupo","Denuncias")',
+                        type: 'Post',
+                        data: {
+                            lista: listaFinal,
+                            idGrupo: parseInt($('#grupoDenuncianteId').text())
+                        },
+                        success(response) {
+                            $('#divGrupo').html(response);
+                            $('#grupoIdDenunciantes').val($('#grupoDenuncianteId').text());
+                            $('#denuncianteResult').html(nombrePrincipal + " " + apellidoPrincipal + " " + dniPrincipal);
+                            $('#denuncianteId').val($('#idDenunciantePrincipal').val());
+                            eliminarFilasGrupo();
+                            listaFinal = [];
+                            listadoDenunciantes = [];
+                        },
+                        error(response) {
+                            toastr.error(response.responseText);
+                            listadoDenunciantes = [];
+                            listaFinal = [];
+                        }
+                    });
+                }
+            }
+
+            function seleccionaElementoAQuitar(denuncianteId, elem) {
+                var filaARemover = $(elem).parent().parent().attr('id');
+                sessionStorage.setItem('denuncianteAQuitar', denuncianteId);
+                sessionStorage.setItem('filaARemover', filaARemover);
+            }
+
+
+            function confirmaQuitar() {
+                var denuncianteId = sessionStorage.getItem('denuncianteAQuitar');/*$('#denuncianteId').val();*/
+                if (denuncianteId != $('#idDenunciantePrincipal').val()) {
+
+                    quitarDelGrupo(denuncianteId);
+                }
+                else {
+
+                    quitarDelGrupoDenunciantePrincipal(denuncianteId);
+                }
+            }
+
+            function quitarDelGrupo(denuncianteId) {
+
+                var idfila = sessionStorage.getItem('filaARemover');
+                var fila = $('#' + idfila);
+
+
+                    $.ajax({
+                        url: '@Url.Action("QuitarDelGrupo","Denuncias")',
+                        type: 'PosT',
+                        data: {
+                            id: denuncianteId,
+                            grupoId: $('#grupoDenuncianteId').val()
+                            //grupoId: $('#grupoDenuncianteId').text()
+                        },
+                        success(response) {
+                            toastr.success(response);
+                            fila.remove();
+                        },
+                        error(response) {
+                            toastr.error(response.responseText);
+                        }
+                    });
+
+            }
+
+            function quitarDelGrupoDenunciantePrincipal(denuncianteId) {
+                        $.ajax({
+                        url: '@Url.Action("QuitarDelGrupoDenunciantePrincipal","Denuncias")',
+                        type: 'PosT',
+                        data: {
+                            id: denuncianteId,
+                            grupoId: $('#grupoDenuncianteId').val(),
+                            denunciaId: $('#nroDenuncia').text()
+                        },
+                        success(response) {
+                            $('#divGrupoDenunciantes').html(response);
+                            $('#validandoDniMessage').css('display', 'none');
+                            $('#denuncianteSeleccionado').html($('#datosDenunciantePrincipal').val());
+                            $('#denuncianteId').val($('#idDenunciantePrincipal').val());
+                            $('#denuncianteId').addClass('text-primary');
+
+                            $('#grupoIdDenunciantes').val($('#grupoDenuncianteId').val());
+                            $('#divListaDenunciantes').empty();
+                            $('#btnGuardarGrupoDenunciantes').css('display', 'none');
+                            $('#btnAgregarDenuncianteAlGrupo').css('display', 'block');
+                            if ($('.modal-backdrop').is(':visible')) {
+                                $('body').removeClass('modal-open');
+                                $('.modal-backdrop').remove();
+                            };
+                            //toastr.success(response);
+
+                        },
+                        error(response) {
+                            toastr.error(response.responseText);
+                        }
+                    });
+
+            }
+        @*</script>
+                            <script type="text/javascript">*@
+
+
+
+
+                                //Dropzone.options.dropzoneJsForm = {
+                                //    //prevents Dropzone from uploading dropped files immediately
+                                //    autoProcessQueue: false,
+                                //    addRemoveLinks: true,
+                                //    parallelUploads: 5,
+                                //    maxFilesize: 20,
+                                //    //url:"/Home/SubirArchivo",
+                                //    init: function () {
+
+                                //        var submitButton = document.querySelector("#submit-all");
+                                //        var myDropzone = this; //closure
+                                //        console.log(this);
+                                //        submitButton.addEventListener("click", function () {
+                                //            myDropzone.processQueue(); //tell Dropzone to process all queued files
+
+                                //        });
+
+                                //    }
+                                //};
+
+
+                               $("#linkDocuments").click(function () {
+                                        $('#divLoadingFiles').show();
+                                         var token = '@Html.AntiForgeryToken()';
+                                         var untkn = $(token).val();
+                                        $.ajax({
+                                            url: '@Url.Action("Index", "Archivos")' ,
+                                            type: "Post",
+                                            data: {
+                                                __RequestVerificationToken: untkn},
+                                            success: function (response) {
+                                                $('#FileList').html(response);
+                                                $('#divLoadingFiles').hide();
+                                                getAFTFiles();
+                                            },
+                                            error: function (response) {
+                                                toastr.error(response.responseText);
+                                                $('#divLoadingFiles').hide();
+
+
+                                            }
+                                        });
+                                    });
+                                    var orden = 1;
+
+
+
+                                    var tbody = $('#lista tbody');
+                                    var fila_contenido = tbody.find('tr').first().html();
+                                    //Agregar fila nueva.
+                                    $('#lista .button_agregar').click(function () {
+                                        var fila_nueva = $('<tr></tr>');
+                                        fila_nueva.append(fila_contenido);
+                                        orden++;
+                                        fila_nueva.find('td').first().replaceWith(orden);
+                                        tbody.append(fila_nueva);
+                                    });
+
+                                    //Eliminar fila.
+                                    $('#lista').on('click', '.button_eliminar', function () {
+                                        $(this).parents('tr').eq(0).remove();
+
+                                    });
+
+
+
+            function limpiarGrupoInputs() {
+                $('#cantidadDenunciantes').val('');
+                $('#cantidadDenunciantesASacar').val('');
+            }
+
+            function getElement(elem) {
+                //var posicion = $(elem).parent().parent().find('td').eq(0).text();
+                var posicion = $(elem).parent().parent().attr('id');
+                sessionStorage.setItem("posicionSeleccionada",posicion);
+                //console.log(sessionStorage.getItem("posicionSeleccionada"));
+            }
+
+            function generarNFilas(cantidadFilas) {
+                //
+                var i = 0;
+                var tbody = $('#lista tbody');/* data - target="#BusquedaDenunciantesGrupoModal"*/
+                var fila = '<tr id=""><td></td><td><input type="text" maxlength="25" onfocus="removeErrorClass(this)" class="form-control"/></td><td><input type="text" maxlength="25" onfocus="removeErrorClass(this)" class="form-control"/></td><td><input type="number" class="form-control"/></td><td><button style="max-width:35px;" class="btn btn-primary btn-sm" onclick="getElement(this)" data-toggle="modal" data-target="#BusquedaDenunciantesGrupoModal" ><i class="glyphicon glyphicon-search"></i></button></td><td></td></tr>'; //<td><button style="max-width:35px;" class="btn btn-info btn-sm" onclick="getElement(this)"><i class="glyphicon glyphicon-trash"></i></button></td>
+
+
+                for (i = 1; i <= cantidadFilas; i++) {
+                    tbody.append($(fila).attr('id', 'fila' + i.toString()));
+                    tbody.find('tr').last().find('td').first().text(i.toString());
+
+                }
+
+            }
+
+
+                                    //var nFilasABorrar;
+                                    function removerNFilas(nFilasABorrar) {
+                                        var tbody = $('#lista tbody');
+                                        var cantidadFilasTabla = document.querySelector("#lista").rows.length; //- 1
+                                        console.log(cantidadFilasTabla);
+
+                                        var cantidad = 0;
+                                        var n = cantidadFilasTabla;
+
+                                        while (n > 1 && (nFilasABorrar > cantidad)) {
+
+                                            $("#lista").find("tr").last().remove();
+                                            n--;
+                                            cantidad++;
+
+                                        }
+                                        orden = $("#lista").find("tr").last().find("td").eq(0).val();
+                                        console.log(orden);
+
+                                    }
+
+
+
+            function agregarFilas(elem,e) {
+
+                if (e.which == 13) {
+                    //e.preventDefault();
+                    generarNFilas($(elem).val());
+                    $(elem).val = 0;
+                    $(elem).prop('readonly',true);
+                }
+            }
+            function removeErrorClass(elem) {
+                if ($(elem).hasClass('error')) {
+                    $(elem).removeClass('error');
+                }
+
+            }
+
+            function removerFilas(elem, e) {
+                if (e.which == 13) {
+                    removerNFilas($(elem).val());
+                    $(elem).val = 0;
+                    $('#cantidadDenunciantes').prop('disabled', false);
+                    $('#cantidadDenunciantes').val('');
+                }
+            }
+
+
+
+                                    $("#cantidadDenunciantesASacar").keypress(function (e) {
+                                        if (e.which == 13) {
+                                            e.preventDefault();
+                                            removerNFilas($(this).val());
+                                            $(this).val = 0;
+                                        }
+                                    });
+
+
+
+                                    $("#lista").on('click', '.button_agregar', function () {
+                                        $('#lista .button_agregar').click(function () {
+                                            var fila_nueva = $('<tr></tr>');
+                                            fila_nueva.append(fila_contenido);
+                                            orden++;
+                                            fila_nueva.find('td').first().replaceWith(orden);
+                                            tbody.append(fila_nueva);
+                                        });
+                                    });
+
+
+            $("#comboModalidadesGestionEdicion").change(function () {
+                if ($("#comboModalidadesGestionEdicion option:selected").text().includes("INTER") &&
+                    $("#comboEstudioEdicion")[0].selectedIndex != 0) {
+                    toastr.warning('No puede seleccionar un Estudio si la modalidad de Gestión Interna');
+                    $("#comboEstudioEdicion").addClass("error");
+                }
+                else {
+                    $("#comboEstudioEdicion").removeClass("error");
+                }
+                //if ($("#comboModalidadesGestionEdicion option:selected").text().includes("INTER")) {
+                //    $("#comboEstudioEdicion").removeClass("error");
+                //}
+            });
+
+            $("#responsableInterno").change(function () {
+                $("#responsableInternoEvento").val($(this).val());
+            });
+
+            $("#fechaNotificacion").change(function () {
+                $("#fechaNotificacionGcia").val($(this).val());
+            });
+
+            $('#Cleaner').click(function () {
+                $('#dni').val("");
+                $('#nombre').val("");
+                $('#apellido').val("");
+            });
+
+
+            $("#dni").keypress(function (e) {
+                if (e.which == 13) {
+                    e.preventDefault();
+                    buscarDenunciante();
+                    //GetDenunciante();
+                }
+            });
+
+            $("#apellido").keypress(function (e) {
+                if (e.which == 13) {
+                    e.preventDefault();
+                    buscarDenunciante();
+
+                }
+            });
+
+            $("#nombre").keypress(function (e) {
+                if (e.which == 13) {
+                    e.preventDefault();
+                    buscarDenunciante();
+
+                }
+            });
+
+            function traerGrupoDenunciantes() {
+
+                if ($('#grupoIdDenunciantes').val() != "") {
+                    $.ajax({
+                        url: '@Url.Action("TraerGrupoDenunciantes","Denuncias")',
+                        type: "GET",
+                        data: { grupoId: $('#grupoIdDenunciantes').val()},
+                        success(response) {
+
+                            //$('#divGrupo').html(response);
+                            $('#divGrupoDenunciantesDB').html(response);
+                            $('#guardarGrupoDenunciantes').css("display", "none");
+                            $('#editarGrupoDenunciantes').css("display", "block");
+                        },
+                        error(response) {
+                            //toastr.options.positionClass = 'toast-top-full-width';
+                            toastr.error(response.responseText);
+                        }
+                        });
+                }
+            }
+
+            function GetGrupoDenunciantesView() {
+                if ($('#divGrupoDenunciantes').contents().length == 0 &&
+                    $('#grupoIdDenunciantes').val() == '') {
+                    $.ajax({
+                        url: '@Url.Action("GetGrupoDenunciantesView","Denunciantes")',
+                        type: "GET",
+                        success(response) {
+                            $('#divGrupoDenunciantes').html(response);
+                            //$('#divGrupoDenunciantes').html(response);
+                        },
+                        error(response) {
+                            toastr.error(response.responseText + ' ' + response.statusText);
+                        }
+                    });
+                } else {
+                    if ($('#divGrupoDenunciantes').contents().length == 0 &&
+                        $('#grupoIdDenunciantes').val() != '') {
+                        traerGrupoDenunciantes();
+                    }
+
+                }
+            }
+
+
+            function ocultarBusqueda() {
+                $('#divAgregarNuevosDenunciantes').empty();
+                $('#divAgregarGrupo').show();
+            };
+
+            function AgregarDenunciantesAlGrupo() {
+
+                    $.ajax({
+                        url: '@Url.Action("GetGrupoDenunciantesView","Denunciantes")',
+                        type: "GET",
+                        success(response) {
+                            //$('#AgregarDenunciantesAlGrupo').html(response);
+                            $('#divAgregarNuevosDenunciantes').html(response);
+                            $('#divAgregarGrupo').css("display","none");
+                         //if ($('#grupoIdDenunciantes').val() !== ''){
+                             $('#btnGuardarGrupoDenunciantes').css('display', 'none');
+                             $('#btnAgregarDenuncianteAlGrupo').css('display', 'block');
+                             $('#btn-cancelarBusqueda').show();
+                         //}
+                        },
+                        error(response) {
+                            toastr.error(response.responseText + ' ' + response.statusText);
+                        }
+                    });
+            }
+
+             function AgregarNuevosDenunciantesAlGrupo() {
+
+                    $.ajax({
+                        url: '@Url.Action("AgregarNuevosDenunciantes", "Denunciantes")',
+                        type: "Post",
+                        data: {
+                            lista: cargarListaDniAValidar(),
+                            idGrupo: $('#grupoIdDenunciantes').val()
+                        },
+                        success(response) {
+                            //if (xhr.responseXML.contentType == "text/html") {
+                              //if (response.contentType == "text/html") {
+                                $('#divGrupoDenunciantesDB').html(response);
+                                $('#validandoDniMessage').css('display', 'none');
+                                $('#denuncianteSeleccionado').html($('#datosDenunciantePrincipal').val());
+                                $('#denuncianteId').val($('#idDenunciantePrincipal').val());
+                                $('#denuncianteId').addClass('text-primary');
+                                //$('#grupoIdDenunciantes').val($('#grupoDenuncianteId').text());
+                                $('#grupoIdDenunciantes').val($('#grupoDenuncianteId').val());
+                                $('#btnGuardarGrupoDenunciantes').css('display', 'none');
+                                $('#btnAgregarDenuncianteAlGrupo').css('display', 'block');
+                                $('#divAgregarGrupo').css("display", "block");
+                                $('#divGrupo').empty();
+                            toastr.success('Denunciante agregado con éxito');
+
+                            //}
+                            //  else if (response.contentType == "application/json") {
+                            //      toastr.error(response.responseText);
+                            //}
+
+
+                        },
+                        error(response) {
+                            toastr.error(response.responseText + ' ' + response.statusText);
+                        }
+                    });
+            }
+
+            var duplicados = [];
+            function getListaDuplicados() {
+                return duplicados;
+            }
+
+            var duplicadosInicial = [];
+            function getListaDuplicadosInicial() {
+                return duplicadosInicial;
+            }
+            function generarNuevosDenunciantesGrupoTR() {
+                var filaslista = [];
+                $('#lista tbody tr').each(function (i, valor) {
+                    var denunciante = new Object();
+                    denunciante.posicion = $(valor).children().eq(0).text();
+                    denunciante.nombre = $(valor).children().eq(1).children().val().toUpperCase();
+                    denunciante.apellido = $(valor).children().eq(2).children().val().toUpperCase();
+                    denunciante.dni = $(valor).children().eq(3).children().val();
+                    filaslista.push(denunciante);
+                });
+                return filaslista;
+            }
+
+            var denunciantesTR = [];
+            function generarDenunciantesGrupoTR() {
+                var filaslistaDB = [];
+                $('#listaDB tbody tr').each(function (i, valor) {
+                    var denunciante = new Object();
+                    denunciante.posicion = $(valor).children().eq(0).text();
+                    denunciante.nombre = $(valor).children().eq(1).text();
+                    denunciante.apellido = $(valor).children().eq(2).text();
+                    denunciante.dni = $(valor).children().eq(3).text();
+                    filaslistaDB.push(denunciante);
+                });
+
+                return filaslistaDB;
+            }
+
+            function esDuplicado(denunciante) {
+                var integrantesGrupo = generarDenunciantesGrupoTR();
+
+                $(integrantesGrupo).each(function (i, valor) {
+                    if (valor.nombre === denunciante.nombre
+                        && valor.apellido === denunciante.apellido
+                        && valor.dni === denunciante.dni) {
+                        getListaDuplicados().push(valor);
+                    }
+                });
+            }
+
+            function validarNuevosDenunciantesGrupo() {
+
+              //if (losNombresyApellidosSonValidos()) {
+                duplicados = [];
+                var nuevosDenunciantes = generarNuevosDenunciantesGrupoTR();
+                $(nuevosDenunciantes).each(function (i, valor) {
+                    esDuplicado(valor);
+                });
+                if (duplicados.length < 1) {
+                    AgregarNuevosDenunciantesAlGrupo();
+                    //$('#divAgregarGrupo').css("display", "block");
+                }
+                else {
+                    $('#divGrupo').html('<ul></ul>')
+                    $(duplicados).each(function (i, valor) {
+                        $('#divGrupo ul').append('<li class="text-danger">El denunciante que intenta seleccionar ya se encuentra en la posición : ' + valor.posicion + '</li>');
+                    });
+
+                }
+
+              //}
+
+            }
+
+            function esDuplicadoEnOtraPosicion(denunciante,integrantesGrupo) {
+                //var integrantesGrupo = generarDenunciantesGrupoTR();
+                $(integrantesGrupo).each(function (i, valor) {
+                    //if (denunciante.posicion != valor.posicion) {
+                        if (valor.nombre === denunciante.nombre
+                            && valor.apellido === denunciante.apellido
+                            && valor.dni === denunciante.dni) {
+                            getListaDuplicadosInicial().push(valor);
+                        }
+                    //}
+                });
+            }
+
+            function BuscarDuplicadosDenunciantesGrupo() {
+                //var len = $('#lista tbody tr').length;
+                //$('#lista tbody tr').each(function (i, val) {
+
+                //    console.log($('#lista tbody tr').slice(i, len));
+
+                //});
+
+                var duplicadosInicial = [];
+                var nuevosDenunciantes = generarNuevosDenunciantesGrupoTR();
+                var total = $(nuevosDenunciantes).length;
+                $(nuevosDenunciantes).each(function (i, denunciante) {
+                    //var subarray = $(nuevosDenunciantes).slice(i + 1, total);
+                    var subarray = $(nuevosDenunciantes).slice(i, total);
+                    console.log(subarray);
+                    $(subarray).each(function (j, valor) {
+                        //var booleano = (valor.nombre == denunciante.nombre
+                        //    && valor.apellido == denunciante.apellido
+                        //    && valor.dni == denunciante.dni);
+                        //console.log(denunciante);
+                        //console.log(valor);
+                        //console.log($(booleano));
+                        if (/*valor.posicion != denunciante.posicion &&*/
+                             (valor.nombre == denunciante.nombre
+                            && valor.apellido == denunciante.apellido
+                            && valor.dni == denunciante.dni)) {
+                            console.log(valor.nombre + '-' + denunciante.nombre);
+                            console.log(valor.nombre == denunciante.nombre);
+                            console.log(valor.apellido + '-' + denunciante.apellido);
+                            console.log(valor.apellido == denunciante.apellido);
+                            console.log(valor.dni + '-' + denunciante.dni);
+                            console.log(valor.dni == denunciante.dni);
+                            duplicadosInicial.push(denunciante);
+                        }
+                        //total--;
+                        //console.log(subarray);
+                    });
+                });
+                console.log(duplicadosInicial);
+            }
+            function BuscarDuplicadosDenunciantesGrupo_old() {
+                $('#divGrupo').empty();
+                duplicadosInicial = [];
+                var nuevosDenunciantes = generarNuevosDenunciantesGrupoTR();
+                var array = $(nuevosDenunciantes);
+                array.toArray().shift();
+                $(nuevosDenunciantes).each(function (i,denunciante) {
+                    console.log(array);
+                    $(array).each(function (i, valor) {
+                       if (denunciante.posicion !== valor.posicion) {
+                            if (valor.nombre === denunciante.nombre
+                                && valor.apellido === denunciante.apellido
+                                && valor.dni === denunciante.dni) {
+                                duplicadosInicial.push(valor);
+                            }
+                       }
+                    });
+                    //esDuplicadoEnOtraPosicion(valor, array);
+                    array.toArray().shift();
+                });
+                if (duplicadosInicial.length < 1) {
+                    alert('Sin duplicados');
+                    //AgregarNuevosDenunciantesAlGrupo();
+                }
+                else {
+                    $('#divGrupo').html('<ul></ul>')
+                    $(duplicadosInicial).each(function (i, valor) {
+                        $('#divGrupo ul').append('<li class="text-danger">El denunciante que intenta seleccionar ya se encuentra en la posición : ' + valor.posicion + '</li>');
+                    });
+
+                }
+
+
+            }
+
+
+                                function esUnEventoVálido() {
+                                    var control = true;
+                                    //var today = new Date();
+                                    var vencimiento = $('#fechaVencimientoEN').val();
+                                    var notificacion = $('#fechaNotificacion').val();
+                                    var fechaVencimiento = new Date(vencimiento);
+                                    var fechaNotificacion = new Date(notificacion);
+                                    $('#guardarNuevoEvento').removeAttr("data-dismiss", "modal");
+
+                                    if ($('#fechaVencimientoEN').val().length == 0) {
+                                        console.log($('#fechaVencimientoEN').val().length == 0);
+                                        toastr.warning('Ingrese la Fecha De Vencimiento');
+                                        control = false;
+                                    }
+
+                                    if ($('#horaVencimientoEN').val().length == 0) {
+                                        console.log($('#horaVencimientoEN').val().length == 0);
+                                        toastr.warning('Ingrese la Hora De Vencimiento');
+                                        control = false;
+                                    }
+                                    //if ($('#horaVencimientoEN').val().includes('00:00')) {
+                                    //    console.log($('#horaVencimientoEN').val().length == 0);
+                                    //    toastr.warning('La Hora de Vencimiento es Inválida');
+                                    //    control = false;
+                                    //}
+                                    if (fechaNotificacion > fechaVencimiento) {
+                                        toastr.warning("La Fecha de vencimiento <br/> no puede ser anterior <br/> a la Fecha de Notificación <br/> del Reclamo");
+                                        control = false;
+                                    }
+                                    if ($('#responsableInternoEventoNuevo')[0].selectedIndex == 0) {
+                                        toastr.warning('Seleccione un Responsable');
+                                        control = false;
+                                    }
+                                    //if ($('#evento_tipoEvento')[0].selectedIndex == 0) {
+                                    //    toastr.warning('Seleccione un Tipo de Evento');
+                                    //    control = false;
+                                    //}
+                                    if (control) {
+                                        $('#guardarNuevoEvento').attr("data-dismiss", "modal");
+                                    }
+
+                                    return control;
+                                }
+
+            function elEventoEditadoEsVálido() {
+                $('#btnGuardarEventoEditado').removeAttr("data-dismiss");
+                var control = true;
+                //var creacion = $('#fechaCreacionEE').val();
+                //var fechaCreacion = new Date(creacion);
+                var fechaNotif = $('#fechaNotificacion').val();
+                var fechaNotificacion = new Date(fechaNotif);
+                var today = new Date();
+                var vencimiento = $('#fechaVencimientoEE').val();
+                var fechaVencimiento = new Date(vencimiento);
+                if ($('#fechaVencimientoEE').val().length == 0) {
+
+                    toastr.warning('Ingrese la Fecha De Vencimiento');
+                    control = false;
+                }
+                if ($('#horaVencimientoEE').val().length == 0) {
+                    //console.log($('#horaVencimientoEE').val().length == 0);
+                    toastr.warning('Ingrese la Hora De Vencimiento');
+                    control = false;
+                }
+                if (fechaVencimiento < fechaNotificacion) {
+                    toastr.warning("La Fecha de Vencimiento <br/>no puede ser anterior <br/> a la Fecha de Notificación");
+                    control = false;
+                }
+                if ($('#responsableInternoEventoEdicion')[0].selectedIndex == 0) {
+                    toastr.warning('Seleccione un Responsable');
+                    control = false;
+                }
+
+                if (control) {
+
+                    $('#btnGuardarEventoEditado').attr("data-dismiss", "modal");
+                }
+
+                return control;
+                 //if (fechaVencimiento < fechaNotificacion) {
+                //    toastr.warning("La fecha de vencimiento debe ser posterior a la fecha de Creación");
+                //    control = false;
+                //}
+                //if ((today > fechaVencimiento)) {
+                //    toastr.warning("La fecha de vencimiento no puede ser anterior a la fecha actual");
+                //    control = false;
+
+                //}
+
+            }
+
+            var eventoARemover;
+            function ConfirmarEliminarEvento(id, element) {
+                $('#idDeleteEventHidden').html(id);
+                eventoARemover = $(element).parent().parent();
+
+            }
+
+            function eliminarEvento() {
+
+                var idEvent = parseInt($('#idDeleteEventHidden').text());
+                                try {
+                                    $.ajax({
+                                        url: '@Url.Action("EliminarEvento","Denuncias")',
+                                        type: "Post",
+                                        data: {
+                                            id: idEvent
+
+                                        },
+                                        success: function (result) {
+
+                                            if (result == "Registro eliminado con éxito") {
+                                                eventoARemover.remove();
+                                                eventoARemover = undefined;
+                                            }
+                                            toastr.info(result);
+                                        },
+                                        error: function (result) {
+                                            toastr.error(result.responseText);
+                                        }
+                                    });
+                                } catch (error) {
+                                    toastr.error(error)
+                                }
+            }
+
+
+                                @*function guardarNuevoEvento() {
+
+                                    if (esUnEventoVálido()) {
+                                        cleanNuevoModal();
+                                        $.ajax({
+                                            url: '@Url.Action("CrearEvento","Denuncias")',
+                                            type: "Post",
+                                            data: {
+                                                DenunciaId: $('#nroDenuncia').text(),
+                                                Fecha: $('#fechaVencimiento').val() + ' ' + $('#horaVencimiento').val(),
+                                                //horaVencimiento: $('#horaVencimiento').val(),
+                                                //tipoEvento: $('#evento_tipoEvento option:selected').val(),
+                                                tipoEvento: $('#tipoEventoSeleccionado').val(),
+                                                CONTESTADO: $('#contestado').val(),
+                                                SOLUCIONADO: $('#solucionadoSeleccionado option:selected').val(),
+                                                REQUERIMIENTOINFORME: $('#evento_REQUERIMIENTOINFORME option:selected').val(),
+                                                observacion: $('#evento_Observacion').val()
+                                            },
+                                                success(response){
+                                                    toastr.success('Evento guardado correctamente');
+                                                    $('#divlistaEventos').html(response);
+
+                                            },
+                                            error(response) {
+
+                                                toastr.error(response.responseText + ' ' + response.statusText)
+                                                }
+                                        });
+                                    }
+
+                                }*@
+
+             function guardarNuevoEvento() {
+
+                                    if (esUnEventoVálido()) {
+                                        $.ajax({
+                                            url: '@Url.Action("CrearEvento","Denuncias")',
+                                            type: "Post",
+                                            data: {
+                                                DenunciaId: $('#nroDenuncia').text(),
+                                                Fecha: $('#fechaVencimientoEN').val() + ' ' + $('#horaVencimientoEN').val(),
+                                                //horaVencimiento: $('#horaVencimiento').val(),
+                                                //tipoEvento: $('#evento_tipoEvento option:selected').val(),
+                                                tipoEvento: $('#comboTipoEventoNuevo option:selected').val(),
+                                                contestado: $('#contestadoEN').prop('checked'),
+                                                //contestado: $('#contestadoEN').val(),
+                                                //contestado: $('#contestadoEN:checked').val(),
+                                                solucionado: $('#comboSolucionadoEN option:selected').val(),
+                                                REQUERIMIENTOINFORME: $('#comboRequerimientoInformeEN option:selected').val(),
+                                                observacion: $('#observacionesEN').val(),
+                                                ResIntId: $('#responsableInternoEventoNuevo option:selected').val()
+                                            },
+                                                success(response){
+                                                    toastr.success('Evento guardado correctamente');
+                                                    $('#divlistaEventos').html(response);
+                                            },
+                                            error(response) {
+                                                //toastr.options.positionClass = 'top-full-widht';
+                                                toastr.error(response.responseText + ' ' + response.statusText)
+                                                }
+                                        });
+                                    }
+
+             }
+
+
+            function cleanNuevoModal() {
+                $('#nroDenuncia').val('');
+                $('#fechaVencimientoEN').val('');
+                $('#horaVencimientoEN').val('00:00');
+                //$('#evento_tipoEvento')[0].selectedIndex = 0;
+                //$('#contestadoEN').removeProp("checked");
+                $('#contestadoEN').prop("checked",false);
+                $('#comboSolucionadoEN')[0].selectedIndex = 0;
+                $('#comboRequerimientoInformeEN')[0].selectedIndex = 0;
+                $('#observacionesEN').val('');
+            }
+
+            function cleanEditModal() {
+                $('#fechaVencimientoEE').val('');
+                $('#horaVencimientoEE').val('');
+                //$('#evento_tipoEventoEE')[0].selectedIndex = 0;
+                //$('#comboTipoEventoEE')[0].selectedIndex = 0;
+                $('#contestadoEE').val(0);
+                $('#comboSolucionadoEE')[0].selectedIndex = 0;
+                $('#comboRequerimientoInformeEE')[0].selectedIndex = 0;
+                $('#observacionesEE').val('');
+            }
+            @*function EditarEvento() {
+
+                                    if (esUnEventoVálido()) {
+                                        $.ajax({
+                                            url: '@Url.Action("EditarEvento","Denuncias")',
+                                            type: "Post",
+                                            data: {
+                                                DenunciaId: $('#nroDenuncia').text(),
+                                                Fecha: $('#fechaVencimiento').val() + ' ' + $('#horaVencimiento').val(),
+                                                //horaVencimiento: $('#horaVencimiento').val(),
+                                                tipoEvento: $('#evento_tipoEvento option:selected').val(),
+                                                contestado: $('#contestado').val(),
+                                                solucionado: $('#solucionado').val(),
+                                                REQUERIMIENTOINFORME: $('#evento_REQUERIMIENTOINFORME option:selected').val(),
+                                                observacion: $('#evento_Observacion').val()
+                                            },
+                                                success(response){
+                                                    toastr.success('Evento guardado correctamente');
+                                                    $('#divlistaEventos').html(response);
+                                            },
+                                            error(response) {
+                                                //toastr.options.positionClass = 'top-full-widht';
+                                                toastr.error(response.responseText + ' ' + response.statusText)
+                                                }
+                                        });
+                                    }
+
+                                }*@
+
+                                function validarTipoEvento() {
+                                    if ($('#comboTipoEventoNuevo')[0].selectedIndex == 0) {
+                                        toastr.warning("Debe seleccionar un Tipo de Evento");
+                                    }
+                                }
+            //$("#btn-CrearEvento").click(function () {
+            //    $.ajax({
+            //        url: "/Home/NuevoEvento",
+            //        type: "Get",
+            //        data: {
+            //            //dni: $('#dni').val(),
+            //            //nombre: $('#nombre').val(),
+            //            //apellido: $('#apellido').val()
+            //        },
+            //        success: function (response) {
+            //            $('#NewEventContainer').html(response);
+
+            //        },
+            //        error: function (response) {
+            //            alert(response);
+            //        }
+            //    });
+            //});
+
+
+            $('#comboTipoEventoNuevo').change(function () {
+                $('#idTipoEventoSeleccionado').val($('#comboTipoEventoNuevo option:selected').val());
+                $('#tipoEventoSeleccionado').val($('#comboTipoEventoNuevo option:selected').text());
+                if ($(this)[0].selectedIndex != 0) {
+                    $('#nuevoEvento').attr("disabled", false);
+                } else {
+                    $('#nuevoEvento').attr("disabled", true);
+                }
+
+            });
+
+            $("#Buscador").click(function () {
+                buscarDenunciante();
+
+            });
+
+            function buscarDenunciante() {
+                $('#inputdatosDenunciante').attr("hidden","hidden");
+                    $.ajax({
+                    url: '@Url.Action("GetDenunciante","Home")'/*"/Home/GetDenunciante"*/,
+                    type: "Post",
+                    data: {
+                        dni: $('#dni').val(),
+                        nombre: $('#nombre').val(),
+                        apellido: $('#apellido').val()
+                    },
+                    success: function (response) {
+                        $('#denuncianteBuscado').html(response);
+                        $('#denuncianteId').val($('#idDenuncianteResult').val());
+                        $('#denuncianteResult').hide();
+                    },
+                        error: function (response) {
+                            toastr.warning("El Denunciante no existe");
+                            //toastr.error(response.responseText);
+                    }
+                });
+
+            }
+
+
+            function mostrarLoading() {
+                $('#denuncianteResult').empty();
+                $('#loading').show();
+            };
+
+            function ocultarLoading() {
+                $('#loading').hide();
+            };
+
+            function GetDenunciante() {
+                //falta deshabilitar los campos durante el envio
+                $('#inputdatosDenunciante').attr("hidden","hidden");
+                var dni = $('#dni').val();
+                if (isEmpty(dni) && faltaCompletarLosDatos()) {
+                    toastr.info("Ingrese un filtro de Búsqueda");
+                }
+                else {
+                    mostrarLoading();
+                    $.ajax({
+                        url: '@Url.Action("Guardar","Home")'/*"/Home/GetDenunciante"*/,
+                        type: "Post",
+                        data: {
+                            dni: $('#dni').val(),
+                            nombre: $('#nombre').val(),
+                            apellido: $('#apellido').val()
+                        },
+                        success: function (response) {
+                            $('#loading').hide();
+                            $('#denuncianteResult').html(response);
+                            $('#denuncianteId').val($('#idDenuncianteResult').val());
+
+
+                        },
+                        error: function (response) {
+                            $('#loading').hide();
+                            toastr.warning("El denunciante no existe");
+                        }
+                    });
+                }
+            };
+
+            function faltaCompletarLosDatos() {
+                var nombre = $('#nombre').val();
+                var apellido = $('#apellido').val();
+                return isEmpty(nombre) || isEmpty(apellido);
+
+                                };
+
+            function validarYGuardarDenunciante() {
+
+                if (faltaCompletarLosDatos()) {
+                    toastr.info("Ingrese nombre y apellido");
+                } else {
+                    guardarDenunciante();
+                }
+            };
+
+            function isEmpty(id) {
+                return id.length == 0
+            }
+
+            function guardarDenunciante() {
+                mostrarLoading();
+                $.ajax({
+                    url: '@Url.Action("Guardar","Home")'/*"/Home/Guardar"*/,
+                    type: "Post",
+                    data: {
+                        dni: $('#dni').val(),
+                        nombre: $('#nombre').val(),
+                        apellido: $('#apellido').val()
+                    },
+                    success: function (response) {
+                        toastr.options.positionClass = 'toast-bottom-right';
+                        ocultarLoading();
+                        $('#denuncianteResult').html(response);
+                        $('#denuncianteId').val($('#idDenuncianteResult').val());
+                        var id = $('#denuncianteId').val();
+                        if (isEmpty(id)) {
+                            toastr.info("Ya existe un Denunciante con esa descripción");
+                        } else {
+                            toastr.success("El denunciante se ha creado correctamente");
+                        }
+
+                    },
+                    error: function (response) {
+                        toastr.error(response.statusCode + ' : ' + response.statusText);
+                    }
+                });
+
+            }
+
+
+            $("#alta").click(function () {
+                $(this).attr("disable", true);
+                validarYGuardarDenunciante();
+                $(this).attr("disable", false);
+            });
+
+            //$("#GuardarDenuncia").click(function () {
+            //    //$(this).attr("disabled", true);
+            //    $("html, body").animate({ scrollTop: $("#navHeader").offset().top }, 500);
+            //    $.ajax({
+            //        url: "/Home/CrearDenuncia",
+            //        type: "Post",
+            //        data: {
+            //            DENUNCIANTE_ID: $('#denuncianteId').val(),
+            //            CREATIONDATE: $('#creationDate').val(),
+            //            FSELLOCIA: $('#fechaNotificacion').val(),
+            //            FSELLOGCIADC: $('#fechaNotificacionGcia').val(),
+            //            tipoEvento: $("#tipoEvento").val(),
+            //            reqInforme: $('#reqInforme').val(),
+            //            fechaVencimiento: $('#fechaVencimiento').val(),
+            //            horaVencimiento: $('#horaVencimiento').val()
+
+            //        },
+            //        success: function (response) {
+            //            toastr.options.positionClass = 'toast-bottom-right';
+            //            toastr.success("Se ha guardado correctamente");
+            //            $("#nroDenuncia").html(response);
+            //            //$(this).attr("disabled", false);
+
+            //        },
+            //        error: function (response) {
+            //            toastr.error("Ocurrió un Error Inesperado. No se ha podido guardar el Registro");
+            //            //$(this).attr("disabled", false);
+            //        }
+            //    });
+
+            //});
+
+             function editarDenuncia(elem) {
+                 var boton = $(elem);
+                 boton.attr("disabled","disabled");
+                 mostrarLoading();
+                 var laDenunciaEstaCerrada = false;
+                 var denunciaId = parseInt($('#nroDenuncia').text());
+            //$("html, body").animate({ scrollTop: $("#navHeader").offset().top }, 500);
+                 if (denunciaEditadaEsVálida()) {
+                     $.ajax({
+                         url: '@Url.Action("EditarDenuncia", "Denuncias")',
+                         type: "POST",
+                         data: {
+                             DenunciaId: denunciaId,
+                             ETAPA_ID: $('#comboEtapaProcesal option:selected').val(),
+                             TIPO_PRO_ID: $('#comboTiposProceso option:selected').val(),
+                             DENUNCIANTE_ID: $('#denuncianteId').val(),
+                             CREATIONDATE: $('#creationDate').val(),
+                             TRAMITECRM: $('#tramiteCrm').val(),
+                             OBJETORECLAMO: $('#numeroLinea').val(),
+                             FSELLOCIA: $('#fechaNotificacion').val(),
+                             FSELLOGCIADC: $('#fechaNotificacionGcia').val(),
+                             EXPEDIENTE_ID: $('#numeroExpediente').val(),
+                             ORGANISMO_ID: $('#comboOrganismo option:selected').val(),
+                             ESTUDIO_ID: $('#comboEstudioEdicion option:selected').val(),
+                             MODALIDADGESTION: $('#comboModalidadesGestionEdicion  option:selected').val(),
+                             SUBTIPO_PRO_ID: $('#comboSubTiposProceso option:selected').val(),
+                             SERV_DEN_ID: $('#comboServicios option:selected').val(),
+                             RECLAMO_ID: $('#comboMotivosReclamo option:selected').val(),
+                             CONCILIACION_ID: $('#comboSubEstados option:selected').val(),
+                             FECHARESULTADO: $('#fechaResultado').val(),
+                             grupoId: $('#grupoIdDenunciantes').val(),
+                             nroClienteContrato: $('#nroClienteContrato').val(),
+                             mediadorId: $('#comboMediadores option:selected').val(),
+                             domicilioMediadorId: $('#comboDomiciliosMediadores option:selected').val(),
+                             reclamoRelacionado: $('#reclamoRelacionado').val(),
+                             //idDatosCoprec: $('#datosCoprecId').val()
+                             idDatosCoprec: $('#idCoprec').val(),
+                             responsableId: $('#responsableInterno option:selected').val(),
+                             fechaHomologacion: $('#fechaHomologacion').val(),
+                             nroGestionCoprec: $('#inputNroGestion').val(),
+                             honorariosCoprec: $('#inputHonorarios').val(),
+                             fechaGestionHonorarios: $('#inputFechaGestionHonorarios').val(),
+                             montoAcordado: $('#inputMontoAcordado').val(),
+                             arancel: $('#inputArancel').val(),
+                             fechaGestionArancel: $('#inputFechaGestionArancel').val()
+                         },
+
+                         success: function (response) {
+                             toastr.options.positionClass = 'toast-bottom-right';
+                             toastr.success("Se ha guardado correctamente");
+
+                                 $('#nroDenuncia').val(response.denuncia.DenunciaId);
+
+                                 $('#denuncianteId').val(response.denuncia.DENUNCIANTE_ID);
+
+                             //$('#datosDenunciante').val(response.datosDenunciante);
+                             $('#denuncianteResult').text(response.datosDenunciante);
+                                 $('#creationDate').val(response.denuncia.CREATIONDATE);
+                                 $('#tramiteCrm').val(response.denuncia.TRAMITECRM);
+                                 $('#numeroLinea').val(response.denuncia.OBJETORECLAMO);
+
+                                 $('#fechaNotificacion').val((new Date(response.denuncia.FSELLOCIA)).getDate().toString("yyyy-MM-dd"));
+                                 $('#fechaNotificacionGcia').val((new Date(response.denuncia.FSELLOGCIADC)).getDate().toString("yyyy-MM-dd"));
+
+                                 $('#numeroExpediente').val(response.denuncia.EXPEDIENTE_ID);
+                                 $('#fechaResultado').val(response.denuncia.FECHARESULTADO);
+                                     $('#nroClienteContrato').val(response.denuncia.nroClienteContrato),
+                                     $('#reclamoRelacionado').val(response.denuncia.reclamoRelacionado),
+                                     $('#idCoprec').val(response.denuncia.idDatosCoprec),/*,*/
+                                     $('#grupoIdDenunciantes').val(response.denuncia.grupoId);
+
+                                         $('#comboEtapaProcesal option').each(function (i, valor) {
+                                         if ($(valor).val() == response.denuncia.ETAPA_ID) {
+                                             alert(response.denuncia.ETAPA_ID);
+                                             $(valor).prop('selected', true);
+                                         }
+                                     });
+                                 $('#comboTiposProceso option').each(function (i, valor) {
+                                     if ($(valor).val() == response.denuncia.TIPO_PRO_ID) {
+                                         //console.log(response.denuncia.ETAPA_ID);
+                                         $(valor).prop('selected', true);
+                                     }
+                                 });
+                                 $('#comboOrganismo option').val().each(function (i, valor) {
+                                     if ($(valor).val() == response.denuncia.ORGANISMO_ID) {
+                                         //console.log(response.denuncia.ORGANISMO_ID);
+                                         $(valor).prop('selected', true);
+                                     }
+                                 });
+                                 $('#comboEstudioEdicion option').val().each(function (i, valor) {
+                                     if ($(valor).val() == response.denuncia.ESTUDIO_ID) {
+                                         //console.log(response.denuncia.ESTUDIO_ID);
+                                         $(valor).prop('selected', true);
+                                     }
+                                 });
+                                 $('#comboModalidadesGestionEdicion  option').val().each(function (i, valor) {
+                                     if ($(valor).val() == response.denuncia.MODALIDADGESTION) {
+                                         //console.log(response.denuncia.ESTUDIO_ID);
+                                         $(valor).prop('selected', true);
+                                     }
+                                 });
+                                 $('#comboSubTiposProceso option').val().each(function (i, valor) {
+                                     if ($(valor).val() == response.denuncia.SUBTIPO_PRO_ID) {
+
+                                         $(valor).prop('selected', true);
+                                     }
+                                 });
+                                 $('#comboServicios option').val().each(function (i, valor) {
+                                     if ($(valor).val() == response.denuncia.SERV_DEN_ID) {
+
+                                         $(valor).prop('selected', true);
+                                     }
+                                 });
+                                 $('#comboMotivosReclamo option').val().each(function (i, valor) {
+                                     if ($(valor).val() == response.denuncia.RECLAMO_ID) {
+
+                                         $(valor).prop('selected', true);
+                                     }
+                                 });
+                                 $('#comboSubEstados option').val().each(function (i, valor) {
+                                     if ($(valor).val() == response.denuncia.CONCILIACION_ID) {
+
+                                         $(valor).prop('selected', true);
+                                     }
+                                 });
+
+
+                                 $('#comboMediadores option').val().val().each(function (i, valor) {
+                                     if ($(valor).val() == response.denuncia.mediadorId) {
+
+                                         $(valor).prop('selected', true);
+                                     }
+                                 });
+                                 $('#comboDomiciliosMediadores option').val().each(function (i, valor) {
+                                     if ($(valor).val() == response.denuncia.domicilioMediadorId) {
+
+                                         $(valor).prop('selected', true);
+                                     }
+                                 });
+                             ocultarLoading();
+                             $('#fechaHomologacion').val(response.fechaHomologacion);
+                             $('#inputNroGestion').text(response.nroGestionCoprec);
+                             $('#inputHonorarios').val(response.honorariosCoprec);
+                             $('#inputfechaGestionHonorarios').val(response.fechaGestionHonorarios);
+                             $('#inputMontoAcordado').val(response.montoAcordado);
+                             $('#inputArancel').val(response.arancel);
+                             $('#inputfechaGestionArancel').val(response.fechaGestionArancel);
+
+                             $("#FormGroupDenuncia *").prop("disabled", true);
+                             laDenunciaEstaCerrada = response.estaCerrada;
+
+
+                             //$('#fechaHomologacion').val($('#fechaHomologacionExistente').val());
+                             //$('#inputNroGestion').text($('#nroGestionCoprecExistente').val());
+                             //$('#inputHonorarios').val($('#honorariosCoprecExistente').val());
+                             //$('#inputfechaGestionHonorarios').val($('#fechaGestionHonorariosExistente').val());
+                             //$('#inputMontoAcordado').val($('#montoAcordadoExistente').val());
+                             //$('#inputArancel').val($('#arancelExistente').val());
+                             //$('#inputfechaGestionArancel').val($('#fechaGestionArancelExistente').val());
+                         },
+                         error: function (response) {
+                             toastr.error(response.responseText);
+                             ocultarLoading();
+                         }
+                     });
+                     $("#FormGroupDenuncia *").prop("disabled", true);
+                     if (laDenunciaEstaCerrada) {
+                         $('#comboSubEstados').removeProp("disabled");
+                         $('#EditarDenuncia').css("display", "none");
+                         $('#EditarDenunciaCerrada').css("display", "block");
+                     }
+                 }
+                         ocultarLoading();
+                         boton.removeAttr("disabled");
+
+            }
+
+            function editarDenunciaCerrada(elem) {
+                 var boton = $(elem);
+                 boton.attr("disabled","disabled");
+                 mostrarLoading();
+                 var denunciaId = parseInt($('#nroDenuncia').text());
+            //$("html, body").animate({ scrollTop: $("#navHeader").offset().top }, 500);
+                 //if (denunciaEditadaEsVálida()) {
+                     $.ajax({
+                         url: '@Url.Action("EditarDenunciaCerrada", "Denuncias")',
+                         type: "POST",
+                         data: {
+                             DenunciaId: denunciaId,
+                             CONCILIACION_ID: $('#comboSubEstados option:selected').val(),
+                         },
+
+                         success: function (response) {
+                             toastr.options.positionClass = 'toast-bottom-right';
+                             toastr.success("Se ha guardado correctamente");
+                                 $('#comboSubEstados option').val().each(function (i, valor) {
+                                     if ($(valor).val() == response.ConciliacionId) {
+                                         $(valor).prop('selected', true);
+                                     }
+                             });
+                             alert(response.CierraDenuncia);
+                             if (!response.CierraDenuncia) {
+                                 $('#comboSubEstados').attr("disabled", "disabled");
+                                 $('#btnEditarDenuncia').removeAttr("disabled");
+
+                             }
+                             ocultarLoading();
+
+                         },
+                         error: function (response) {
+                             toastr.error(response.responseText);
+                             ocultarLoading();
+                         }
+                     });
+                     //$("#FormGroupDenuncia *").prop("disabled", true);
+                 //}
+                         ocultarLoading();
+                         boton.removeAttr("disabled");
+
+            }
+      //funcion anterior hasta el sprint 3
+      $("#GuardarNuevaDenuncia").click(function () {
+          alert(esValidaDenuncia());
+          if (esValidaDenuncia()) {
+              alert('Es válida');
+              mostrarLoading();
+              $("html, body").animate({ scrollTop: $("#navHeader").offset().top }, 500);
+              $.ajax({
+                  url: '@Url.Action("CrearDenuncia", "Denuncias")',
+                  type: "Post",
+                  data: {
+                      ETAPA_ID: $('#comboEtapaProcesal option:selected').val(),
+                      TIPO_PRO_ID: $('#comboTiposProceso option:selected').val(),
+                      DENUNCIANTE_ID: $('#denuncianteId').val(),
+                      CREATIONDATE: $('#creationDate').val(),
+                      TRAMITECRM: $('#tramiteCrm').val(),
+                      OBJETORECLAMO: $('#numeroLinea').val(),
+                      FSELLOCIA: $('#fechaNotificacion').val(),
+                      FSELLOGCIADC: $('#fechaNotificacionGcia').val(),
+                      EXPEDIENTE_ID: $('#numeroExpediente').val(),
+                      ORGANISMO_ID: $('#comboOrganismo option:selected').val(),
+                      ESTUDIO_ID: $('#comboEstudioEdicion option:selected').val(),
+                      MODALIDADGESTION: $('#comboModalidadesGestionEdicion option:selected').val(),
+                      SUBTIPO_PRO_ID: $('#comboSubTiposProceso option:selected').val(),
+                      SERV_DEN_ID: $('#comboServicios option:selected').val(),
+                      RECLAMO_ID: $('#comboMotivosReclamo option:selected').val(),
+                      CONCILIACION_ID: $('#comboSubEstados option:selected').val(),
+                      FECHARESULTADO: $('#fechaResultado').val(),
+                      tipoEvento: $('#comboTipoEventos option:selected').val(),
+                      reqInforme: $('#comboReqsInforme option:selected').val(),
+                      fechaVencimiento: $('#fechaVencimiento').val(),
+                      horaVencimiento: $('#horaVencimiento').val(),
+                      grupoId: $('#grupoDenuncianteId').val(),
+                      nroClienteContrato: $('#nroClienteContrato').val(),
+                      mediadorId: $('#comboMediadores option:selected').val(),
+                      domicilioMediadorId: $('#comboDomiciliosMediadores option:selected').val(),
+                      reclamoRelacionado: $('#reclamoRelacionado').val(),
+                      responsableId: $('#responsableInterno option:selected').val()
+                  },
+
+                  success: function (response) {
+                      $('#home').html(response);
+                      toastr.success('Denuncia creada correctamente');
+                      $("#FormGroupDenuncia *").prop("disabled", true);
+
+                      // esta es la versión del sprint2V2
+                      @*var ventana = window.open('@Url.Action("CrearDenuncia", "Denuncias")','_self');
+                      ventana.document.write(response);*@
+
+
+                      try {
+
+                      } catch (response) {
+                          ocultarLoading();
+                          toastr.error(response.responseText + ' ' + response.status);
+                      } finally {
+                          ocultarLoading();
+                      }
+                  },
+                  error: function (response) {
+                      toastr.error(response.responseText);
+
+                  }
+              });
+          }
+      });
+
+            function guardarDenunciaNew() {
+
+                if (esValidaDenuncia()) {
+                    mostrarLoading();
+                    $("html, body").animate({ scrollTop: $("#navHeader").offset().top }, 500);
+                    $.ajax({
+                        url: '@Url.Action("CrearDenuncia", "Denuncias")',
+                        type: "Post",
+                        data: {
+                            ETAPA_ID: $('#comboEtapaProcesal option:selected').val(),
+                            TIPO_PRO_ID: $('#comboTiposProceso option:selected').val(),
+                            DENUNCIANTE_ID: $('#denuncianteId').val(),
+                            CREATIONDATE: $('#creationDate').val(),
+                            TRAMITECRM: $('#tramiteCrm').val(),
+                            OBJETORECLAMO: $('#numeroLinea').val(),
+                            FSELLOCIA: $('#fechaNotificacion').val(),
+                            FSELLOGCIADC: $('#fechaNotificacionGcia').val(),
+                            EXPEDIENTE_ID: $('#numeroExpediente').val(),
+                            ORGANISMO_ID: $('#comboOrganismo option:selected').val(),
+                            ESTUDIO_ID: $('#comboEstudioEdicion option:selected').val(),
+                            MODALIDADGESTION: $('#comboModalidadesGestionEdicion option:selected').val(),
+                            SUBTIPO_PRO_ID: $('#comboSubTiposProceso option:selected').val(),
+                            SERV_DEN_ID: $('#comboServicios option:selected').val(),
+                            RECLAMO_ID: $('#comboMotivosReclamo option:selected').val(),
+                            CONCILIACION_ID: $('#comboSubEstados option:selected').val(),
+                            FECHARESULTADO: $('#fechaResultado').val(),
+                            tipoEvento: $('#comboTipoEventos option:selected').val(),
+                            reqInforme: $('#comboReqsInforme option:selected').val(),
+                            fechaVencimiento: $('#fechaVencimiento').val(),
+                            horaVencimiento: $('#horaVencimiento').val(),
+                            //grupoId: $('#grupoDenuncianteId').val(),
+                            grupoId: $('#grupoIdDenunciantes').val(),
+                            nroClienteContrato: $('#nroClienteContrato').val(),
+                            mediadorId: $('#comboMediadores option:selected').val(),
+                            domicilioMediadorId: $('#comboDomiciliosMediadores option:selected').val(),
+                            reclamoRelacionado: $('#reclamoRelacionado').val(),
+                            responsableId: $('#responsableInterno option:selected').val(),
+                            responsableEvento: $('#responsableInternoEvento option:selected').val(),
+                            fechaHomologacion: $('#fechaHomologacion').val(),
+                            nroGestionCoprec: $('#inputNroGestion').val(),
+                            honorariosCoprec: $('#inputHonorarios').val(),
+                            fechaGestionHonorarios: $('#inputFechaGestionHonorarios').val(),
+                            montoAcordado: $('#inputMontoAcordado').val(),
+                            arancel: $('#inputArancel').val(),
+                            fechaGestionArancel: $('#inputFechaGestionArancel').val()
+                        },
+
+                        success: function (response) {
+
+                            try {
+                                $('#home').html(response);
+                                toastr.success('Denuncia creada correctamente');
+                                $("#FormGroupDenuncia *").prop("disabled", true);
+                                var responsable = $("#respInter").val();
+
+                                $("#responsableInterno option").each(function (i, valor) {
+                                    if ($(valor).val() == responsable) {
+                                        $(valor).prop('selected', true);
+                                    }
+                                });
+                                $('#btnVisualizarModificaciones').prop("disabled", false);
+                                $('#btnFormalizarDenuncia').prop("disabled", false);
+                                //$('#btnEditarDenuncia').prop("disabled",true);
+                                visualizarBloqueCamposCoprec();
+
+                                // esta es la versión del sprint2V2
+                                @*var ventana = window.open('@Url.Action("CrearDenuncia", "Denuncias")', '_self');
+                                ventana.document.write(response);*@
+
+
+                            } catch (response) {
+                                toastr.error('Error en el Cliente : ' + response.responseText + ' ' + response.status);
+                            }
+                        },
+                        error: function (response) {
+                            toastr.error(response.responseText);
+
+                        }
+                    });
+                }
+            }
+
+            function removeErrorClass(elem) {
+                $(elem).removeClass('error');
+            }
+
+            function esValidaDenuncia() {
+                $("#FormGroupDenuncia *").removeClass('error');
+                var flag = true;
+                $('#ErrorBox').empty();
+                var fechaNotificacion = new Date($('#fechaNotificacion').val());
+                var fechaNotificacionGcia = new Date($('#fechaNotificacionGcia').val());
+                var today = new Date();
+
+                if (!parseInt($('#denuncianteId').val()) > 0) {
+                    $('#ErrorBox').append('<li class="text-danger">Debe seleccionar un Denunciante</li>');
+                    flag = false;
+                }
+                if ($('#fechaNotificacion').val().length == 0) {
+                    $('#ErrorBox').append('<li class="text-danger">La fecha de Notificación es Obligatoria</li>');
+                    $('#fechaNotificacion').addClass('error');
+                    flag = false;
+                }
+                if (fechaNotificacion > today) {
+                    $('#ErrorBox').append('<li class="text-danger">La fecha de Notificación es Inválida</li>');
+                    $('#fechaNotificacion').addClass('error');
+                    flag = false;
+                }
+                if ($('#fechaNotificacionGcia').val().length == 0) {
+                    $('#ErrorBox').append('<li class="text-danger">La fecha de Notificación de la Gerencia es Obligatoria</li>');
+                    $('#fechaNotificacionGcia').addClass('error');
+                    flag = false;
+                }
+                if (fechaNotificacionGcia > today) {
+                    $('#ErrorBox').append('<li class="text-danger">La fecha de Notificación de la Gcia. es Inválida</li>');
+                    $('#fechaNotificacionGcia').addClass('error');
+                    flag = false;
+                }
+                if (!$('#numeroLinea').val() == '' && $('#numeroLinea').val().length != 10 ) { //!$('#numeroLinea').patternMismatch
+                    $('#ErrorBox').append('<li class="text-danger">El numero de Linea debe contener 10 dígitos</li>');
+                    //$('#ErrorBoxContainer').css('display', 'block');
+                    $('#numeroLinea').addClass('error');
+                    flag = false;
+                }
+                if ($('#comboOrganismo')[0].selectedIndex == 0) {
+                    $('#ErrorBox').append('<li class="text-danger">Debe Seleccionar un Organismo</li>');
+                    $('#comboOrganismo').addClass('error');
+
+                    flag = false;
+                }
+                if ($('#comboEstudioEdicion')[0].selectedIndex == 0 && (!$('#comboModalidadesGestionEdicion option:selected').text().includes('INTERNA'))) {
+                    $('#ErrorBox').append('<li class="text-danger">Debe Seleccionar un Estudio</li>');
+                    $('#comboEstudioEdicion').addClass('error');
+                    flag = false;
+                }
+                if ($('#comboServicios')[0].selectedIndex == 0) {
+                    $('#ErrorBox').append('<li class="text-danger">Debe Seleccionar un Servicio</li>');
+                    $('#comboServicios').addClass('error');
+                    flag = false;
+                }
+                if ($('#comboMotivosReclamo')[0].selectedIndex == 0) {
+                    $('#ErrorBox').append('<li class="text-danger">Debe Seleccionar un Motivo de Reclamo</li>');
+                    $('#comboMotivosReclamo').addClass('error');
+                    flag = false;
+                }
+                if ($('#comboSubEstados')[0].selectedIndex == 0) {
+                    $('#ErrorBox').append('<li class="text-danger">Debe Seleccionar un Estado de Conciliación</li>');
+                    $('#comboSubEstados').addClass('error');
+                    flag = false;
+                }
+
+                if ($('#comboTipoEventos')[0].selectedIndex == 0) {
+                    $('#ErrorBox').append('<li class="text-danger">Debe Seleccionar un tipo de Evento</li>');
+                    $('#comboTipoEventos').addClass('error');
+                    flag = false;
+                }
+                if ($('#fechaVencimiento').val().length == 0) {
+                    $('#ErrorBox').append('<li class="text-danger">La Fecha de Vencimiento es Inválida</li>');
+                    $('#fechaVencimiento').addClass('error');
+                    flag = false;
+                }
+                if ($('#horaVencimiento').val().length == 0) { //|| $('#horaVencimiento').val() == "00:00"
+                    $('#ErrorBox').append('<li class="text-danger">La Hora de Vencimiento es Inválida</li>');
+                    $('#horaVencimiento').addClass('error');
+                    flag = false;
+                }
+                if ($('#responsableInterno')[0].selectedIndex == 0) {
+                    $('#ErrorBox').append('<li class="text-danger">Debe Seleccionar un Responsable para la Denuncia</li>');
+                    $('#responsableInterno').addClass('error');
+                    flag = false;
+                }
+                if ($('#responsableInternoEvento')[0].selectedIndex == 0) {
+                    $('#ErrorBox').append('<li class="text-danger">Debe Seleccionar un Responsable para el Evento</li>');
+                    $('#responsableInternoEvento').addClass('error');
+                    flag = false;
+                }
+
+                if ($('#comboOrganismo option:selected').text() == 'COPREC') {
+                    if ($('#comboMediadores')[0].selectedIndex == 0) {
+                        toastr.warning("Debe Seleccionar un Mediador");
+                        flag = false;
+                    }
+                    if ($('#comboDomiciliosMediadores')[0].selectedIndex == 0) {
+                        toastr.warning("Debe Seleccionar el Domicilio del Mediador");
+                        flag = false;
+                    }
+
+
+                }
+                if (!flag) {
+                    $('#ErrorBoxContainer').css('display', 'block');
+                    $('#erroresModal').modal('show');
+                    //$('#GuardarDenuncia').prop("data-dismiss", "modal");
+                } else {
+                    return flag;
+                }
+            }
+
+            $('#numeroLinea').on('focus', function () {
+                $(this).removeClass('error');
+            });
+
+            $('#filtroDni').on('focus', function () {
+                $(this).removeClass('error');
+            });
+
+            //function esVálidaDenuncia() {
+            //    var flag = true;
+            //    toastr.options.hideDuration = 10000;
+            //    if ($('#denuncianteId').val().length == 0 || $('#denuncianteId').val()== 0) {
+            //        toastr.warning("Debe Seleccionar un Denunciante");
+            //        flag = false;
+            //    }
+            //    if ($('#fechaNotificacion').val().length == 0) {
+            //        toastr.warning("Debe ingresar la Fecha de Notificación");
+            //        flag = false;
+            //    }
+            //    if ($('#fechaNotificacionGcia').val().length == 0) {
+            //        toastr.warning("Debe ingresar la Fecha de Notificación de la Gerencia");
+            //        flag = false;
+            //    }
+            //    if ($('#comboOrganismo')[0].selectedIndex == 0) {
+            //        toastr.warning("Debe Seleccionar un Organismo");
+            //        flag = false;
+            //    }
+            //    if ($('#comboEstudioEdicion')[0].selectedIndex == 0) {
+            //        toastr.warning("Debe Seleccionar un Estudio");
+            //        flag = false;
+            //    }
+            //    if ($('#comboServicios')[0].selectedIndex == 0) {
+            //        toastr.warning("Debe Seleccionar un Servicio");
+            //        flag = false;
+            //    }
+            //    if ($('#comboMotivosReclamo')[0].selectedIndex == 0) {
+            //        toastr.warning("Debe Seleccionar un Motivo de Reclamo");
+            //        flag = false;
+            //    }
+            //    if ($('#comboSubEstados')[0].selectedIndex == 0) {
+            //        toastr.warning("Debe Seleccionar un Estado de Conciliación");
+            //        flag = false;
+            //    }
+
+            //    if ($('#comboTipoEventos')[0].selectedIndex == 0) {
+            //        toastr.warning("Debe Seleccionar un tipo de Evento");
+            //        flag = false;
+            //    }
+            //    if ($('#fechaVencimiento').val().length == 0) {
+            //        toastr.warning("Debe Seleccionar la Fecha de Vencimiento");
+            //        flag = false;
+            //    }
+            //    if ($('#horaVencimiento').val().length == 0) {
+            //        toastr.warning("Debe Seleccionar la Hora de Vencimiento");
+            //        flag = false;
+            //    }
+
+
+            //    if ($('#comboOrganismo option:selected').text().includes('COPREC')) {
+            //        if ($('#comboMediadores')[0].selectedIndex == 0) {
+            //            toastr.warning("Debe Seleccionar un Mediador");
+            //            flag = false;
+            //        }
+            //        if ($('#comboDomiciliosMediadores')[0].selectedIndex == 0) {
+            //            toastr.warning("Debe Seleccionar el Domicilio del Mediador");
+            //            flag = false;
+            //        }
+
+
+            //    }
+            //    return flag;
+            //}
+
+            function denunciaEditadaEsVálida() {
+                var flag = true;
+                toastr.options.hideDuration = 10000;
+                var fechaNotificacion = new Date($('#fechaNotificacion').val());
+                var fechaNotificacionGcia = new Date($('#fechaNotificacionGcia').val());
+                var today = new Date();
+
+                if ($('#denuncianteId').val().length == 0 || $('#denuncianteId').val() == 0) {
+                    toastr.warning("Debe Seleccionar un Denunciante");
+                    flag = false;
+                }
+                if ($('#fechaNotificacion').val().length == 0) {
+                    toastr.warning("Debe ingresar la Fecha de Notificación");
+                    flag = false;
+                    $('#fechaNotificacion').addClass("error");
+                }
+                if ($('#fechaNotificacionGcia').val().length == 0) {
+                    toastr.warning("Debe ingresar la Fecha de Notificación de la Gerencia");
+                    flag = false;
+                    $('#fechaNotificacionGcia').addClass("error");
+                }
+
+                if (fechaNotificacion > today) {
+                    //$('#ErrorBox').append('<li class="text-danger">La fecha de Notificación es Inválida</li>');
+                    toastr.warning("La Fecha de Notificación es Inválida");
+                    $('#fechaNotificacion').addClass('error');
+                    flag = false;
+                }
+
+                if (fechaNotificacionGcia > today) {
+                    //$('#ErrorBox').append('<li class="text-danger">La fecha de Notificación de la Gerencia es Inválida</li>');
+                    toastr.warning("La Fecha de Notificación de la Gerencia es Inválida");
+                    $('#fechaNotificacionGcia').addClass('error');
+                    flag = false;
+                }
+                if ($('#comboOrganismo')[0].selectedIndex == 0) {
+                    toastr.warning("Debe Seleccionar un Organismo");
+                    flag = false;
+                    $('#comboOrganismo').addClass("error");
+                }
+                if ($('#comboEstudioEdicion')[0].selectedIndex == 0 && (!$('#comboModalidadesGestionEdicion option:selected').text().includes('INTERNA'))){
+                    toastr.warning("Debe Seleccionar un Estudio");
+                    flag = false;
+                    $('#comboEstudioEdicion').addClass("error");
+                }
+                if (!$('#numeroLinea').val() == '' && $('#numeroLinea').val().length != 10) {
+                    toastr.warning('El numero de Linea <br/> debe contener 10 dígitos');
+                    $('#numeroLinea').addClass('error');
+                    flag = false;
+                }
+
+                if ($('#comboServicios')[0].selectedIndex == 0) {
+                    toastr.warning("Debe Seleccionar un Servicio");
+                    flag = false;
+                    $('#comboServicios').addClass("error");
+                }
+                if ($('#comboMotivosReclamo')[0].selectedIndex == 0) {
+                    toastr.warning("Debe Seleccionar un Motivo de Reclamo");
+                    flag = false;
+                    $('#comboMotivosReclamo').addClass("error");
+                }
+                if ($('#comboSubEstados')[0].selectedIndex == 0) {
+                    toastr.warning("Debe Seleccionar un Estado de Conciliación");
+                    flag = false;
+                    $('#comboSubEstados').addClass("error");
+                }
+                if ($('#responsableInterno')[0].selectedIndex == 0) {
+                    toastr.warning("Debe Seleccionar un Responsable");
+                    flag = false;
+                    $('#responsableInterno').addClass("error");
+                }
+
+
+                if ($('#comboOrganismo option:selected').text() == 'COPREC') {
+                    if ($('#comboMediadores')[0].selectedIndex == 0) {
+                        toastr.warning("Debe Seleccionar un Mediador");
+                        flag = false;
+                        $('#comboMediadores').addClass("error");
+                    }
+                    if ($('#comboDomiciliosMediadores')[0].selectedIndex == 0) {
+                        toastr.warning("Debe Seleccionar el Domicilio del Mediador");
+                        flag = false;
+                        $('#comboDomiciliosMediadores').addClass("error");
+                    }
+
+
+                }
+                return flag;
+            }
+
+
+            function guardarEventoEditado() {
+                console.log($('input:checkbox[name=estaContestadoEE]:checked').val());
+                if (elEventoEditadoEsVálido()) {
+                $.ajax({
+                    url: '@Url.Action("guardarEventoEditado","Denuncias")',
+                    type: "Post",
+                    data: {
+                        EventoId: $('#idEventoAEditar').val(),
+                        DenunciaId: $('#nroDenuncia').text(),
+                        Fecha: $('#fechaVencimientoEE').val() + ' ' + $('#horaVencimientoEE').val(),
+                        tipoEvento: $('#comboTipoEventoEE option:selected').val(),
+                        /*CONTESTADO: $('input:checkbox[name=estaContestadoEE]:checked').val(),*//*('#contestadoEE').val()*/
+                        CONTESTADO: $('#ContestadoEE').prop('checked'),
+                        SOLUCIONADO: $('#comboSolucionadoEE option:selected').val(),
+                        REQUERIMIENTOINFORME: $('#comboReqInformeEE option:selected').val(),
+                        Observacion: $('#observacionEE').val(),
+                        ResIntId: $('#responsableInternoEventoEdicion option:selected').val()
+                    },
+                    success(response) {
+                        $('#divlistaEventos').html(response);
+                        toastr.success('Evento guardado correctamente');
+                        $('.modal-backdrop').hide();
+                        //cleanEditModal();
+                        $('#btnGuardarEventoEditado').removeAttr("data-dismiss");
+                        //$('#editEventModal').on('hidden.bs.modal', function (e) {
+                        //    cleanEditModal();
+                        //})
+                        //$("[data-dismiss=modal]").trigger({ type: "click" });
+
+                        //document.getElementsByTagName("body").style('overflow-y','visible'); "overflow-y:visible"
+
+                        $('body').css('overflow-y', 'visible');
+                    },
+                    error(response) {
+                        //toastr.options.positionClass = 'top-full-widht';
+                        toastr.error(response.responseText + ' ' + response.statusText)
+                    }
+                    });
+                }
+            }
+
+            @*$('#EditarEvento').on("click", function () {
+
+            //if (esUnEventoVálido()) {
+                $.ajax({
+                    url: '@Url.Action("guardarEventoEditado","Denuncias")',
+                    type: "Post",
+                    data: {
+                        EventoId: $('#idEventoAEditar').val(),
+                        DenunciaId: $('#nroDenuncia').text(),
+                        Fecha: $('#fechaVencimientoEE').val() + ' ' + $('#horaVencimientoEE').val(),
+                        ////tipoEvento: $('#evento_tipoEvento option:selected').val(),
+                        tipoEvento: $('#comboTipoEventoEE option:selected').val(),
+                        CONTESTADO: $('#contestadoEE :checked').val(),
+                        //SOLUCIONADO: $('#evento_SOLUCIONADO option:selected').val(),
+                        SOLUCIONADO: $('#comboSolucionadoEE option:selected').val(),
+                        //REQUERIMIENTOINFORME: $('#evento_REQUERIMIENTOINFORME option:selected').val(),
+                        REQUERIMIENTOINFORME: $('#comboReqInformeEE option:selected').val(),
+                        Observacion: $('#observacionEE').val()
+                    },
+                    success(response) {
+                        toastr.success('Evento guardado correctamente');
+                        $('#divlistaEventos').html(response);
+                    },
+                    error(response) {
+                        //toastr.options.positionClass = 'top-full-widht';
+                        toastr.error(response.responseText + ' ' + response.statusText)
+                    }
+                });
+            //}
+
+        });*@
+
+            //GrupoDenunciantes
+
+
+            function limpiarInput(elemento) {
+                var elem = '#' + elemento
+                console.log($(elem));
+                $(elem).val('');
+                $(elem).prop('readonly',false);
+            }
+
+            //$("#cantidadDenunciantes").keypress(function (e) {
+            //    if (e.which == 13) {
+            //        e.preventDefault();
+            //        generarNFilas($(this).val());
+            //        console.log($(this).val());
+            //        $(this).val = 0;
+            //    }
+            //});
+
+            //$("#cantidadDenunciantesASacar").keypress(function (e) {
+            //    if (e.which == 13) {
+            //        e.preventDefault();
+            //        removerNFilas($(this).val());
+            //        $(this).val = 0;
+            //    }
+            //});
+
+
+            //
+
+            function getEventobyId(EventID) {
+                $.ajax({
+                    url: '@Url.Action("EditarEvento", "Home")' /*+ EventID */,
+                    type: "POST",
+                    data: { id:EventID},
+
+                    success: function (result) {
+                        $('#divEventoAEditar').html(result);
+
+                        $("#responsableInternoEventoEdicion option").each(function (i, valor) {
+                            console.log(i + ' : ' + $(valor).val())
+                            if ($(valor).val() == result.ResIntId) {
+                                $(valor).prop('selected', true);
+                                console.log('son iguales');
+                            }
+                        });
+                    },
+                    error: function (result) {
+                        toastr.error(result.responseText)
+                    }
+
+                });
+
+                return false;
+
+            }
+
+
+                                //});
+                   function getEvento(EventID) {
+                      $.ajax({
+
+                        url: '@Url.Action("EditarEvento", "Home")',
+                        type: "Post",
+                        data: { id: EventID },
+
+                          success: function (result) {
+                              $('#eventoEdicionDenunciaId').val(result.DenunciaId);
+                              $('#eventoEdicionEventoId').val(result.EventoId);
+                              $('#eventoEdicionContestado').val(result.contestado);
+                              $('#eventoAEditar').html(result);
+
+                                        },
+
+                                    error: function (errormessage) {
+                                        console.log(errormessage.responseText);
+
+                                        alert(errormessage.responseText);
+
+                                    }
+
+                                });
+
+                                return false;
+
+            }
+
+            //funciones traidas de la Vista nueva denuncia -- a partir de  aquí
+
+ $("#comboMediadores").change(function () {
+
+            if ($(this)[0].selectedIndex != 0) {
+
+                $.ajax({
+                    url: '@Url.Action("GetDomiciliosMediadores", "Home")',
+                    type: "Post",
+                    data: {
+                        idMediador: $('#comboMediadores option:selected').val()
+                    },
+                    success: function (response) {
+                        $('#comboDomiciliosMediadores').empty();
+                        $('#comboDomiciliosMediadores').append('<option value=0/>');
+                        $(response).each(function () {
+                            $('#comboDomiciliosMediadores').append(
+                                $('<option/>', { value: this.Id }).html(this.Domicilio)
+                            );
+                        });
+                        $('#comboDomiciliosMediadores').attr("disabled",false);
+
+                    },
+                    error: function (response) {
+                        toastr.error(response);
+                    }
+                });
+            }
+        });
+
+        $("#comboServicios").change(function () {
+
+            if ($(this)[0].selectedIndex != 0) {
+
+                $.ajax({
+                    url: '@Url.Action("GetMotivosDeReclamoPorServicio", "Home")',
+                    type: "Post",
+                    data: {
+                        idServicio: $('#comboServicios option:selected').val(),
+                        tipoProcesoId: $('#comboTiposProceso option:selected').val()
+                    },
+                    success: function (response) {
+                        $('#comboMotivosReclamo').empty();
+                        $('#comboMotivosReclamo').append('<option value=0/>');
+                        $(response).each(function () {
+                            $('#comboMotivosReclamo').append(
+                                $('<option/>', { value: this.Id }).html(this.Nombre)
+                            );
+                        });
+                        $('#comboMotivosReclamo').attr("disabled",false);
+
+                    },
+                    error: function (response) {
+                        toastr.error(response);
+                    }
+                });
+            }
+        });
+
+         $("#comboOrganismo").change(function () {
+
+             if ($(this)[0].selectedIndex != 0) {
+
+                 $.ajax({
+                     url: '@Url.Action("GetEstudiosPorOrganismo", "Home")',
+                     type: "Post",
+                     data: {
+                         organismoId: $('#comboOrganismo option:selected').val()
+                     },
+                     success: function (response) {
+                         $('#comboEstudioEdicion').empty();
+                         $('#comboEstudioEdicion').append('<option value=0/>');
+                         $(response).each(function () {
+                             $('#comboEstudioEdicion').append(
+                                 $('<option/>', { value: this.EstudioRelacionId }).html(this.Estudio)
+                             );
+                         });
+                         $('#comboEstudioEdicion').removeAttr("disabled");
+
+                         if ($('#comboOrganismo option:selected').text() == 'COPREC') {
+                             $('#bloqueCamposCoprec').show();
+                             $('#solapaDatosCoprec').css('display','block');
+                         } else {
+                             $('#bloqueCamposCoprec').hide();
+                             //$('#solapaDatosCoprec').hide();
+                         }
+                     },
+                     error: function (response) {
+                         toastr.error(response);
+                     }
+                 });
+             }
+        });
+
+            function limpiarDenuncianteResult(){
+                $('#divDatosDenunciante').remove();
+                $('#inputdatosDenunciante').removeAttr("hidden");
+            };
+
+    function guardarDenuncianteSiNoExiste() {
+        if (esValidoDenunciante()) {
+            $.ajax({
+                url: '@Url.Action("CrearDenuncianteDenuncia","Denuncias")',
+                type: "POST",
+                data: {
+                    nombre: $('#filtroNombre').val(),
+                    apellido: $('#filtroApellido').val(),
+                    dni: $('#filtroDni').val()
+                },
+                success: function (response) {
+                    //toastr.success("Registro guardado correctamente");
+                    $('#elementos').html(response);
+                },
+                error: function (response) {
+                    toastr.error(response.responseText + ' ' + response.status);
+                }
+            });
+        }
+    }
+            function esValidoDenunciante() {
+                var control = true;
+                if ($('#filtroNombre').val().trim().length == 0) {
+                    toastr.warning("El nombre es Obligatorio");
+                    control = false;
+                }
+                if ($('#filtroApellido').val().trim().length == 0){
+                    toastr.warning("El apellido es Obligatorio");
+                    control = false;
+                }
+                return control;
+            }
+
+    function guardarDenuncianteSiNoExiste() {
+        if (esValidoDenunciante()) {
+            $.ajax({
+                url: '@Url.Action("CrearDenuncianteDenuncia","Denuncias")',
+                type: "POST",
+                data: {
+                    nombre: $('#filtroNombre').val().toUpperCase(),
+                    apellido: $('#filtroApellido').val().toUpperCase(),
+                    NroDocumento: $('#filtroDni').val()
+                },
+                success: function (response) {
+                    //toastr.success("Registro guardado correctamente");
+                    $('#elementos').html(response);
+                },
+                error: function (response) {
+                    toastr.error(response.responseText + ' ' + response.status);
+                }
+            });
+        }
+    }
+      function getDenuncianteAEditar() {
+          var denuncianteId = $('#idDenuncianteResult').val();
+          if (denuncianteId != null || denuncianteId != undefined) {
+              $.ajax({
+                  url: '@Url.Action("EditarDenuncianteDenuncia", "Denunciantes")',
+                  type: "POST",
+                  data: {
+                      id: denuncianteId
+                  },
+                  success: function (response) {
+                      $('#editDenuncianteBodyContent').html(response);
+                  },
+                  error: function (response) {
+                      toastr.error(response.responseText + ' ' + response.status);
+                  }
+              });
+          }
+          else {
+              toastr.warning("La Denuncia no posee un Denunciante<br>Primero busque y seleccione");
+          }
+      }
+
+            function getDenuncianteGrupoEdicion(elem) {
+                var idFilaSeleccionada = $(elem).parent().parent().attr('id');
+
+                //var tr = $(elem);
+                //getElement(elem);
+                //var fila = sessionStorage.getItem("posicionSeleccionada");
+                //var seleccion = $('#filaGR' + fila );
+                //tr.prop('id', seleccion);
+                var denuncianteIdGrupo = $(elem).parent().parent().children().eq(6).text();
+                sessionStorage.setItem("idFilaSeleccionada", idFilaSeleccionada);
+                //alert(sessionStorage.getItem("idFilaSeleccionada"));
+              $.ajax({
+                  url: '@Url.Action("EditarDenuncianteDenuncia", "Denunciantes")',
+                  type: "POST",
+                  data: {
+                      id: denuncianteIdGrupo
+                  },
+                  success: function (response) {
+                      //var tds = seleccion.find('td');
+
+                      //tds.eq(1).children().val(response.nombre);
+                      //tds.eq(2).children().val(response.apellido);
+                      //tds.eq(3).children().val(response.NroDocumento);
+                      //tds.eq(6).html(response.DenuncianteId);
+                      $('#editDenuncianteGrupoBodyContent').html(response);
+                  },
+                  error: function (response) {
+                      toastr.error(response.responseText + ' ' + response.status);
+                  }
+              });
+
+            }
+
+            function existeElDni() {
+                $.ajax({
+                    url: '@Url.Action("ExisteElDni", "Denuncias")',
+                    type: "POST",
+                    data: {
+                        dni: $('#dniEdicion').val(),
+                        id: $('#DenuncianteIdEdicion').val()
+
+                    },
+                    success: function (response) {
+                        $('#existeDni').html(response);
+                        console.log($('#existeDni').text())
+                        $('#existeDni').text().includes('rue')
+                            ? toastr.warning("Ya existe otro Denunciante con <br/> el mismo Número de Documento")
+                            : guardarDenuncianteEdicion();
+                },
+                error: function (response) {
+                    toastr.error(response.responseText + ' ' + response.status);
+                }
+            });
+            }
+
+      function guardarDenuncianteEdicion() {
+        if (esValidoNombreEdicion()) {
+
+            $.ajax({
+                url: '@Url.Action("guardarDenuncianteEdicion", "Denuncias")',
+                type: "POST",
+                data: {
+
+                    id: $('#DenuncianteIdEdicion').val(),
+                    nombre: $('#nombreEdicion').val(),
+                    apellido: $('#apellidoEdicion').val(),
+                    dni: $('#dniEdicion').val()
+
+                },
+                success: function (response) {
+                    $('#denuncianteSeleccionado').html(response);
+                    $('#btnCerrarDenuncianteEdicionModal').click();
+                    $('#denuncianteId').val($('#DenuncianteIdEdicion').val());
+
+
+
+                },
+                error: function (response) {
+                    toastr.error(response.responseText + ' ' + response.status);
+                }
+            });
+        } else {
+            toastr.warning("Nombre y Apellido son obligatorios");
+        }
+    }
+
+      function guardarDenuncianteGrupoEdicion() {
+          if (esValidoNombreEdicion()) {
+
+            $.ajax({
+                url: '@Url.Action("guardarDenuncianteGrupoEdicion", "Denuncias")',
+                type: "POST",
+                data: {
+
+                    id: $('#DenuncianteIdEdicion').val(),
+                    nombre: $('#nombreEdicion').val(),
+                    apellido: $('#apellidoEdicion').val(),
+                    dni: $('#dniEdicion').val()
+
+                },
+                success: function (response) {
+                    var seleccion = sessionStorage.getItem("idFilaSeleccionada");
+                    //alert(seleccion);
+                    var tds = $('#'+ seleccion).find('td');
+                    //alert('#' + seleccion);
+                      tds.eq(1).html(response.nombre);
+                      tds.eq(2).html(response.apellido);
+                      tds.eq(3).html(response.NroDocumento);
+                      tds.eq(6).html(response.DenuncianteId);
+                    $('#btnCerrarDenuncianteGrupoEdicionModal').click();
+                    //$('#denuncianteSeleccionado').html(response);
+                    //$('#btnCerrarDenuncianteEdicionModal').click();
+                    //$('#denuncianteId').val($('#DenuncianteIdEdicion').val());
+
+
+
+                },
+                error: function (response) {
+                    toastr.error(response.responseText + ' ' + response.status);
+                }
+            });
+        } else {
+            toastr.warning("Nombre y Apellido son obligatorios");
+        }
+    }
+
+            function existeElDniDG() {
+                if ($('#dniEdicion').val().trim().length > 0) {
+                    $.ajax({
+                        url: '@Url.Action("ExisteElDni", "Denuncias")',
+                        type: "POST",
+                        data: {
+                            dni: $('#dniEdicion').val(),
+                            id: $('#DenuncianteIdEdicion').val()
+                        },
+                        success: function (response) {
+                            $('#existeDni').html(response);
+                            //console.log($('#existeDni').text())
+                            $('#existeDni').text().includes('rue')
+                                ? toastr.warning("Ya existe otro Denunciante con <br/> el mismo Número de Documento")
+                                : guardarDenuncianteGrupoEdicion();
+                        },
+                        error: function (response) {
+                            toastr.error(response.responseText + ' ' + response.status);
+                        }
+                    });
+                } else {
+                    guardarDenuncianteGrupoEdicion();
+                }
+            }
+
+
+            @*function existeElDni() {
+                 $.ajax({
+                url: '@Url.Action("verificarDni", "Denuncias")',
+                type: "POST",
+                data: {
+
+                    id: $('#DenuncianteIdEdicion').val()
+                },
+                success: function (response) {
+                    $('#EdicionDenuncianteResult').text(response);
+
+
+                },
+                error: function (response) {
+                    toastr.error(response.responseText + ' ' + response.status);
+                }
+            });
+            };*@
+
+            function esValidoNombreEdicion() {
+                if ($('#nombreEdicion').val().trim().length == 0 ||
+                    $('#apellidoEdicion').val().trim().length == 0) {
+                    return false;
+                }
+                return true;
+            }
+
+            //  *********************
+            //  Denunciantes Denuncia
+            //
+            // **********************
+
+    $("#filtroNombre").keypress(function (e) {
+        if (e.which == 13) {
+
+            BuscarDenuncianteDenuncia();
+        }
+    });
+
+    $("#filtroApellido").keypress(function (e) {
+        if (e.which == 13) {
+            //e.preventDefault();
+            BuscarDenuncianteDenuncia();
+        }
+    });
+
+    $("#filtroDni").keypress(function (e) {
+        if (e.which == 13) {
+            //e.preventDefault();
+            BuscarDenuncianteDenuncia();
+        }
+    });
+
+            function BuscarDenuncianteGrupo(elem,e) {
+                if (e.which == 13) {
+                    BuscarDenuncianteGrupoDenuncia(elem);
+                }
+            }
+
+            $("#filtroNombreDG").keypress(function (e) {
+                if (e.which == 13) {
+
+                    BuscarDenuncianteGrupoDenuncia($(this));
+                }
+            });
+
+            $("#filtroApellidoDG").keypress(function (e) {
+                if (e.which == 13) {
+                    //e.preventDefault();
+                    BuscarDenuncianteGrupoDenuncia($(this));
+                }
+            });
+
+            $("#filtroDniDG").keypress(function (e) {
+                if (e.which == 13) {
+                    //e.preventDefault();
+                    BuscarDenuncianteGrupoDenuncia($(this));
+                }
+            });
+
+    function verificarContenidoDni(elem) {
+        var input = $(elem);
+
+        if(input.val().length > 10
+                || input.val().toString().includes(".")
+                || input.val().toString().includes(",")) {
+            input.addClass('error');
+            toastr.warning('El número de Documento <br/> no debe superar los 10 dígitos');
+
+        };
+
+    }
+
+    function limpiarFiltrosBusqueda() {
+        $('#filtroNombre').val('');
+        $('#filtroApellido').val('');
+        $('#filtroDni').val('');
+        $('#elementos').empty();
+            }
+
+    function limpiarFiltrosBusquedaDG() {
+        $('#filtroNombreDG').val('');
+        $('#filtroApellidoDG').val('');
+        $('#filtroDniDG').val('');
+        $('#elementosDG').empty();
+    }
+
+     function elDenuncianteEsValido() {
+         var mensaje = "Ingrese alguno de los Filtros";
+         if (($('#filtroNombre').val().trim().length == 0 &&
+             $('#filtroApellido').val().trim().length == 0) &&
+             ($('#filtroDni').val().trim().length == 0)) {
+             toastr.warning(mensaje);
+             return false;
+         }
+         return true;
+
+    }
+
+
+
+
+    function BuscarDenuncianteDenuncia() {
+        $('#elementos').empty();
+        if (elDenuncianteEsValido()) {
+            mostrarLoading();
+                $.ajax({
+                    url: '@Url.Action("BuscarDenuncianteDenuncia", "Denuncias")',
+                    type: "post",
+                    data: {
+                        nombre: $('#filtroNombre').val(),
+                        apellido: $('#filtroApellido').val(),
+                        dni: $('#filtroDni').val()
+                    },
+                    success: function (response) {
+                        ocultarLoading();
+                        $('#elementos').html(response);
+                    },
+                    error: function (response) {
+                        ocultarLoading();
+                        toastr.info(response.responseText + ' ' + response.statusText);
+                    }
+                });
+        }
+    }
+            function elFiltroDenuncianteEsValido() {
+                var mensaje = "Ingrese alguno de los Filtros";
+                if (($('#filtroNombreDG').val().trim().length == 0 &&
+                    $('#filtroApellidoDG').val().trim().length == 0) &&
+                    ($('#filtroDniDG').val().trim().length == 0)) {
+                    toastr.warning(mensaje);
+                    return false;
+                }
+                return true;
+
+            }
+
+            function BuscarDenuncianteGrupoDenuncia(elem) {
+                var htmlDestino = sessionStorage.getItem('posicionSeleccionada');
+
+       $('#elementosDG').empty();
+        if (elFiltroDenuncianteEsValido()) {
+            mostrarLoading();
+                $.ajax({
+                    url: '@Url.Action("BuscarDenunciantesGrupoDenuncia", "Denunciantes")',
+                    type: "post",
+                    data: {
+                        nombre: $('#filtroNombreDG').val(),
+                        apellido: $('#filtroApellidoDG').val(),
+                        dni: $('#filtroDniDG').val()
+                    },
+                    success: function (response) {
+                        ocultarLoading();
+                        $('#elementosDG').html(response);
+                    },
+                    error: function (response) {
+                        ocultarLoading();
+                        toastr.info(response.responseText + ' ' + response.statusText);
+                    }
+                });
+        }
+    }
+
+            function elDenuncianteEstaEnElGrupo(response) {
+                var estaElDenunciante = false;
+                $('#lista tbody tr').each(function (i, valor) {
+
+                    if ($(valor).find('td').eq(1).children().val() == response.nombre
+                        && $(valor).find('td').eq(2).children().val() == response.apellido
+                        && $(valor).find('td').eq(3).children().val() == response.NroDocumento
+                        || ($(valor).find('td').eq(5).text() != '' && $(valor).find('td').eq(5).text() == response.DenuncianteId)) {
+                        var denuncianteCargado = $(valor).find('td').eq(0).text();
+                        //$('#divGrupo').text('El denunciante que intenta seleccionar ya se encuentra en la posición : ' + denuncianteCargado);
+                        $('#divGrupo').html('<ul id="duplicado"><li class="text-danger">El denunciante que intenta seleccionar ya se encuentra en la posición : ' + denuncianteCargado + '</li></ul>');
+                        estaElDenunciante = true;
+                    }
+
+                });
+                return estaElDenunciante;
+            }
+
+            function hayDuplicados() {
+                var duplicados = [];
+                var denunciantes = $('#lista tbody tr');
+                //var denunciantes = $('#lista tbody tr').toArray();
+
+                //denunciantes.forEach(e => console.log(parseInt(e.children[0].textContent)));
+
+                //denunciantes.forEach(e =>
+                //    console.log(parseInt(e.children[0].textContent)));
+
+                ////var numberSelected = 0;
+                //var duplicados = [];
+                //for (var i = 0; i < denunciantes.length; i++) {
+                //    var subLista = denunciantes.filter(e => parseInt(e.children[0].textContent) > parseInt(denunciantes[i].children[0].textContent));
+                //    for (var j = 0; j < subLista.length; j++) {
+                //        duplicados.push(subLista.filter(
+                //            d => d.children[1].children.textContent == denunciantes[i].children[1].children.textContent
+                //                && d.children[2].children.textContent == denunciantes[i].children[2].children.textContent
+                //                && d.children[3].children.textContent == denunciantes[i].children[3].children.textContent
+                //        )
+                //        )
+                //        console.log(denunciantes[i].children[1].children.textContent);
+                //        console.log(denunciantes[i].children[2].children.value);
+                //        console.log(denunciantes[i].children[3].children.value);
+                //        console.log(subLista[j].children[1].children.textContent);
+                //        console.log(subLista[j].children[2].children.textContent);
+                //        console.log(subLista[j].children[3].children.textContent);
+
+                //    }
+                //}
+                //    return duplicados;
+                //var denunciante = {
+                //    posicion = '',
+                //    nombre = '',
+                //    apellido = '',
+                //    dni = '',
+                //};
+                //var d = new denunciante();
+                var listado = [];
+                denunciantes.each(function (i, valor) {
+                    var denuncianteNew = new Object();
+                    denuncianteNew.nombre = $(valor).children().eq(1).children().val();
+                    denuncianteNew.apellido = $(valor).children().eq(2).children().val();
+                    denuncianteNew.dni = $(valor).children().eq(3).children().val();
+                    listado.push(denuncianteNew);
+                });
+
+                var subLista = listado;
+                for (var i = 0; i < listado.length; i++) {
+                    var primero = subLista[i];
+
+                    subLista = subLista.filter(function () {
+                        e => e !== subLista[i]
+
+                    });
+
+                    console.log(subLista);
+
+
+                    //var losDemas = denunciantes.filter(e => parseInt(e.children.textContent) > parseInt(denunciantes[i].children[0].textContent));
+                    //var losDemas = denunciantes.remove(denunciantes[i]);
+                    //losDemas.each(function (idx, value) {
+                    //    if ($(denunciantes[i]).children().eq(1).children().val() === $(value).children().eq(1).children().val()
+                    //        && $(denunciantes[i]).children().eq(2).children().val() === $(value).children().eq(2).children().val()
+                    //        && $(denunciantes[i]).children().eq(3).children().val() === $(value).children().eq(3).children().val()
+                    //    ) {
+                    //        duplicados.push('duplicado');
+                    //    }
+                    //});
+
+
+
+                }
+                return listado;
+            }
+
+            function GetDenuncianteTR(elem, idDenunciante) {
+                $('#duplicado').remove();
+                duplicados = [];
+                var fila = sessionStorage.getItem("posicionSeleccionada");
+                var seleccion = $('#' + fila);
+                $.ajax({
+                    url: '@Url.Action("GetFilaDenunciante", "Denunciantes")',
+                    type: "post",
+                    data: {
+                        id: idDenunciante
+                    },
+                    success: function (response) {
+                      if (!elDenuncianteEstaEnElGrupo(response)) {
+                        var tds = seleccion.find('td');
+
+                        tds.eq(1).children().val(response.nombre);
+                        tds.eq(2).children().val(response.apellido);
+                        tds.eq(3).children().val(response.NroDocumento);
+                        tds.eq(5).html(response.DenuncianteId);
+                        }
+                    },
+                    error: function (response) {
+
+                        toastr.info(response.responseText + ' ' + response.statusText);
+                    }
+                });
+
+            };
+
+            var btnCerrar = $('#btnCerrarModal');
+
+            var divBotonesFormalizar = $('#divBotonesFormalizar');
+
+            function getConfigVisualizar() {
+                btnCerrar.css("display", "block");
+                divBotonesFormalizar.css("display", "none");
+                $('#modalTitle').text("Historial de Modificaciones");
+
+            }
+            function getConfigFormalizar() {
+                toastr.warning("Una denuncia eliminada <br>no puede ser formalizada");
+                //btnCerrar.css("display","none");
+                //divBotonesFormalizar.css("display", "block");
+                //$('#modalTitle').empty();
+                //$('#visualizarModificacionesModalBody').empty()
+                //    .append("<p class='text-danger' style='text-align:center;'>Esta seguro que desea formalizar la Denuncia ?</p>");
+            }
+
+            function getHistorialDeModificaciones() {
+                var loading = $('#divLoadingHistorialCambios');
+                loading.css("display", "block");
+                getConfigVisualizar();
+                $.ajax({
+                    url: '@Url.Action("GetHistory", "Denuncias")',
+                    type: "post",
+                    data: {
+                        id: parseInt($('#nroDenuncia').text())
+                    },
+                    success: function (response) {
+                        $('#visualizarModificacionesModalBody').html(response);
+                        loading.css("display", "none");
+                    },
+                    error: function (response) {
+                        toastr.info(response.responseText + ' ' + response.statusText);
+                        loading.css("display", "none");
+                    }
+                });
+
+            }
+
+            function formalizarDenuncia() {
+                if ($('#comboTiposProceso option:selected').text() == "DENUNCIA PREVENTIVA") {
+                    //var loading = $('#divLoadingHistorialCambios');
+                    getConfigFormalizar();
+                    $.ajax({
+                        url: '@Url.Action("Formalizar", "Denuncias")',
+                        type: "post",
+                        data: {
+                            DenunciaId: parseInt($('#nroDenuncia').text()),
+                            ETAPA_ID: $('#comboEtapaProcesal option:selected').val(),
+                            TIPO_PRO_ID: $('#comboTiposProceso option:selected').val(),
+                            DENUNCIANTE_ID: $('#denuncianteId').val(),
+                            CREATIONDATE: $('#creationDate').val(),
+                            TRAMITECRM: $('#tramiteCrm').val(),
+                            OBJETORECLAMO: $('#numeroLinea').val(),
+                            FSELLOCIA: $('#fechaNotificacion').val(),
+                            FSELLOGCIADC: $('#fechaNotificacionGcia').val(),
+                            EXPEDIENTE_ID: $('#numeroExpediente').val(),
+                            ORGANISMO_ID: $('#comboOrganismo option:selected').val(),
+                            ESTUDIO_ID: $('#comboEstudioEdicion option:selected').val(),
+                            MODALIDADGESTION: $('#comboModalidadesGestionEdicion option:selected').val(),
+                            SUBTIPO_PRO_ID: $('#comboSubTiposProceso option:selected').val(),
+                            SERV_DEN_ID: $('#comboServicios option:selected').val(),
+                            RECLAMO_ID: $('#comboMotivosReclamo option:selected').val(),
+                            CONCILIACION_ID: $('#comboSubEstados option:selected').val(),
+                            FECHARESULTADO: $('#fechaResultado').val(),
+
+                            grupoId: $('#grupoDenuncianteId').val(),
+                            nroClienteContrato: $('#nroClienteContrato').val(),
+                            mediadorId: $('#comboMediadores option:selected').val(),
+                            domicilioMediadorId: $('#comboDomiciliosMediadores option:selected').val(),
+                            reclamoRelacionado: $('#reclamoRelacionado').val(),
+                            RESP_INT_ID: $('#responsableInterno option:selected').val(),
+                            fechaHomologacion: $('#fechaHomologacion').val(),
+                            nroGestionCoprec: $('#nroGestionCoprecExistente').val(),
+                            honorariosCoprec: $('#honorariosCoprecExistente').val(),
+                            fechaGestionHonorarios: $('#fechaGestionHonorariosExistente').val(),
+                            montoAcordado: $('#montoAcordadoExistente').val(),
+                            arancel: $('#arancelExistente').val(),
+                            fechaGestionArancel: $('#fechaGestionArancelExistente').val()
+
+                        },
+                        success: function (response) {
+                            $('#home').html(response);
+                            /*loading.css("display", "none")*/;
+                            var responsable = $('#respIntId').val();
+                            console.log(responsable);
+                            //$('#responsableInterno option').val().each(function (i, valor) {
+
+                            //    if ($(valor).val() == responsable) {
+                            //        console.log("son iguales");
+                            //        $(valor).prop('selected', true);
+                            //    }
+                            //});
+                            $('#inputNroGestion').text($('#nroGestionCoprecExistente').val());
+                            $('#inputHonorarios').val($('#honorariosCoprecExistente').val());
+                            $('#inputFechaGestionHonorarios').val($('#fechaGestionHonorariosExistente').val());
+                            $('#inputMontoAcordado').val($('#montoAcordadoExistente').val());
+                            $('#inputArancel').val($('#arancelExistente').val());
+                            $('#inputFechaGestionArancel').val($('#fechaGestionArancelExistente').val());
+                            $('#btnFormalizarDenuncia').prop("disabled", true);
+                            $('#FormGroupDenuncia *').prop("disabled", true);
+
+                        },
+                        error: function (response) {
+                            toastr.info(response.responseText + ' ' + response.statusText);
+                            loading.css("display", "none");
+                            $('#nuevoEvento').removeProp("disabled");
+                        }
+                    });
+                } else {
+                    toastr.warning('Para formalizar una Denuncia la misma debe ser Preventiva');
+                }
+
+            }
+
+
+
+            //function verFecha(elem) {
+            //    alert($(elem).val());
+            //}
+    </script>
+}
+
+

@@ -1,0 +1,531 @@
+﻿
+
+<div>
+    <div class="jumbotron">
+        <h4 class="text-primary">Gestión de Mediadores</h4>
+    </div>
+
+    <div class="row">
+        <span class="col-xs-3"></span>
+        <label class="col-xs-1" style="margin-right:5px;margin-left:10px;font-size:12px;">Nombre:</label>
+        <input type="text" class="input-sm form-control col-xs-3" id="filtro" onkeyup="traerMediadores(event)" />
+
+       
+    </div>
+    <div class="row" style="margin-top:10px;">
+        <input type="button" value="Nuevo" class="btn btn-primary btn-sm col-xs-1" id="NuevoMediador" style="margin-left:340px;margin-right:10px;"
+               data-toggle="modal" data-target="#nuevoModalMediador" onclick="cleanInput();" />
+        <input type="button" value="Limpiar" class="btn btn-primary btn-sm col-xs-1" id="btnLimpiar" onclick="LimpiarTodo()"
+               style="
+        margin-right:10px;" />
+        <input type="button" value="Buscar" class="btn btn-primary btn-sm col-xs-1" id="" onclick="BuscarMediador()"
+               style="
+        margin-right:10px;" />
+    </div>
+    <br />
+    <br />
+    <div class="container-fluid" id="elementos">
+
+    </div>
+
+</div>
+
+@*inicio Popup Nuevo*@
+<div class="modal fade" id="nuevoModalMediador" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+
+                <button type="button" class="close" data-dismiss="modal" id="btnCerrarModalNuevoMediador">×</button>
+                <h4 class="modal-title" id="myModalLabel">Nuevo Mediador</h4>
+            </div>
+            <div class="modal-body center-block">
+                <div id="nuevoEstudioBodyContent">
+                    <br />
+
+                    <form>
+                        @Html.AntiForgeryToken()
+
+                        <div class="row col-lg-offset-2">
+                            <label class="col-xs-1" style="margin-right:50px;">Nombre</label>
+                            <input class="input-sm form-control col-xs-1" type="text" id="filtroNombre" />
+                        </div>
+                        <label type="text" class="text-danger" id="MensajeNombreInvalido" style="display:none;"></label>
+                    </form>
+                    <br />
+                    <div id="divExisteMediador" style="color:white">
+
+                    </div>
+                </div>
+
+            </div>
+            <div class="modal-footer">
+                <div class="row" id="nuevoEstudioContent">
+                    <span style="margin-right:50px;" class="col-md-offset-3"></span>
+                    <input id="guardarNuevo" type="button" class="btn btn-sm btn-primary col-xs-3" value="Guardar" onclick="existeMediador()" />
+                    <input type="button" class="btn btn-sm btn-toolbar col-xs-3" value="Cancelar" data-dismiss='modal' />
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@*----------- Fin Popup Nuevo ----------*@
+
+
+@*inicio Popup Edit*@
+<div class="modal fade" id="editModalMediadores" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+
+                <button type="button" class="close" data-dismiss="modal" id="btnCloseEditMediador">×</button>
+                <h4 class="modal-title" id="myModalLabel">Editar Mediador</h4>
+            </div>
+            <div class="modal-body center-block">
+
+                <div id="editBodyContent">
+                    <form>
+                        @Html.AntiForgeryToken()
+                        <input type="hidden" id="idElementEdit" />
+                        <br />
+                        <div class="row col-lg-offset-2">
+                            <label class="col-xs-1" style="margin-right:50px;">Nombre</label>
+                            <input class="input-sm form-control col-xs-1" type="text" id="NombreEdicion" />
+                        </div>
+                        <br />
+                        <div class="row col-lg-offset-2">
+                            <label class="col-xs-1">Activo</label>
+                            <input style="margin-left: 35px;" class="col-xs-1" type="checkbox" id="campoActivacion" name="checkActivo" />
+                        </div>
+                    </form>
+                </div>
+
+            </div>
+            <div class="modal-footer">
+                <div class="row" id="editFooterContent">
+                    <span style="margin-right:50px;" class="col-md-offset-3"></span>
+                    <input type="button" class="btn btn-sm btn-primary col-xs-3" value="Guardar" onclick="guardarMediadorEditado()" id="guardarEdicion"/>
+                    <input type="button" class="btn btn-sm btn-toolbar col-xs-3" value="Cancelar" data-dismiss='modal' />
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@*----------- Inicio Popup Edit ----------*@
+
+<div class="modal fade" id="deleteModalMediadores" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" id="btnCerrarModalEliminarMediador">×</button>
+            </div>
+            <div id="deletePopupContent" class="modal-body center-block">
+                <h4>Está a punto de eliminar al Mediador con Id : </h4>
+                <form>
+                    @Html.AntiForgeryToken()
+                    <h4 id="idDeleteHidden"></h4>
+                </form>
+            </div>
+            <div id="divExisteRelacionesMediadores" style="color:white;">
+
+            </div>
+            <div id="deleteFooterContent" class="modal-footer">
+                <button type="button" class="btn btn-danger" id="btnDelete" onclick="validarRelaciones()">Eliminar</button>
+                <button type="button" class="btn btn-toolbar" data-dismiss="modal">Cancelar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function cleanInput() {
+        $('#filtroNombre').val("");
+        $('#divExisteMediador').html("");
+    }
+
+    $("#filtroNombre").keypress(function (e) {
+        if (e.which == 13) {
+            e.preventDefault();
+            existeMediador();
+            //return false;
+        }
+    });
+
+    $("#NombreEdicion").keypress(function (e) {
+        if (e.which == 13) {
+            e.preventDefault();
+            guardarMediadorEditado();
+            //return false;
+        }
+    });
+
+    function traerMediadores(e) {
+        var key = e.keyCode || e.which;
+        console.log(e.keyCode);
+        if (key === 13) {
+            GetElements('BuscarMediador');
+        };
+    }
+
+    function elMediadorEsValido() {
+        var mensaje = "Ingrese algún Filtro de Búsqueda";
+        if ($('#filtro').val().trim().length == 0) {
+            toastr.warning(mensaje);
+            return false;
+        } else {
+            $('#guardarNuevo').attr('data-dismiss', 'modal');
+            return true;
+        }
+    }
+
+    function traerMediadores(e) {
+        var key = e.keyCode || e.which;
+        if (key === 13) {
+            try {
+                BuscarMediador();
+            } catch{
+                toastr.error(Error);
+            }
+                
+            
+        };
+    }
+
+    
+
+    function BuscarMediador() {        
+        $('#elementos').empty();
+        mostrarLoading();
+            $.ajax({
+                url: '@Url.Action("BuscarMediador", "Admin")',
+                type: "GET",
+                data: {
+                    filtro: $('#filtro').val()
+                },
+                success: function (response) {
+                    ocultarLoading();
+                    $('#elementos').html(response);
+                },
+                error: function (response) {
+                    ocultarLoading();
+                    toastr.error(response.responseText + ' ' + response.statusText);
+                }
+            });
+    }
+
+    function esValido() {
+        var mensaje = "Ingrese el Nombre";
+        if ($('#filtroNombre').val().trim().length == 0) {
+            toastr.warning(mensaje);
+
+            return false;
+        } else {
+            //$('#guardarNuevo').attr('data-dismiss', 'modal');
+            return true;
+        }
+    }
+
+    function esValidoNombreMediador() {
+        var mensaje = "Ingrese el nombre del Mediador";
+        if ($('#filtroNombre').val().trim().length == 0) {
+            toastr.warning(mensaje);
+            return false;
+        } else {
+            return true;
+        }
+    }
+
+    function limpiaryCerrarModal() {
+        $('#btnCerrarModalNuevoMediador').click();
+        $('#divExisteMediador').html("");
+    }
+
+    function existeMediador() {
+        $('#guardarNuevo').prop("disabled", true);
+        var token = '@Html.AntiForgeryToken()';
+         var ctoken = $(token).val();
+        if (esValidoNombreMediador()) {
+             $.ajax({
+                 url: '@Url.Action("ExisteMediador","Admin")',
+                 type: "POST",
+                 data: {
+                     Nombre: $('#filtroNombre').val(),
+                     __RequestVerificationToken: ctoken
+                 },
+                 success: function (response) {
+                     $("#divExisteMediador").html(response);
+                     $('#guardarNuevo').prop("disabled",false);
+
+                 },
+                 error: function (response) {
+                     toastr.error(response.responseText + ' ' + response.status);
+                     $('#guardarNuevo').prop("disabled", false);
+                 }
+             });
+        }
+        $('#guardarNuevo').prop("disabled", false);
+    };
+
+
+    function guardarNuevoMediador() {
+        if (esValido()) {
+              var token = '@Html.AntiForgeryToken()';
+              var gnmedtoken = $(token).val();
+            $.ajax({
+                url: '@Url.Action("CrearMediador","Admin")',
+                type: "POST",
+                data: {
+                    Nombre: $('#filtroNombre').val(),
+                    __RequestVerificationToken: gnmedtoken
+                },
+                success: function (response) {
+                    /*toastr.success("Registro guardado correctamente");*/
+                    $('#elementos').html(response);
+                    limpiaryCerrarModal();
+                },
+                error: function (response) {
+                    toastr.error(response.responseText + ' ' + response.status);
+                }
+            });
+        }
+    }
+
+    function esValidoNombreEdicion() {
+        if ($('#NombreEdicion').val().trim().length == 0) {
+            toastr.warning('El nombre es obligatorio');
+            deshabilitarGuardarEdicion();
+            return false;
+        } else {
+            //habilitarGuardarEdicion();
+            return true;
+        }
+    }
+
+    @*function guardarMediadorEditado() {
+        if (esValidoNombreEdicion()) { 
+              var token = '@Html.AntiForgeryToken()';
+              var gmededitoken = $(token).val();
+               $.ajax({
+                    url: '@Url.Action("guardarMediadorEditado", "Admin")',
+                    type: "POST",
+                    data: {
+                        id: $('#idElementEdit').val(),
+                        Nombre: $('#NombreEdicion').val(),
+                        campoActivacion: $('input:checkbox[name=checkActivo]:checked').val(),
+                        __RequestVerificationToken: gmededitoken
+                    },
+                    success: function (response) {
+                        toastr.success("Registro guardado correctamente");
+                        $('#elementos').html(response);
+                    },
+                    error: function (response) {
+                        toastr.error(response.responseText + ' ' + response.status);
+                    }
+               });
+        }
+    }*@
+
+     function guardarMediadorEditado() {
+        if (esValidoNombreEdicion()) {
+            var token = '@Html.AntiForgeryToken()';
+            var atoken = $(token).val();
+            $('#guardarEdicion').prop("disabled",true);
+            $.ajax({
+                url: '@Url.Action("guardarMediadorEditado", "Admin")',
+                type: "POST",
+                data: {
+                    id: $('#idElementEdit').val(),
+                    Nombre: $('#NombreEdicion').val(),
+                    campoActivacion: $('input:checkbox[name=checkActivo]:checked').val(),
+                    __RequestVerificationToken: atoken
+
+                },
+                success: function (response) {                 
+                    try {
+                        if (response == "ACTUALIZADO") {                           
+                            GetMediadorActualizado(); 
+                            $('#btnCloseEditMediador').click();
+                            $('#guardarEdicion').prop("disabled", false);
+                        }
+                        else
+                            if (response == "No se pueden actualizar los datos.</br>Existe otro Mediador con el mismo Nombre.") {
+                                toastr.warning(response);
+                            }
+                            else {
+                                toastr.error(response);   
+                                //toastr.error("Verifique si la Sesión sigue activa.</br>Verifique si los datos fueron actualizados.");            
+                            }
+                    } catch (error) {
+                        toastr.error(error);
+                    }
+                    
+                },
+                error: function (response) {
+                    toastr.error(response.responseText + ' ' + response.status);
+                }
+            });
+            $('#guardarEdicion').prop("disabled", false);
+        }
+        
+    }
+
+    function GetMediadorActualizado() {
+        $.ajax({
+                url: '@Url.Action("GetMediadorActualizado", "Admin")',
+                type: "GET",
+                data: {
+                    id: $('#idElementEdit').val()
+                   
+            }, success: function (result) {
+                    $('#elementos').html(result);
+
+            }, error: function (result) {
+                    toastr.error(result.responseText + ' ' + result.status);
+            }
+        });
+
+    }
+
+    $("#NombreEdicion").keypress(function (e) {
+        if (e.which == 13) {
+            e.preventDefault();
+            return false;
+        }
+    });
+
+    @*function eliminarMediador() {
+            var idOculto = document.getElementById('idDeleteHidden');
+            var Id = parseInt(idOculto.innerText);
+            
+            $.ajax({
+                url: '@Url.Action("EliminarMediador", "Admin")',
+                type: "Post",
+                data: {
+                    id: Id
+                },
+                success: function (result) {
+                    try {
+                        if (result == "Registro eliminado con éxito") {
+                            filaARemover.remove();
+                            filaARemover = undefined;
+                            toastr.success(result);
+                        } else {
+                            toastr.error(result);
+                        }
+                        
+                    } catch (error) {
+                        toastr.error(error);
+                    }
+                },
+                error: function (result) {
+                    toastr.error(result.responseText);
+                }
+            });
+
+    }*@
+
+     function EliminarMediador() {
+        var idOculto = document.getElementById('idDeleteHidden');
+        var Id = parseInt(idOculto.innerText);
+       var token = '@Html.AntiForgeryToken()';
+         var eptoken = $(token).val();
+         $('#btnCerrarModalEliminarMediador').click();  
+        $.ajax({
+            url: '@Url.Action("EliminarMediador","Admin")',
+            type: "Post",
+            data: {
+                id: Id,
+                __RequestVerificationToken: eptoken
+            },
+            success: function (result) {
+                try {
+                    
+                    if (result == "Registro eliminado con éxito") {
+                        filaARemover.remove();
+                        filaARemover = undefined;
+                        toastr.success(result);
+                    } else {
+                        toastr.error(result);
+                    }
+                } catch (error) {
+                    toastr.error(error);
+                }
+            },
+            error: function (result) {
+                toastr.error(result.responseText);
+            }
+        });
+
+    }
+
+   
+
+    function validarRelaciones() {
+        
+         var idOculto = document.getElementById('idDeleteHidden');
+         var Id = parseInt(idOculto.innerText);
+          var token = '@Html.AntiForgeryToken()';
+          var vrtoken = $(token).val();
+        $('#btnDelete').prop("disabled", false);
+            $.ajax({
+                url: '@Url.Action("TieneRelacionesElMediador", "Admin")',
+                type: "Post",
+                data: {
+                    mediadorId: Id,
+                    __RequestVerificationToken: vrtoken  
+                },
+                success: function (result) {
+                    $('#divExisteRelacionesMediadores').html(result);
+                    $('#btnDelete').prop("disabled", true);
+                },
+                error: function (result) {
+                    toastr.error(result.responseText);
+                }
+            });
+        $('#btnDelete').prop("disabled", false);
+    }
+
+    function cargarIdModalDelete(id, element) {
+        $('#idDeleteHidden').html(id);
+        filaARemover = $(element).parent().parent();
+        $('#divExisteRelacionesMediadores').empty();
+        $('#btnDelete').prop("disabled", false)
+    }
+
+    function LimpiarTodo() {
+        $('#elementos').empty();
+        $('#filtro').val('');
+    }
+
+
+    function editarMediador(Id) {
+        deshabilitarGuardarEdicion();
+        $.ajax({
+            url: '@Url.Action("EditarMediador", "Admin")',
+            type: "GET",
+            data: {
+                id: Id
+            },
+            success: function (response) {
+                try {
+                    $('#idElementEdit').val(response.Id);
+                    $('#NombreEdicion').val(response.Nombre);
+                    $('#campoActivacion').prop('checked', response.Activo);
+                    
+                } catch (response) {
+                    toastr.error(response);
+                }
+            },
+            error: function (response) {
+                toastr.error(response.responseText + ' ' + response.status);
+            }
+        });
+    }
+
+
+</script>
+
+
+

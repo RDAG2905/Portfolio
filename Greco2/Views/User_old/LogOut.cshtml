@@ -1,0 +1,19 @@
+﻿@{
+    ViewBag.Title = "LogOut";
+}
+<h2>LogOut Success</h2>
+@if (ViewBag.Status != null && Convert.ToBoolean(ViewBag.Status))
+{
+    <div class="alert alert-success">
+        <strong>By!</strong> @ViewBag.Message .
+    </div>
+}
+else
+{
+    <div class="alert alert-danger">
+        <strong>Error!</strong> @ViewBag.Message
+    </div>
+}
+<div class="logindisplay">
+    <input type="button" value="Login" class="btn btn-primary" onclick="location.href='@Url.Action("Login", "User")';return false;" />
+</div>

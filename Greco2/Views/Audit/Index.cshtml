@@ -1,0 +1,366 @@
+﻿
+@{
+    ViewBag.Title = "AuditAreaView";
+}
+
+<style>
+    @@keyframes lds-dual-ring {
+        0% {
+            transform: rotate(0deg);
+        }
+
+        100% {
+            transform: rotate(360deg);
+        }
+    }
+
+    .loader-container {
+        width: 40px;
+        height: 40px;
+        margin-left: 48%;
+    }
+
+        .loader-container .loader {
+            width: 100%;
+            height: 100%;
+            /*position: absolute;
+            z-index: 1002;
+            top: 50%;
+            left: 50%;*/
+            /*z-index:10000;*/
+            /*padding-bottom:500px;*/
+            /*position:absolute;*/
+            border: solid 8px transparent;
+            border-top-color: #337ab7;
+            border-bottom-color: #337ab7;
+            border-left-color: white;
+            /*border-right-color: #337ab7;*/
+            background-color: white;
+            border-radius: 50%;
+            animation: lds-dual-ring 1.2s linear infinite;
+            /*margin-left: 490px;*/
+        }
+
+
+    body {
+        background-image: linear-gradient(#F2F2F2 11%,white 0.1%,white 99%,#f9f9f9);
+        /*background-image: linear-gradient(#808080 8%,white 0.1%,white 90%,#f5f5f5);*/
+    }
+
+    .clear {
+        color: black;
+    }
+
+    label,input[type=date],th,td {
+    font-size:11px;
+    }
+
+    #btnGetListAudit {
+         margin-left:20px;
+    }
+
+    .row {
+        margin-left:80px;
+    }
+
+    .jumbotron {
+        background-color: #f1edf8;
+    }
+    input[type="date"] {
+        margin-left:-10px;
+    }
+    label {
+        margin-right:-10px;
+    }
+    input[type=button]:hover, button:hover {
+        -webkit-box-shadow: 0px 1px 10px 0px rgba(0,0,0,0.25);
+        -moz-box-shadow: 0px 1px 10px 0px rgba(0,0,0,0.25);
+        box-shadow: 0px 1px 10px 0px rgba(0,0,0,0.25);
+    }
+
+    @@media(min-width: 1000px) {
+        .row {
+            margin-left: 280px;
+        }
+
+        h4 {
+            margin-left: -230px;
+        }
+
+        input[type=button] {
+            margin-left: 50px;
+        }
+    }
+</style>
+<div class="container">
+    <div class="row">
+        <div class="col-xs-1">
+            <h4 class="text-primary">Auditoria</h4>
+        </div>
+        <div class="col-md-6 col-xs-12">
+            <button style="width:150px;margin-left:585px;margin-top:4px;height:28px;" class="btn btn-sm btn-toolbar" onclick="Volver()"><i style="margin-right:15px;" class="glyphicon glyphicon-arrow-left"></i>Volver</button>
+        </div>
+    </div>
+    <hr />
+    <div class="jumbotron">
+        <form>
+            @Html.AntiForgeryToken()
+            <div class="row">
+                <div class="col-md-2 col-xs-12">
+                    <label>Fecha Inicio:</label>
+                </div>
+                <div class="col-md-3 col-xs-12">
+                    <input type="date" id="fechaInicioAuditoria" class="form-control" />
+                </div>
+                @*<div class="col-md-3 col-xs-12">
+                        <input type="button" class="btn btn-primary btn-sm" id="btnExcelAuditoria" onclick="generarReporteAuditoria()" value="Exportar" style="width:150px;" />
+                    </div>*@
+
+            </div>
+            <div class="row">
+                <div class="col-md-2 col-xs-12">
+                    <label>Fecha Fin:</label>
+                </div>
+                <div class="col-md-3 col-xs-12">
+                    <input type="date" id="fechaFinAuditoria" class="form-control" />
+                </div>
+                <div class="col-xs-3">
+                    @*<input type="button" class="btn btn-primary btn-sm" id="btnGetListAudit" onclick="GetListAudit()" value="Listar" style="width:150px;" />*@
+                </div>
+            </div>
+            <br />
+            <div class="row">
+                <div class="col-md-3 col-xs-12">
+                    <input type="button" class="btn btn-primary btn-sm" id="btnExcelAuditoria" onclick="generarReporteAuditoria()" value="Exportar" style="width:100%;" />
+                </div>
+            </div>
+        </form>
+
+
+
+    </div>
+    @*<div class="row text-center">*@
+        <div class="loader-container" style="display:none;" id="loadingAuditoria">
+            <div class="loader"></div>
+        </div>
+        @*<img src="@Url.Content("~/Images/4.gif")" id="loadingAuditoria" style="display:none;padding-top:100px;" />*@
+    @*</div>*@
+
+    <div id="divListAudit">
+
+    </div>
+</div>
+
+    @section scripts{
+        <script>
+
+            
+      $(window).on('load', function () {
+        laCuentaRegresivaContinua = true,
+            valorInicial = 300,
+            tiempo = 0,
+
+            verificarTiempoRestante(),
+            toastr.options = {
+                "closeButton": true,
+                "debug": false,
+                "newestOnTop": false,
+                "progressBar": false,
+                "positionClass": "toast-top-right",
+                "preventDuplicates": false,
+                "onclick": null,
+                "showDuration": "300",
+                "hideDuration": "1000",
+                "timeOut": "5000",
+                "extendedTimeOut": "1000",
+                "showEasing": "swing",
+                "hideEasing": "linear",
+                "showMethod": "fadeIn",
+                "hideMethod": "fadeOut"
+            }
+
+             
+      });
+
+   
+
+
+  function renovar() {
+        laCuentaRegresivaContinua = false;
+        elModalEstaCerrado = true;
+
+    $.ajax({
+        url: '@Url.Action("Renovar", "Checker")',
+        type: "POST",
+        data: {
+
+        },
+        success: function (response) {
+            toastr.success(response);  
+            toastr.clear();
+            toastr.remove();            
+            horario = Date.now();
+            setHorarioInicial(horario);
+            initIntervalo();
+            toastr.options = {
+                "closeButton": true,
+                "debug": false,
+                "newestOnTop": false,
+                "progressBar": false,
+                "positionClass": "toast-top-right",
+                "preventDuplicates": false,
+                "onclick": null,
+                "showDuration": "300",
+                "hideDuration": "1000",
+                "timeOut": "5000",
+                "extendedTimeOut": "1000",
+                "showEasing": "swing",
+                "hideEasing": "linear",
+                "showMethod": "fadeIn",
+                "hideMethod": "fadeOut"
+            };
+        },
+        error: function (response) {
+            toastr.error(response.responseText + ' ' + response.status);
+        }
+    });
+
+  }
+
+function BackToLogin() {
+        toastr.clear();
+        toastr.remove();
+        window.location.href = "@Url.Action("CerrarSesion", "User" )";
+    }
+
+
+            function GetListAudit() {
+                $.ajax({
+                    url: '@Url.Action("GetListAuditEvents", "Audit")' /*+ EventID */,
+                    type: "POST",
+                    data: {
+                        fechaInicio: $('#fechaInicioAuditoria').val(),
+                        fechaFin: $('#fechaFinAuditoria').val()
+                    },
+
+                    success: function (result) {
+                        $('#divListAudit').html(result);
+                    },
+                    error: function (result) {
+                        toastr.error(result.responseText)
+                    }
+
+                });
+            }
+
+            function mostrarLoadingAuditoria() {
+                $('#loadingAuditoria').show();
+            };
+           
+            function ocultarLoadingAuditoria() {
+                $('#loadingAuditoria').hide();
+            };
+
+             function laAuditoriaEsValida() {
+                
+                flag = false;
+                 if ($('#fechaInicioAuditoria').val().trim().length > 0
+                     || $('#fechaFinAuditoria').val().trim().length > 0) {
+                    flag = true
+                }
+                return flag;
+        }
+
+            function generarReporteAuditoria() {
+
+                if (laAuditoriaEsValida) {
+                     var token = '@Html.AntiForgeryToken()';
+                     var grepAuditoken = $(token).val();
+
+                    var btn = $('#btnExcelAuditoria');
+                    btn.prop('disabled', true);
+                    mostrarLoadingAuditoria();
+                    $.ajax({
+                        url: '@Url.Action("GenerarReporteAuditoria", "Audit")',
+                        type: "Post",
+                        data: {
+                            fechaInicio: $('#fechaInicioAuditoria').val(),
+                            fechaFin: $('#fechaFinAuditoria').val(),
+                            __RequestVerificationToken: grepAuditoken
+
+                        },
+                        success: function (data) {
+                            if (data != null && (data.errorMessage == null || data.errorMessage === "")) {
+                                ocultarLoadingAuditoria();
+
+                                if (data.fileName != "" && data.fileName != "isEmpty") {
+
+                                    window.location.href = "Audit/DownloadSpreadsheet/?file=" + data.fileName;
+                                    btn.prop('disabled', false);
+                                } else
+                                    if (data.fileName == "isEmpty") {
+                                        toastr.options.positionClass = "toast-bottom-right";
+                                        toastr.warning("No existen datos a Exportar");
+                                        btn.prop('disabled', false);
+
+                                    }
+                            } else {
+                                toastr.error("Error en la Descarga </br>", data.errorMessage);
+                                ocultarLoadingAuditoria();
+                                btn.prop('disabled', false);
+                            }
+                        },
+                        error: function (data) {
+
+                            toastr.error(data.responseText);
+                            ocultarLoadingAuditoria();
+                            btn.prop('disabled', false);
+
+                        }
+                    });
+                }
+                else {
+                        toastr.warning('Seleccione alguno de los filtros');
+                }
+            }
+
+            
+
+                function Volver() {
+                    history.back();
+                }
+
+            //function excelReport() {
+            //    var tab_text = "<table border='2px'><div bgcolor='#87AFC6'>";
+            //    var texdivange; var j = 0;
+            //    tab = document.getElementById('listSystemEventsTable'); // id of table
+
+            //    for (j = 0; j < tab.rows.length; j++) {
+            //        tab_text = tab_text + tab.rows[j].innerHTML + "</div>";
+            //        //tab_text=tab_text+"</div>";
+            //    }
+
+            //    tab_text = tab_text + "</table>";
+
+
+            //    var ua = window.navigator.userAgent;
+            //    var msie = ua.indexOf("MSIE ");
+
+            //    if (msie > 0 || !!navigator.userAgent.match(/divident.*rv\:11\./))      // If Internet Explorer
+            //    {
+            //        txtArea1.document.open("txt/html", "replace");
+            //        txtArea1.document.write(tab_text);
+            //        txtArea1.document.close();
+            //        txtArea1.focus();
+            //        sa = txtArea1.document.execCommand("SaveAs", divue, "Global View Task.xls");
+            //    }
+            //    else //other browser not tested on IE 11
+            //        sa = window.open('data:application/vnd.ms-excel,' + encodeURIComponent(tab_text));
+            //    return (sa);
+            //}
+        </script>
+
+    }
+
+
+

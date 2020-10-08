@@ -1,0 +1,1146 @@
+﻿@using Greco2.Models.Responsables
+@model ResponsablesModelView
+
+<style>
+    input[type=text], select {
+        height: 30px;
+        max-width: 280px;
+    }
+
+        input[type=text], select > option {
+            font-size: 12px;
+        }
+
+    .row {
+        margin-top: 5px;
+    }
+
+    input[type=button] {
+        height: 30px;
+        max-width: 120px;
+    }
+
+
+    label {
+        text-align: right;
+    }
+
+    #elementos {
+        margin-left: -60px;
+        margin-right: -50px;
+    }
+
+    .row {
+        margin-top: 5px;
+        /*font-size: 12px;*/
+    }
+
+    .btn {
+        /*height: 26px;*/
+        width: 100px;
+    }
+
+    /*label {
+        margin-right: -20px;
+    }*/
+    .form-control, label {
+        font-size: 12px;
+        max-height: 26px;
+        /*border-color: #f1f1f1;*/
+    }
+    /*.form-control {
+        background-color: #f9f9f9;
+        
+    }*/
+        .panel-default {
+            border-color: #f1f1f1;
+        }
+    .panel-body {
+        margin-left:120px;
+    }
+</style>
+
+<div>
+    <div class="panel panel-default">
+        <div class="panel-heading"><h4 class="text-primary">Gestión de Responsables</h4></div>
+        <div class="panel-body">
+            
+            <div class="row">
+                <label class="col-xs-2">Nombre:</label>
+                <input type="text" class="form-control col-xs-1" id="filtroNombre" />
+                
+            </div>
+            <div class="row">
+                <label class="col-xs-2">Apellido:</label>
+                <input type="text" class="form-control col-xs-1" id="filtroApellido" />
+                <input style="margin-left:20px;" type="button" value="Nuevo" class="btn btn-sm btn-primary col-xs-1" id="btnNuevoResponsable"
+                       data-toggle="modal" data-target="#nuevoModalResponsable" onclick="cleanModalNuevoResponsable()" />
+            </div>
+
+
+            <div class="row">
+                <label class="col-xs-2">Usuario:</label>
+                <input type="text" class="form-control col-xs-1" id="filtroUsuario" />
+                <input style="margin-left:20px;" type="button" value="Limpiar" class="btn btn-sm btn-primary col-xs-1" onclick="limpiarFiltrosBusqueda()" />
+            </div>
+            <div class="row">
+
+                <label class="col-xs-2">Tipo:</label>
+                <select class="form-control col-xs-1" id="comboTipoResponsable" @*onfocus="removeErrorClass(this)"*@>
+                    <option value=""></option>
+                    <option value="RI">Responsable Interno</option>
+                    <option value="RE">Responsable Externo</option>
+                </select>
+                <input style="margin-left:20px;" type="button" value="Buscar" class="btn btn-sm btn-primary col-xs-1" onclick="BuscarResponsables()" />
+            </div>
+        
+        </div>
+    </div>
+    
+
+    <div class="container-fluid"  id="elementos">
+        <img src="@Url.Content("~/Images/4.gif")" id="loading" style="display:none;padding-top:100px;" />
+    </div>
+
+</div>
+
+@*inicio Popup Nuevo*@
+<div class="modal fade" id="nuevoModalResponsable" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+
+                <button type="button" class="close" data-dismiss="modal" id="btnCerrarModalNuevoResponsable">×</button>
+                <h4 class="modal-title" id="myModalLabel">Nuevo Responsable</h4>
+            </div>
+            <div class="modal-body center-block">
+                <div id="nuevoMotivoDeReclamoBodyContent">
+                    <br />
+                    <form>
+                        @Html.AntiForgeryToken()
+                        <div class="row col-lg-offset-2">
+                            <label class="col-xs-2">Nombre</label>
+                            <input class="form-control col-xs-1" type="text" id="nombreRN" />
+                        </div>
+                        <div class="row col-lg-offset-2">
+                            <label class="col-xs-2">Apellido</label>
+                            <input class="form-control col-xs-1" type="text" id="apellidoRN" />
+                        </div>
+
+                        <div class="row col-lg-offset-2">
+                            <label class="col-xs-2">Usuario</label>
+                            <input class="form-control col-xs-1" type="text" id="usuarioRN" />
+                        </div>
+                        <div class="row col-lg-offset-2">
+                            <label class="col-xs-2">Tipo</label>
+                            <select class="form-control col-xs-1" type="text" id="tipoResponsableRN">
+                                <option value=""></option>
+                                <option value="RI">Responsable Interno</option>
+                                <option value="RE">Responsable Externo</option>
+                            </select>
+                        </div>
+                        <div class="row col-lg-offset-2">
+                            <label class="col-xs-2">Rol</label>
+                            <select class="form-control col-xs-1" type="text" id="rolRN" @*onchange="mostrarRol(this)"*@>
+                                <option value=""></option>
+                                <option value="ADMINISTRADOR">ADMINISTRADOR</option>
+                                <option value="ANALISTA">ANALISTA</option>
+                                <option value="COORDINADOR">COORDINADOR</option>
+                                <option value="GERENTE">GERENTE</option>
+                                <option value="ESTUDIO">ESTUDIO</option>
+                            </select>
+                        </div>
+                        <div class="row col-lg-offset-2" style="display:none;" id="divEstudios">
+                            <label class="col-xs-2">Estudio</label>
+                            <select class="form-control col-xs-1" type="text" id="estudioRN" @*onchange="mostrarRol(this)"*@></select>
+                        </div>
+                    </form>
+                    @*<div class="row col-lg-offset-2">
+            <label class="col-xs-2">Estudio</label>
+            <select class="form-control col-xs-1" type="text" id="estudioRN" />
+        </div>*@
+                    <br />
+                    <div id="divExisteResponsable">
+
+                    </div>
+
+                </div>
+
+            </div>
+            <div class="modal-footer">
+                <div class="row" id="nuevoMotivoDeReclamoContent">
+                    <span  class="col-md-offset-2"></span>                              
+                    <input id="btnGuardarNuevoResponsable" type="button" class="btn btn-sm btn-primary col-xs-3" value="Guardar" onclick="existeResponsable();" />
+                    <input type="button" class="btn btn-sm btn-toolbar col-xs-3" value="Cancelar" data-dismiss='modal' />
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@*----------- Fin Popup Nuevo ----------*@
+
+
+@*inicio Popup Edit*@
+<div class="modal fade" id="editModalResponsable" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+
+                <button type="button" class="close" data-dismiss="modal" id="btnCloseEditResponsables">×</button>
+                <h4 class="modal-title" id="myModalLabel">Editar Responsable</h4>
+            </div>
+            <div class="modal-body center-block">
+
+                <div id="editBodyContent">
+                    <form>
+                        @Html.AntiForgeryToken()
+                        <input type="hidden" id="idElementEdit" />
+                        <br />
+                        <div class="row col-lg-offset-2" style="display:none;">
+                            <h4 class="text-danger" id="h4FinDeSesion">Ha culminado la Sesión</h4>
+                        </div>
+                        <div class="row col-lg-offset-2">
+                            <label class="col-xs-2">Nombre</label>
+                            <input class="form-control col-xs-1" type="text" id="nombreRE" />
+                        </div>
+                        <div class="row col-lg-offset-2">
+                            <label class="col-xs-2">Apellido</label>
+                            <input class="form-control col-xs-1" type="text" id="apellidoRE" />
+                        </div>
+
+                        <div class="row col-lg-offset-2">
+                            <label class="col-xs-2">Usuario</label>
+                            <input class="form-control col-xs-1" type="text" id="usuarioRE" />
+                        </div>
+                        <div class="row col-lg-offset-2">
+                            <label class="col-xs-2">Tipo</label>
+                            <select class="form-control col-xs-1" type="text" id="tipoResponsableRE">
+                                <option value=""></option>
+                                <option value="RI">Responsable Interno</option>
+                                <option value="RE">Responsable Externo</option>
+                            </select>
+                        </div>
+                        <div class="row col-lg-offset-2">
+                            <label class="col-xs-2">Rol</label>
+                            <select class="form-control col-xs-1" type="text" id="rolRE" @*onchange="mostrarRol(this)"*@>
+                                <option value=""></option>
+                                <option value="ADMINISTRADOR">ADMINISTRADOR</option>
+                                <option value="ANALISTA">ANALISTA</option>
+                                <option value="COORDINADOR">COORDINADOR</option>
+                                <option value="GERENTE">GERENTE</option>
+                                <option value="ESTUDIO">ESTUDIO</option>
+                            </select>
+                        </div>
+                        <div class="row col-lg-offset-2" id="divEstudiosRE">
+                            <label class="col-xs-2">Estudio</label>
+                            <select class="form-control col-xs-1" type="text" id="estudioRE" @*onchange="mostrarRol(this)"*@></select>
+                        </div>
+                        <div class="row col-lg-offset-2">
+                            <label class="col-xs-2">Inactivo</label>
+                            <input style="margin-left:-15px;" class="col-xs-1" type="checkbox" id="campoActivacion" name="checkActivo" />
+                        </div>
+                    </form>
+                </div>
+
+                </div>
+            <div class="modal-footer">
+                <div class="row" id="editFooterContent">
+                    <span  class="col-md-offset-2"></span>
+                    <input type="button" class="btn btn-sm btn-primary col-xs-3" value="Guardar" onclick="guardarResponsableEditado()" id="btnGuardarEdicionResponsable" />
+                    <input type="button" class="btn btn-sm btn-toolbar col-xs-3" value="Cancelar" data-dismiss='modal' />
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@*----------- Inicio Popup Edit ----------*@
+
+<div class="modal fade" id="deleteModalResponsable" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" id="btnCerrarModalEliminarResponsable">×</button>
+            </div>
+            <div id="deletePopupContent" class="modal-body center-block">
+                <h4>Está a punto de eliminar al Responsable con Id : </h4>
+                <form>
+                    @Html.AntiForgeryToken()
+                    <h4 id="idDeleteHidden"></h4>
+                </form>
+
+            </div>
+            <div id="divExisteRelacionesResponsable" style="color:white;">
+
+            </div>
+            <div id="deleteFooterContent" class="modal-footer">
+                <button type="button" class="btn btn-danger" id="btnDelete" onclick="validarRelaciones()">Eliminar</button>
+                <button type="button" class="btn btn-toolbar" data-dismiss="modal">Cancelar</button>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    @*$(window).on('load', function () {
+            $.ajax({
+                    url: '@Url.Action("GetEstudios", "ModificacionesMasivas")',
+                    type: "Post",
+                    success: function (response) {
+                        comboEstudios.empty();
+                        //displayComboEstudios();
+                        comboEstudios.append('<option value=0/>');
+                        $(response).each(function () {
+                            comboEstudios.append(
+                                $('<option/>', { value: this.Id }).html(this.Nombre)
+                            );
+                        });
+                    },
+                    error: function (response) {
+                        toastr.error(response);
+                    }
+            });
+
+    });*@
+    //function mostrarRol(elem) {
+    //    var s = $(elem).find("option:selected").val();
+    //    alert(s);
+    //}
+    var comboEstudios = $('#estudioRN');
+    var divEstudios = $('#divEstudios');
+
+    function displayComboEstudios() {
+        divEstudios.css("display", "block");
+    }
+
+    function ocultarComboEstudios() {
+        divEstudios.css("display", "none");
+        comboEstudios[0].selectedIndex == 0;
+    }
+
+    $('#rolRN').change(function () {        
+
+        console.log($('#rolRN option:selected').text());
+        if ($('#rolRN option:selected').text() == 'ESTUDIO') {
+            displayComboEstudios();
+            GetEstudios();
+        } 
+         else {
+            ocultarComboEstudios();
+        }
+    });
+
+    $("#filtroNombre").keypress(function (e) {
+        if (e.which == 13) {
+            e.preventDefault();
+            BuscarResponsables();
+        }
+    });
+
+    $("#filtroApellido").keypress(function (e) {
+        if (e.which == 13) {
+            e.preventDefault();
+            BuscarResponsables();
+        }
+    });
+
+    $("#filtroUsuario").keypress(function (e) {
+        if (e.which == 13) {
+            e.preventDefault();
+            BuscarResponsables();
+        }
+    });
+    
+    function GetEstudios() {
+        
+        $.ajax({
+            url: '@Url.Action("GetEstudios", "Admin")',
+            type: "Post",
+            
+                    success: function (response) {
+                        //comboEstudios.empty();
+                        displayComboEstudios();
+                        comboEstudios.append('<option value=0/>');
+                        $(response).each(function () {
+                            comboEstudios.append(
+                                $('<option/>', { value: this.Id }).html(this.Nombre)
+                            );
+                        });
+                    },
+                    error: function (response) {
+                        toastr.error(response);
+                    }
+            });
+    }
+
+    function GetEstudiosEdición() {
+         @*var token = '@Html.AntiForgeryToken()';
+             var gnrestoken = $(token).val();*@
+        var comboEstudiosEdición = $('#estudioRE');
+                $.ajax({
+                    url: '@Url.Action("GetEstudios", "Admin")',
+                    type: "Post",
+                    //data: {
+                    //    __RequestVerificationToken: gnrestoken
+                    //},
+                    success: function (response) {
+                        comboEstudiosEdición.empty();
+                        comboEstudiosEdición.append('<option value=0/>');
+                        $(response).each(function () {
+                            comboEstudiosEdición.append(
+                                $('<option/>', { value: this.Id }).html(this.Nombre)
+                            );
+                        });
+                        //$("#estudioRE option").each(function (i, valor) {
+                            
+                        //    if ($(valor).val() == estudioId) {
+                        //        $(valor).prop('selected', true);
+                                                       
+                        //    }
+                           
+                        //});
+                    },
+                    error: function (response) {
+                        toastr.error(response);
+                    }
+            });
+    }
+
+    function cleanModalNuevoResponsable() {
+        $('#nombreRN').val("");
+        $('#apellidoRN').val("");
+        $('#usuarioRN').val(""); 
+        $('#tipoResponsableRN')[0].selectedIndex = 0;
+        $('#rolRN')[0].selectedIndex = 0;
+        $('#estudioRN')[0].selectedIndex = 0;
+        $('#divExisteResponsable').empty();
+    } 
+
+    function guardarNuevoResponsable() {
+        if (esValido()) {
+             var token = '@Html.AntiForgeryToken()';
+            var gnrestoken = $(token).val();
+            $('#btnCerrarModalNuevoResponsable').click();
+            $.ajax({
+                url: '@Url.Action("CrearResponsable", "Admin")',
+                type: "POST",
+                data: {
+                    Nombre: $('#nombreRN').val(),
+                    Apellido: $('#apellidoRN').val(),
+                    Usuario: $('#usuarioRN').val(),
+                    TipoResponsable: $('#tipoResponsableRN').find("option:selected").val(),
+                    Rol: $('#rolRN').find("option:selected").val(),
+                    Estudio_Id: $('#estudioRN').find("option:selected").val(),
+                    __RequestVerificationToken: gnrestoken
+                },
+                success: function (response) {
+                    //toastr.success("Registro guardado correctamente");
+                    $('#elementos').html(response);
+                    $('#btnGuardarNuevoResponsable').removeAttr('data-dismiss');
+                    //cleanModalNuevoResponsable();
+                },
+                error: function (response) {
+                    toastr.error(response.responseText + ' ' + response.status);
+                }
+            });
+        }
+
+    }
+
+    function esValidoResponsable() {
+        var mensaje = "Todos los campos son obligatorios";
+        if (($('#nombreRN').val().trim().length == 0) ||
+            ($('#apellidoRN').val().trim().length == 0) ||
+            ($('#usuarioRN').val().trim().length == 0) ||
+            $('#tipoResponsableRN')[0].selectedIndex == 0 ||
+            $('#tipoResponsableRN option:selected').val() == null ||
+            $('#rolRN')[0].selectedIndex == 0 ||
+            $('#rolRN option:selected').val() == null ||
+            ($('#rolRN option:selected').val() == 'ESTUDIO'
+                && $('#estudioRN')[0].selectedIndex == 0))
+        
+        {
+            toastr.warning(mensaje);
+            return false;
+        } else {
+            return true;
+        }
+     }
+
+    function existeResponsable() {
+        $('#guardarNuevo').prop("disabled", true);
+        var token = '@Html.AntiForgeryToken()';
+        var ctoken = $(token).val();
+        if (esValidoResponsable()) {
+             $.ajax({
+                 url: '@Url.Action("ExisteResponsable","Admin")',
+                 type: "POST",
+                 data: {
+                     usuario: $('#usuarioRN').val(),
+                     __RequestVerificationToken: ctoken
+                 },
+                 success: function (response) {
+                     $("#divExisteResponsable").html(response);
+                     $('#guardarNuevo').prop("disabled",false);
+
+                 },
+                 error: function (response) {
+                     toastr.error(response.responseText + ' ' + response.status);
+                     $('#guardarNuevo').prop("disabled", false);
+                 }
+             });
+        }
+        $('#guardarNuevo').prop("disabled", false);
+    };
+
+    function esValido() {
+        var mensaje = "Todos los campos son obligatorios";
+        if (($('#nombreRN').val().trim().length == 0) ||
+            ($('#apellidoRN').val().trim().length == 0) ||
+            ($('#usuarioRN').val().trim().length == 0)||
+            $('#tipoResponsableRN')[0].selectedIndex == 0 ||
+            $('#tipoResponsableRN option:selected').val() == null ||
+            $('#rolRN')[0].selectedIndex == 0 ||
+            $('#rolRN option:selected').val() == null ||
+            ($('#rolRN option:selected').val() == 'ESTUDIO'
+                && $('#estudioRN')[0].selectedIndex == 0))
+            //($('#rolRN')[0].selectedIndex == 5
+            // && $('#estudioRN')[0].selectedIndex == 'EXTERNO'))
+         {
+            
+            toastr.warning(mensaje);
+            return false;
+        } else {
+            $('#btnGuardarNuevoResponsable').attr('data-dismiss', 'modal');
+            return true;
+        }
+
+        
+
+    }
+
+    function mostrarLoading() {
+        $('#loading').show();
+    }
+    function ocultarLoading() {
+        $('#loading').hide();
+    }
+
+    function BuscarResponsables() {
+        $('#elementos').empty();
+        //if (losFiltrosSonValidados()) {
+            mostrarLoading();
+        $('#btnBuscarResponsables').prop("disabled", true);
+            $.ajax({
+                url: '@Url.Action("BuscarResponsables", "Admin")' /*"/Admin/" + action*/,
+                type: "Post",
+                data: {
+                    Nombre: $('#filtroNombre').val(),
+                    Apellido: $('#filtroApellido').val(),
+                    Usuario: $('#filtroUsuario').val(),
+                    TipoResponsable: $('#comboTipoResponsable').find('option:selected').val()
+                },
+                success: function (response) {
+
+                    ocultarLoading();
+                    $('#elementos').html(response);
+                    $('#btnBuscarResponsables').prop("disabled", false);
+                    
+                },
+                error: function (response) {
+                    ocultarLoading();
+                    toastr.error(response.responseText + ' ' + response.statusText);
+                    $('#btnBuscarResponsables').prop("disabled", false);
+                }
+            });
+        //}
+    }
+
+    function losFiltrosSonValidados() {
+        var mensaje = "Ingrese algún Filtro de Búsqueda";
+        if ((($('#filtroNombre').val().length == 0) &&
+            ($('#filtroApellido').val().length == 0) &&
+            ($('#filtroUsuario').val().length == 0) &&
+            ($('#comboTipoResponsable')[0].selectedIndex == 0))) {
+            toastr.warning(mensaje);
+            return false;
+        } else {
+            return true;
+        }
+    }
+
+    function limpiarFiltrosBusqueda() {
+        $('#filtroNombre').val('');
+        $('#filtroApellido').val('');
+        $('#filtroUsuario').val('');
+        $('#comboTipoResponsable')[0].selectedIndex = 0;
+        $('#elementos').empty();
+    }
+
+    function limpiarCamposEdicionRE() {
+        $('#idElementEdit').val('');
+        $('#nombreRE').val('');
+        $('#apellidoRE').val('');
+        $('#usuarioRE').val('');
+        $('#tipoResponsableRE')[0].selectedIndex = 0;
+        $('#rolRE')[0].selectedIndex = 0;
+        $('#estudioRE')[0].selectedIndex = 0;
+        $('#campoActivacion').prop('checked',false);
+    }
+
+    function editarResponsable(Id) {
+        limpiarCamposEdicionRE();
+        GetEstudiosEdición();
+       
+        $.ajax({
+            url: '@Url.Action("EditarResponsable","Admin")',
+            type: "GET",
+            data: {
+                id: Id
+            },
+            success: function (response) {
+                try {
+                    $('#idElementEdit').val(response.Id);
+                    $('#nombreRE').val(response.Nombre);
+                    $('#apellidoRE').val(response.Apellido);
+                    $('#usuarioRE').val(response.UmeId);
+                    var tipoResponsable = response.TipoResponsable;
+                    var rol = response.Rol;
+                    var estudioId = response.Estudio_Id;
+
+                    $("#tipoResponsableRE option").each(function (i, valor) {
+                        //console.log(i + ' : ' + $(valor).val());
+                        if ($(valor).val() == tipoResponsable) {
+                            $(valor).prop('selected', true);
+                            //console.log('son iguales');                            
+                        } 
+                    });
+
+                    $("#rolRE option").each(function (i, valor) {
+                        console.log(i + ' : ' + $(valor).val());
+                        if ($(valor).val() == rol) {
+                            $(valor).prop('selected', true);
+                            console.log('son iguales');
+                        }
+                    });
+                    
+                    $('#campoActivacion').prop('checked', response.Deleted);
+                   
+                    $("#estudioRE option").each(function (i, valor) {
+                        //console.log(i + ' : ' + $(valor).val())
+                        if ($(valor).val() == estudioId) {
+                            $(valor).prop('selected', true);
+                            //console.log('son iguales');                          
+                        }
+                        if (response.responseText == "Ha finalizado la Sesión") {
+                            toastr.error("Ha finalizado la Sesión");
+                            //finDeSesion.css("display", "block")
+                        }
+                    });
+
+                    if ($("#rolRE option:selected").text() == "ESTUDIO") {
+                        $("#estudioRE").prop("disabled",false);
+                    } else {
+                        $('#estudioRE')[0].selectedIndex = 0;
+                        $("#estudioRE").prop("disabled",true);
+                    }
+                } catch (response) {
+                    //if (response == undefined)
+                    toastr.error(response.responseText);
+                }
+            },
+            error: function (response) {
+                if (response.status == 0) {
+                    toastr.error("Ha culminado la Sesión");
+                } else {
+                    toastr.error(response.responseText + ' ' + response.status);
+                }
+                
+            }
+        });
+    }
+
+     @*function guardarResponsableEditado() {
+         if (esValidoNombreEdicion()) {
+              var token = '@Html.AntiForgeryToken()';
+              var gresedtoken = $(token).val();
+             $.ajax({
+                 url: '@Url.Action("guardarResponsableEditado","Admin")',
+                 type: "POST",
+                 data: {
+                     id: $('#idElementEdit').val(),
+                     Nombre: $('#nombreRE').val(),
+                     Apellido: $('#apellidoRE').val(),
+                     UmeId: $('#usuarioRE').val(),
+                     TipoResponsable: $('#tipoResponsableRE option:selected').val(),
+                     Rol: $('#rolRE').find("option:selected").val(),
+                     Deleted: $('#campoActivacion').prop('checked'),
+                     Estudio_Id: $('#estudioRE option:selected').val(),
+                     __RequestVerificationToken: gresedtoken
+                 },
+                 success: function (response) {
+                     toastr.success("Registro guardado correctamente");
+                     $('#elementos').html(response);
+                     //GetOrganismos();
+                 },
+                 error: function (response) {
+                     toastr.error(response.responseText + ' ' + response.status);
+                 }
+             });
+         } else {
+             toastr.warning("Todos los campos son obligatorios");
+         }
+    }*@
+
+    function guardarResponsableEditado() {
+        if (esValidoNombreEdicion()) {
+            var token = '@Html.AntiForgeryToken()';
+            var atoken = $(token).val();
+            $('#guardarEdicion').prop("disabled",true);
+            $.ajax({
+                url: '@Url.Action("guardarResponsableEditado", "Admin")',
+                type: "POST",
+                data: {
+                    id: $('#idElementEdit').val(),
+                    Nombre: $('#nombreRE').val(),
+                    Apellido: $('#apellidoRE').val(),
+                    UmeId: $('#usuarioRE').val(),
+                    TipoResponsable: $('#tipoResponsableRE option:selected').val(),
+                    Rol: $('#rolRE').find("option:selected").val(),
+                    Deleted: $('#campoActivacion').prop('checked'),
+                    Estudio_Id: $('#estudioRE option:selected').val(),
+                    __RequestVerificationToken: atoken
+
+                },
+                success: function (response) {                 
+                    try {
+                        if (response == "ACTUALIZADO") {                           
+                            GetResponsableActualizado(); 
+                            $('#btnCloseEditResponsables').click();
+                            $('#guardarEdicion').prop("disabled", false);
+                        }
+                        else
+                            if (response == "No se pueden actualizar los datos.</br>Existe otro Responsable con el mismo Usuario.") {
+                                toastr.warning(response);
+                            }
+                            else {
+                                toastr.error(response);   
+                                //toastr.error("Verifique si la Sesión sigue activa.</br>Verifique si los datos fueron actualizados.");            
+                            }
+                    } catch (error) {
+                        toastr.error(error);
+                    }
+                    
+                },
+                error: function (response) {
+                    toastr.error(response.responseText + ' ' + response.status);
+                }
+            });
+            $('#guardarEdicion').prop("disabled", false);
+        }
+        
+    }
+
+    function GetResponsableActualizado() {
+        $.ajax({
+                url: '@Url.Action("GetResponsableActualizado", "Admin")',
+                type: "GET",
+                data: {
+                    id: $('#idElementEdit').val()
+                   
+            }, success: function (result) {
+                    $('#elementos').html(result);
+
+            }, error: function (result) {
+                    toastr.error(result.responseText + ' ' + result.status);
+            }
+        });
+
+    }
+
+    $("#NombreEdicion").keypress(function (e) {
+        if (e.which == 13) {
+            e.preventDefault();
+            return false;
+        }
+    });
+
+    $("#nombreRN").keypress(function (e) {
+        if (e.which == 13) {
+            e.preventDefault();
+            existeResponsable();
+            //return false;
+        }
+    });
+
+    $("#apellidoRN").keypress(function (e) {
+        if (e.which == 13) {
+            e.preventDefault();
+            existeResponsable();
+            //return false;
+        }
+    });
+
+    $("#usuarioRN").keypress(function (e) {
+        if (e.which == 13) {
+            e.preventDefault();
+            existeResponsable();
+            //return false;
+        }
+    });
+
+
+    $("#nombreRE").keypress(function (e) {
+        if (e.which == 13) {
+            e.preventDefault();
+            guardarResponsableEditado();
+            //return false;
+        }
+    });
+
+    $("#apellidoRE").keypress(function (e) {
+        if (e.which == 13) {
+            e.preventDefault();
+            guardarResponsableEditado();
+            //return false;
+        }
+    });
+
+    $("#usuarioRE").keypress(function (e) {
+        if (e.which == 13) {
+            e.preventDefault();
+            guardarResponsableEditado();
+            //return false;
+        }
+    });
+
+
+    function esValidoNombreEdicion() {
+
+        if ($('#nombreRE').val().trim().length == 0 ||
+            $('#apellidoRE').val().trim().length == 0 ||
+            $('#usuarioRE').val().trim().length == 0 ||
+            $('#tipoResponsableRE')[0].selectedIndex == 0 ||
+            $('#rolRE')[0].selectedIndex == "" ||
+            $('#rolRE option:selected').val() == null ||
+            ($('#rolRE option:selected').val() == 'ESTUDIO'
+                && $('#estudioRE')[0].selectedIndex == 0)) {
+
+            toastr.warning('Todos los campos son obligatorios');
+            deshabilitarGuardarEdicion();
+            return false;
+        } else {
+            //toastr.success('OK');
+            //habilitarGuardarEdicion();
+            return true;
+        }
+    }
+
+    function deshabilitarGuardarEdicion() {
+        $('#btnGuardarEdicionResponsable').removeAttr('data-dismiss', 'modal');
+    }
+
+    function habilitarGuardarEdicion() {
+        $('#btnGuardarEdicionResponsable').attr('data-dismiss', 'modal');
+    }
+
+
+     function EliminarResponsable() {
+        var idOculto = document.getElementById('idDeleteHidden');
+        var Id = parseInt(idOculto.innerText);
+       var token = '@Html.AntiForgeryToken()';
+         var eptoken = $(token).val();
+         $('#btnCerrarModalEliminarResponsable').click();  
+        $.ajax({
+            url: '@Url.Action("EliminarResponsable", "Admin")',
+            type: "Post",
+            data: {
+                responsableId: Id,
+                __RequestVerificationToken: eptoken
+            },
+            success: function (result) {
+                try {
+                    
+                    if (result == "Registro eliminado con éxito") {
+                        filaARemover.remove();
+                        filaARemover = undefined;
+                        toastr.success(result);
+                    } else {
+                        toastr.error(result);
+                    }
+                } catch (error) {
+                    toastr.error(error);
+                }
+            },
+            error: function (result) {
+                toastr.error(result.responseText);
+            }
+        });
+
+    }
+
+   
+
+    function validarRelaciones() {
+        
+         var idOculto = document.getElementById('idDeleteHidden');
+         var Id = parseInt(idOculto.innerText);
+          var token = '@Html.AntiForgeryToken()';
+          var vrtoken = $(token).val();
+          $('#btnDelete').prop("disabled", false);
+            $.ajax({
+                url: '@Url.Action("TieneRelacionesResponsable", "Admin")',
+                type: "Post",
+                data: {
+                    responsableId: Id,
+                    __RequestVerificationToken: vrtoken  
+                },
+                success: function (result) {
+                    $('#divExisteRelacionesResponsable').html(result);
+                    $('#btnDelete').prop("disabled",true);
+                },
+                error: function (result) {
+                    toastr.error(result.responseText);
+                }
+            });
+        $('#btnDelete').prop("disabled", false);
+    }
+
+    function cargarIdModalDelete(id, element) {
+        $('#idDeleteHidden').html(id);
+        filaARemover = $(element).parent().parent();
+        $('#divExisteRelacionesResponsable').empty();
+        $('#btnDelete').prop("disabled", false);
+    }
+
+    function LimpiarTodo() {
+        $('#elementos').empty();
+        $('#filtro').val('');
+    }
+
+
+</script>
+@*<script>
+    
+
+    
+
+   
+
+
+
+    function GetOrganismos() {
+        $('#elementos').empty();
+        if (losFiltrosSonValidados()) {
+            mostrarLoading();
+            $('#BuscarOrganismo').prop("disabled", true);
+            $.ajax({
+                url: '@Url.Action("BuscarOrganismo","Admin")' /*"/Admin/" + action*/,
+                type: "GET",
+                data: {
+                    nombre: $('#filtroOrganismo').val(),
+                    provinciaId: $('#comboProvinciasBusquedaOR').find('option:selected').val(),
+                    localidadId: $('#comboLocalidadesBusquedaOR').find('option:selected').val(),
+                    regionId: $('#comboRegionesBusquedaOR').find('option:selected').val()
+                },
+                success: function (response) {
+
+                    ocultarLoading();
+                    $('#elementos').html(response);
+                    $('#BuscarOrganismo').prop("disabled", false);
+                },
+                error: function (response) {
+                    ocultarLoading();
+                    toastr.error(response.responseText + ' ' + response.statusText);
+                    $('#BuscarOrganismo').prop("disabled", false);
+                }
+            });
+        }
+    }
+
+    
+    function guardarNuevoOrganismo() {
+        if (esValido()) {
+            $.ajax({
+                url: '@Url.Action("CrearOrganismo", "Admin")',
+                type: "POST",
+                data: {
+                    Nombre: $('#nuevoOrganismo').val(),
+                    provinciaId: $('#comboProvinciasNuevoOR').find("option:selected").val(),
+                    localidadId: $('#comboLocalidadesNuevoOR').find("option:selected").val(),
+                    regionId: $('#comboRegionesNuevoOR').find("option:selected").val()
+                },
+                success: function (response) {
+                    toastr.success("Registro guardado correctamente");
+                    $('#elementos').html(response);
+                },
+                error: function (response) {
+                    toastr.error(response.responseText + ' ' + response.status);
+                }
+            });
+        }
+
+    }
+
+    
+
+    function habilitarGuardarEdicion() {
+        $('#guardarEdicion').attr('data-dismiss', 'modal');
+    }
+
+
+    
+
+    function guardarOrganismoEditado() {
+        if (esValidoNombreEdicion()) {
+            var provinciaId = $('#comboProvinciasEditOR').find("option:selected").val();
+            var localidadId = $('#comboLocalidadesEditOR').find("option:selected").val();
+            var regionId = $('#comboRegionesEditOR').find("option:selected").val();
+            console.log('provinciaId : ' + provinciaId);
+            console.log('localidadId : ' + localidadId);
+            console.log('regionId : ' + regionId );
+            $.ajax({
+                url: '@Url.Action("guardarOrganismoEditado","Admin")',
+                type: "POST",
+                data: {
+                    id: $('#idElementEdit').val(),
+                    Nombre: $('#NombreEdicion').val(),
+                    provinciaId: $('#comboProvinciasEditOR').find("option:selected").val(),
+                    localidadId: $('#comboLocalidadesEditOR').find("option:selected").val(),
+                    regionId: $('#comboRegionesEditOR').find("option:selected").val(),
+                    campoActivacion: $('input:checkbox[name=checkActivo]:checked').val()
+
+                },
+                success: function (response) {
+                    toastr.success("Registro guardado correctamente");
+                    $('#elementos').html(response);
+                    //GetOrganismos();
+                },
+                error: function (response) {
+                    toastr.error(response.responseText + ' ' + response.status);
+                }
+            });
+        }
+    }
+
+
+    function guardarOrganismoEditado() {
+
+        if (esValidoNombreEdicion()) {
+            $.ajax({
+                url: '@Url.Action("guardarOrganismoEditado", "Admin")',
+                type: "POST",
+                data: {
+                    id: $('#idElementEdit').val(),
+                    nombre: $('#NombreEdicion').val(),
+                    provinciaId: $('#comboProvinciasEditOR').find("option:selected").val(),
+                    localidadId: $('#comboLocalidadesEditOR').find("option:selected").val(),
+                    regionId: $('#comboRegionesEditOR').find("option:selected").val(),
+                    campoActivacion: $('input:checkbox[name=checkActivo]:checked').val()
+                },
+                success: function (response) {
+                    toastr.success("Registro guardado correctamente");
+                    $('#elementos').html(response);
+                },
+                error: function (response) {
+                    //toastr.options.positionClass = 'toast-bottom-right';
+                    //toastr.options.hideDuration = 8000;
+                    toastr.error(response.responseText + ' ' + response.status);
+                }
+            });
+        }
+
+    }
+
+
+    function limpiarCamposEdicion() {
+        $('#NombreEdicion').val('');
+        $('#comboProvinciasEditOR')[0].selectedIndex = 0;
+        $('#comboLocalidadesEditOR')[0].selectedIndex = 0;
+        $('#comboRegionesEditOR')[0].selectedIndex = 0;
+    }
+
+    function editarOrganismo(Id) {
+        deshabilitarGuardarEdicion();
+        limpiarCamposEdicion();
+        $.ajax({
+            url: '@Url.Action("EditarOrganismo","Admin")',
+            type: "POST",
+            data: {
+                id: Id
+            },
+            success: function (response) {
+                try {
+                    $('#idElementEdit').val(response.Id);
+                    $('#NombreEdicion').val(response.Nombre);
+                    var provinciaId = response.Provincia_Id;
+                    var localidadId = response.Localidad_Id;
+                    var regionId = response.Region_Id;
+
+                    $('#campoActivacion').prop('checked', response.Activo);
+                    $("#comboProvinciasEditOR option").each(function (i, valor) {
+                        //console.log(i + ' : ' + $(valor).val())
+                        if ($(valor).val() == provinciaId) {
+                            $(valor).prop('selected', true);
+                            //console.log('son iguales');
+                        }
+                    });
+                    $("#comboLocalidadesEditOR option").each(function (i, valor) {
+                        //console.log(i + ' : ' + $(valor).val())
+                        if ($(valor).val() == localidadId) {
+                            $(valor).prop('selected', true);
+                            //console.log('son iguales');
+                        }
+                    });
+                    $("#comboRegionesEditOR option").each(function (i, valor) {
+                        //console.log(i + ' : ' + $(valor).val())
+                        if ($(valor).val() == regionId) {
+                            $(valor).prop('selected', true);
+                            //console.log('son iguales');
+                        }
+                    });
+                } catch (response) {
+                    toastr.error(response);
+                }
+            },
+            error: function (response) {
+                toastr.error(response.responseText + ' ' + response.status);
+            }
+        });
+    }
+
+
+    function eliminarOrganismo() {
+            var idOculto = document.getElementById('idDeleteHidden');
+            var Id = parseInt(idOculto.innerText);
+            console.log(Id);
+
+            $.ajax({
+                url: '@Url.Action("EliminarOrganismo","Admin")',
+                type: "Post",
+                data: {
+                    id: Id
+                },
+                success: function (result) {
+                    try {
+                        if (result == "Registro eliminado con éxito") {
+                            filaARemover.remove();
+                            filaARemover = undefined;
+                        }
+                        toastr.info(result);
+                    } catch (error) {
+                        toastr.error(error);
+                    }
+                },
+                error: function (result) {
+                    toastr.error(result.responseText);
+                }
+            });
+
+        }
+</script>*@
+
+
+
+
+

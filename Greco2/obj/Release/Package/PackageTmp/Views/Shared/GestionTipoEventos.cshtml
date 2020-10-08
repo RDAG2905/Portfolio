@@ -1,0 +1,500 @@
+﻿<div>
+    <div class="jumbotron">
+        <h4 class="text-primary">Gestión de Tipos de Evento</h4>
+    </div>
+    @*<br />*@
+    <div class="row">
+        <span class="col-xs-3"></span>
+        <label class="col-xs-1" style="margin-right:5px;margin-left:10px;font-size:12px;">Nombre:</label>
+        <input type="text" class="form-control col-xs-3" id="filtro" />
+
+       
+    </div>
+    <div class="row" style="margin-top:12px;">
+        <input type="button" value="Nuevo" class="btn btn-primary btn-sm col-xs-1" id="NuevoTipoEvento" onclick="cleanInput();" style="margin-left:340px;margin-right:10px;"
+               data-toggle="modal" data-target="#nuevoModalTipoEvento" />
+        <input type="button" value="Limpiar" class="btn btn-primary btn-sm col-xs-1" id="btnLimpiar" onclick="LimpiarTodo()"
+               style="
+        margin-right:10px;" />
+        <input type="button" value="Buscar" class="btn btn-primary btn-sm col-xs-1" id="" onclick="BuscarTiposDeEvento()"
+               style="
+        margin-right:10px;" />
+    </div>
+    <br />
+    <br />
+    <div class="container-fluid" id="elementos">
+
+    </div>
+
+</div>
+
+@*inicio Popup Nuevo*@
+<div class="modal fade" id="nuevoModalTipoEvento" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+
+                <button type="button" class="close" data-dismiss="modal" id="btnCerrarModalNuevoTipoEvento">×</button>
+                <h4 class="modal-title" id="myModalLabel">Nuevo Tipo Evento</h4>
+            </div>
+            <div class="modal-body center-block">
+                <div id="nuevoEstudioBodyContent">
+                    <br />
+                    <form >
+                        @Html.AntiForgeryToken()
+
+                        <div class="row col-lg-offset-2">
+                            <label class="col-xs-1" style="margin-right:50px;">Nombre</label>
+                            <input class="form-control col-xs-1" type="text" id="filtroNombre" />
+                        </div>
+                        <label type="text" class="text-danger" id="MensajeNombreInvalido" style="display:none;"></label>
+                    </form>
+                    <br />
+                    <div id="divExisteTipoDeEvento" style="color:white;"></div>
+                </div>
+
+            </div>
+            <div class="modal-footer">
+                <div class="row" id="nuevoEstudioContent">
+                    <span style="margin-right:50px;" class="col-md-offset-3"></span>
+                    <input id="guardarNuevo" type="button" class="btn btn-sm btn-primary col-xs-3" value="Guardar" onclick="existeTipoDeEvento()" />
+                    <input type="button" class="btn btn-sm btn-toolbar col-xs-3" value="Cancelar" data-dismiss='modal' />
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@*----------- Fin Popup Nuevo ----------*@
+
+
+@*inicio Popup Edit*@
+<div class="modal fade" id="editModalTipoEvento" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+
+                <button type="button" class="close" data-dismiss="modal" id="btnCloseEditTipoEvento">×</button>
+                <h4 class="modal-title" id="myModalLabel">Editar Tipo de Evento</h4>
+            </div>
+            <div class="modal-body center-block">
+
+                <div id="editBodyContent">
+                    <form>
+                        @Html.AntiForgeryToken()
+                        <input type="hidden" id="idElementEdit" />
+                        <br />
+                        <div class="row col-lg-offset-2">
+                            <label class="col-xs-1" style="margin-right:50px;">Nombre</label>
+                            <input class="form-control col-xs-1" type="text" id="NombreEdicion" />
+                        </div>
+                        <br />
+                        <div class="row col-lg-offset-2">
+                            <label class="col-xs-1">Inactivo</label>
+                            <input style="margin-left:35px;" class="col-xs-1" type="checkbox" id="campoActivacion" name="checkActivo" />
+                        </div>
+                    </form>
+                </div>
+
+            </div>
+            <div class="modal-footer">
+                <div class="row" id="editFooterContent">
+                    <span style="margin-right:50px;" class="col-md-offset-3"></span>
+                    <input type="button" class="btn btn-sm btn-primary col-xs-3" value="Guardar" onclick="guardarTipoEventoEditado()" id="guardarEdicion"/>
+                    <input type="button" class="btn btn-sm btn-toolbar col-xs-3" value="Cancelar" data-dismiss='modal' />
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@*----------- Inicio Popup Edit ----------*@
+
+<div class="modal fade" id="deleteModalTipoEvento" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" id="btnCerrarModalEliminarTipoEvento">×</button>
+            </div>
+            <div id="deletePopupContent" class="modal-body center-block">
+                <h4>Está a punto de eliminar el Tipo de Evento con Id : </h4>                
+                <form>
+                    @Html.AntiForgeryToken()
+                    <h4 id="idDeleteHidden"></h4>
+                </form>
+            </div>
+            <div id="divExisteRelacionesTipoDeEvento"></div>
+            <div id="deleteFooterContent" class="modal-footer">
+                <button type="button" class="btn btn-danger" id="btnDelete" onclick="validarRelaciones()">Eliminar</button>
+                <button type="button" class="btn btn-toolbar" data-dismiss="modal">Cancelar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    //function traerTiposdeEvento(e) {
+    //    var key = e.keyCode || e.which;
+    //    console.log(e.keyCode);
+    //    if (key === 13) {
+    //        GetElements('BuscarTiposdeEvento');
+    //    };
+    //}
+    function cleanInput() {
+        $('#divExisteTipoDeEvento').empty();
+        $("#filtroNombre").val('');
+    }
+
+ function elTipoEventoEsValido() {
+        var mensaje = "Ingrese algún Filtro de Búsqueda";
+        if ($('#filtro').val().trim().length == 0) {
+            toastr.warning(mensaje);
+            return false;
+        } else {
+            $('#guardarNuevo').attr('data-dismiss', 'modal');
+            return true;
+        }
+    }
+
+    $("#filtro").keypress(function (e) {
+        if (e.which == 13) {
+            e.preventDefault();
+            BuscarTiposDeEvento();
+        }
+    });
+
+    $("#filtroNombre").keypress(function (e) {
+        if (e.which == 13) {
+            e.preventDefault();
+            existeTipoDeEvento();
+            //return false;
+        }
+    });
+
+    
+
+    function BuscarTiposDeEvento() {        
+        $('#elementos').empty();
+        mostrarLoading();
+            $.ajax({
+                url: '@Url.Action("BuscarTiposDeEvento", "Admin")',
+                type: "GET",
+                data: {
+                    filtro: $('#filtro').val()
+                },
+                success: function (response) {
+                    ocultarLoading();
+                    $('#elementos').html(response);
+                },
+                error: function (response) {
+                    ocultarLoading();
+                    toastr.error(response.responseText + ' ' + response.statusText);
+                }
+            });
+    }
+
+    function esValido() {
+        var mensaje = "Ingrese el nombre";
+        if ($('#filtroNombre').val().length == 0) {
+            toastr.warning(mensaje);
+
+            return false;
+        } else {
+            $('#guardarNuevo').attr('data-dismiss', 'modal');
+            return true;
+        }
+    }
+
+    function esValidoNombreTipoEvento() {
+        var mensaje = "Ingrese el  Tipo de Evento";
+        if ($('#filtroNombre').val().trim().length == 0) {
+            toastr.warning(mensaje);
+            return false;
+        } else {
+            return true;
+        }
+    }
+
+    function existeTipoDeEvento() {
+        $('#guardarNuevo').prop("disabled", true);
+        var token = '@Html.AntiForgeryToken()';
+        var ctoken = $(token).val();
+        if (esValidoNombreTipoEvento()) {
+            $.ajax({
+                url: '@Url.Action("ExisteTipoDeEvento","Admin")',
+                type: "POST",
+                data: {
+                    Nombre: $('#filtroNombre').val(),
+                    __RequestVerificationToken: ctoken
+                },
+                success: function (response) {
+                    $("#divExisteTipoDeEvento").html(response);
+                    $('#guardarNuevo').prop("disabled", false);
+
+                },
+                error: function (response) {
+                    toastr.error(response.responseText + ' ' + response.status);
+                    $('#guardarNuevo').prop("disabled", false);
+                }
+            });
+        }
+        $('#guardarNuevo').prop("disabled", false);
+    }
+    
+    function guardarNuevoTipoEvento() {
+        if (esValido()) {
+             var token = '@Html.AntiForgeryToken()';
+            var gntetoken = $(token).val();
+            $('#btnCerrarModalNuevoTipoEvento').click();
+            $.ajax({
+                url: '@Url.Action("CrearTipoDeEvento","Admin")',
+                type: "POST",
+                data: {
+                    Nombre: $('#filtroNombre').val(),
+                    __RequestVerificationToken: gntetoken
+                },
+                success: function (response) {
+                    //toastr.success("Registro guardado correctamente");
+                    $('#elementos').html(response);
+                    $('#guardarNuevo').removeAttr('data-dismiss');
+                },
+                error: function (response) {
+                    toastr.error(response.responseText + ' ' + response.status);
+                }
+            });
+        }
+    }
+
+    function esValidoNombreEdicion() {
+        if ($('#NombreEdicion').val().trim().length == 0) {
+            toastr.warning('El nombre es obligatorio');
+            deshabilitarGuardarEdicion();
+            return false;
+        } else {
+            //habilitarGuardarEdicion();
+            return true;
+        }
+    }
+
+    @*function guardarTipoDeEventoEditado() {
+        if (esValidoNombreEdicion()) { 
+            var token = '@Html.AntiForgeryToken()';
+            var gteetoken = $(token).val();
+               $.ajax({
+                    url: '@Url.Action("guardarTipoDeEventoEditado", "Admin")',
+                    type: "POST",
+                    data: {
+                        id: $('#idElementEdit').val(),
+                        Nombre: $('#NombreEdicion').val(),
+                        campoActivacion: $('input:checkbox[name=checkActivo]:checked').val(),  
+                        __RequestVerificationToken: gteetoken
+                    },
+                    success: function (response) {
+                        toastr.success("Registro guardado correctamente");
+                        $('#elementos').html(response);
+                    },
+                    error: function (response) {
+                        toastr.error(response.responseText + ' ' + response.status);
+                    }
+               });
+        }
+    }*@
+
+     function guardarTipoEventoEditado() {
+        if (esValidoNombreEdicion()) {
+            var token = '@Html.AntiForgeryToken()';
+            var atoken = $(token).val();
+            $('#guardarEdicion').prop("disabled",true);
+            $.ajax({
+                url: '@Url.Action("guardarTipoDeEventoEditado", "Admin")',
+                type: "POST",
+                data: {
+                    id: $('#idElementEdit').val(),
+                    Nombre: $('#NombreEdicion').val(),
+                    campoActivacion: $('input:checkbox[name=checkActivo]:checked').val(),
+                    __RequestVerificationToken: atoken
+
+                },
+                success: function (response) {                 
+                    try {
+                        if (response == "ACTUALIZADO") {                           
+                            GetTipoEventoActualizado(); 
+                            $('#btnCloseEditTipoEvento').click();
+                            $('#guardarEdicion').prop("disabled", false);
+                        }
+                        else
+                            if (response == "No se pueden actualizar los datos.</br>Existe otro Tipo de Evento con el mismo Nombre.") {
+                                toastr.warning(response);
+                            }
+                            else {
+                                toastr.error(response);   
+                                //toastr.error("Verifique si la Sesión sigue activa.</br>Verifique si los datos fueron actualizados.");            
+                            }
+                    } catch (error) {
+                        toastr.error(error);
+                    }
+                    
+                },
+                error: function (response) {
+                    toastr.error(response.responseText + ' ' + response.status);
+                }
+            });
+            $('#guardarEdicion').prop("disabled", false);
+        }
+        
+    }
+
+    function GetTipoEventoActualizado() {
+        $.ajax({
+                url: '@Url.Action("GetTipoEventoActualizado", "Admin")',
+                type: "GET",
+                data: {
+                    id: $('#idElementEdit').val()
+                   
+            }, success: function (result) {
+                    $('#elementos').html(result);
+
+            }, error: function (result) {
+                    toastr.error(result.responseText + ' ' + result.status);
+            }
+        });
+
+    }
+
+    $("#NombreEdicion").keypress(function (e) {
+        if (e.which == 13) {
+            e.preventDefault();
+            guardarTipoEventoEditado();
+            //return false;
+        }
+    });
+
+    @*function eliminarTipoDeEvento() {
+            var idOculto = document.getElementById('idDeleteHidden');
+            var Id = parseInt(idOculto.innerText);
+            
+            $.ajax({
+                url: '@Url.Action("EliminarTipoDeEvento", "Admin")',
+                type: "Post",
+                data: {
+                    id: Id
+                },
+                success: function (result) {
+                    try {
+                        if (result == "Registro eliminado con éxito") {
+                            filaARemover.remove();
+                            filaARemover = undefined;
+                        }                       
+                        toastr.info(result);
+                    } catch (error) {
+                        toastr.error(error);
+                    }
+                },
+                error: function (result) {
+                    toastr.error(result.responseText);
+                }
+            });
+
+    }*@
+
+    function eliminarTipoDeEvento() {
+        var idOculto = document.getElementById('idDeleteHidden');
+        var Id = parseInt(idOculto.innerText);
+       var token = '@Html.AntiForgeryToken()';
+         var eptoken = $(token).val();
+         $('#btnCerrarModalEliminarTipoEvento').click();  
+        $.ajax({
+            url: '@Url.Action("EliminarTipoDeEvento","Admin")',
+            type: "Post",
+            data: {
+                tipoEventoId: Id,
+                __RequestVerificationToken: eptoken
+            },
+            success: function (result) {
+                try {
+                    
+                    if (result == "Registro eliminado con éxito") {
+                        filaARemover.remove();
+                        filaARemover = undefined;
+                        toastr.success(result);
+                    } else {
+                        toastr.error(result);
+                    }
+                } catch (error) {
+                    toastr.error(error);
+                }
+            },
+            error: function (result) {
+                toastr.error(result.responseText);
+            }
+        });
+
+    }
+
+   
+
+    function validarRelaciones() {
+        
+         var idOculto = document.getElementById('idDeleteHidden');
+         var Id = parseInt(idOculto.innerText);
+          var token = '@Html.AntiForgeryToken()';
+          var vrtoken = $(token).val();
+        $("#btnDelete").prop("disabled",false);
+            $.ajax({
+                url: '@Url.Action("TieneRelacionesElTipoDeEvento", "Admin")',
+                type: "Post",
+                data: {
+                    tipoEventoId: Id,
+                    __RequestVerificationToken: vrtoken  
+                },
+                success: function (result) {
+                    $('#divExisteRelacionesTipoDeEvento').html(result);
+                    $("#btnDelete").prop("disabled",true);
+                },
+                error: function (result) {
+                    toastr.error(result.responseText);
+                }
+            });
+        $("#btnDelete").prop("disabled", false);
+    }
+
+    function cargarIdModalDelete(id, element) {
+        $('#idDeleteHidden').html(id);
+        filaARemover = $(element).parent().parent();
+        $('#divExisteRelacionesTipoDeEvento').empty();
+        $("#btnDelete").prop("disabled", false);
+    }
+
+    function LimpiarTodo() {
+        $('#elementos').empty();
+        $('#filtro').val('');
+    }
+
+    function editarTipoEvento(Id) {
+        deshabilitarGuardarEdicion();
+        $.ajax({
+            url: '@Url.Action("EditarTipoDeEvento", "Admin")',
+            type: "GET",
+            data: {
+                id: Id
+            },
+            success: function (response) {
+                try {
+                    $('#idElementEdit').val(response.Id);
+                    $('#NombreEdicion').val(response.Nombre);
+                    $('#campoActivacion').prop('checked', response.Deleted);
+                    
+                } catch (response) {
+                    toastr.error(response);
+                }
+            },
+            error: function (response) {
+                toastr.error(response.responseText + ' ' + response.status);
+            }
+        });
+    }
+
+
+</script>
+
+

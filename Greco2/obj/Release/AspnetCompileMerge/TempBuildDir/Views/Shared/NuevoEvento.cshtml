@@ -1,0 +1,219 @@
+﻿@model Greco2.Models.Evento.EventoModelView
+
+<style>
+    .form-control {
+        /*background-color: #f9f9f9;*/
+        height: 26px;        
+    }
+
+    #divFormEditEventoModal > .row {
+        margin-top: 1px;
+        margin-bottom: 1px;
+    }
+    /*.row {
+        margin-bottom:-5px;
+    }*/
+    
+    /*textarea {
+    height:80px;
+    }*/
+    
+</style>
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+<div class="form-horizontal" style="margin-left:60px;" id="divFormEditEventoModal">
+
+    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+
+
+    @*<br />*@
+    <div class="row">
+        
+            <div class="col-xs-5 col-md-5">
+                @Html.LabelFor(model => model.evento.CONTESTADO)
+            </div>
+        
+            <div class="col-xs-5 col-md-5">
+                @{
+
+                    var contestadoBool = (Model.evento.CONTESTADO == 1) ? true : false;
+                    if (User.IsInRole("Estudio Externo"))
+                    {
+                        <input type="checkbox" id="ContestadoEE" name="estaContestadoEE" checked="@contestadoBool" class="col-xs-1" style="margin-left:-45px;" disabled/>
+                    }
+                    else
+                    {
+                        <input type="checkbox" id="ContestadoEE" name="estaContestadoEE" checked="@contestadoBool" class="col-xs-1" style="margin-left:-45px;" />
+                    }
+                    @Html.ValidationMessageFor(model => model.evento.CONTESTADO, "", new { @class = "text-danger" })
+                }
+            </div>
+        </div>
+
+
+    <div class="row">
+        <div class="col-xs-5 col-md-5">
+            <label style="margin-right:20px;">Tipo Evento:</label>
+        </div>
+        <div class="col-xs-5 col-md-5">
+            @Html.DropDownListFor(model => model.evento.TipoEventoId, Model.tipoEventos, "", new { @class = "form-control", @id = "comboTipoEventoEE", style = "margin-left:-30px;" })
+        </div>
+    </div>
+
+
+
+    <div class="row">
+        <div class="col-xs-5 col-md-5">
+            <label>Fecha Vencimiento:</label>
+        </div>
+        @{
+            var fechaVencimiento = @Model.fechaVencimiento != null ? @Model.fechaVencimiento.Value.ToString("yyyy-MM-dd"):"";
+            <div class="col-xs-5 col-md-5">
+                <input type="date" id="fechaVencimientoEE" class="form-control" style="margin-left:-30px;" value= @fechaVencimiento />
+
+            </div>
+
+        }
+        @*<div class="col-xs-5 col-md-5">
+            <input type="date" id="fechaVencimientoEE" class="form-control" style="margin-left:-30px;" value="@Model.fechaVencimiento.Date.ToString("yyyy-MM-dd")" />
+
+        </div>*@
+    </div>
+    <div class="row">
+        <div class="col-xs-5 col-md-5">
+            <label>Hora Vencimiento:</label>
+        </div>
+        <div class="col-xs-5 col-md-5">
+            <input type="time" id="horaVencimientoEE" class="form-control" style="margin-left:-30px;" value="@Model.horaVencimiento" />
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-xs-5 col-md-5">
+            <label style="margin-right:20px;">Req. Informe:</label>
+        </div>
+        <div class="col-xs-5 col-md-5">
+            @Html.DropDownListFor(model => model.evento.REQUERIMIENTOINFORME, Model.reqsInforme, "", new { @class = "form-control", id = "comboReqInformeEE", style = "margin-left:-30px;" })
+        </div>
+    </div>
+    @if (User.IsInRole("ESTUDIO"))
+    {
+        <div class="row">
+            <div class="col-xs-5 col-md-5">
+                <label style="margin-right:20px;">Solucionado:</label>
+            </div>
+            <div class="col-xs-5 col-md-5">
+                @Html.DropDownListFor(model => model.evento.SOLUCIONADO, Model.solucionados, "", new { @class = "form-control", id = "comboSolucionadoEE", style = "margin-left:-30px;",disabled="disabled" })
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-xs-5 col-md-5">
+                <label>Responsable:</label>
+            </div>
+            <div class="col-xs-5 col-md-5">
+                @Html.DropDownListFor(model => model.evento.ResIntId, Model.responsables, "", new { @class = "form-control", id = "responsableInternoEventoEdicion", style = "margin-left:-30px;", disabled = "disabled" })
+
+                <input type="hidden" id="respInter" value="@Model.ResIntId" />
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-xs-5 col-md-5">
+                @Html.LabelFor(model => model.evento.Observacion, htmlAttributes: new { style = "margin-right:20px;"})
+            </div>
+            <div class="col-xs-5 col-md-5">
+
+                <textarea class=" form-control" style="max-height:100px;margin-left:-30px;" id="observacionEE" rows="6" maxlength="500">@Model.evento.Observacion</textarea>
+            </div>
+        </div>
+            }
+            else {
+            <div class="row">
+                <div class="col-xs-5 col-md-5">
+                    <label style="margin-right:20px;">Solucionado:</label>
+                </div>
+                <div class="col-xs-5 col-md-5">
+                    @Html.DropDownListFor(model => model.evento.SOLUCIONADO, Model.solucionados, "", new { @class = "form-control", id = "comboSolucionadoEE", style = "margin-left:-30px;" })
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-xs-5 col-md-5">
+                    <label>Responsable:</label>
+                </div>
+                <div class="col-xs-5 col-md-5">
+                    @Html.DropDownListFor(model => model.evento.ResIntId, Model.responsables, "", new { @class = "form-control", id = "responsableInternoEventoEdicion", style = "margin-left:-30px;" })
+
+                    <input type="hidden" id="respInter" value="@Model.ResIntId" />
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-xs-5 col-md-5">
+                    @Html.LabelFor(model => model.evento.Observacion, htmlAttributes: new { style = "margin-right:20px;" })
+                </div>
+                <div class="col-xs-5 col-md-5">
+
+                    <textarea class="form-control" style="margin-left:-30px;max-height:100px;" id="observacionEE" rows="10" maxlength="500">@Model.evento.Observacion</textarea>
+                </div>
+            </div>
+                }
+                @*<div class="row">
+                    <div class="col-xs-5 col-md-5">
+                        <label style="margin-right:20px;">Solucionado:</label>
+                    </div>
+                    <div class="col-xs-5 col-md-5">
+                        @Html.DropDownListFor(model => model.evento.SOLUCIONADO, Model.solucionados, "", new { @class = "form-control", id = "comboSolucionadoEE", style = "margin-left:-30px;" })
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-xs-5 col-md-5">
+                        <label>Responsable:</label>
+                    </div>
+                    <div class="col-xs-5 col-md-5">
+                        @Html.DropDownListFor(model => model.evento.ResIntId, Model.responsables, "", new { @class = "form-control", id = "responsableInternoEventoEdicion", style = "margin-left:-30px;" })
+
+                        <input type="hidden" id="respInter" value="@Model.ResIntId" />
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-xs-5 col-md-5">
+                        @Html.LabelFor(model => model.evento.Observacion, htmlAttributes: new { style = "margin-right:20px;" })
+                    </div>
+                    <div class="col-xs-5 col-md-5">
+
+                        <textarea class=" form-control" style="max-height:100px;margin-left:-30px;" id="observacionEE">@Model.evento.Observacion</textarea>
+                    </div>
+
+                </div>*@
+                <br />
+                <input type="text" value="@Model.evento.FECHACREACION" id="fechaCreacionEE" class="text-info" style="border-style:none;" />
+                <input type="text" value="@Model.evento.EventoId" id="idEventoAEditar" class="text-info text-right" style="border-style:none;margin-left:50px;" />
+            </div>
+            }
+
+            <script>
+                $(window).on('load', function () {
+                    var responsable = $("#respInter").val();
+                    console.log(responsable);
+
+                    $("#responsableInternoEventoEdicion option").each(function (i, valor) {
+                        console.log(i + ' : ' + $(valor).val())
+                        if ($(valor).val() == responsable) {
+                            $(valor).prop('selected', true);
+                            console.log('son iguales');
+                        }
+                    });
+
+                });
+            </script>
+
+
+

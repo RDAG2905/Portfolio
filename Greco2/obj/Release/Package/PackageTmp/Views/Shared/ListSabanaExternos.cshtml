@@ -1,0 +1,217 @@
+﻿@*@using Greco2.Models.Denuncia
+    @model IEnumerable<ListaSabanaSP>*@
+@using Greco2.Models.Paginacion
+@model ResultadoDenuncias
+
+<style>
+    th {
+        font-size: 12px;
+    }
+
+    td {
+        /*background-image: linear-gradient(white 70%,#f2f2f2);*/
+        font-size: 12px;
+    }
+
+    thead {
+        /*background-image: linear-gradient(white 30%,#e6e6e6);*/
+        background-color: #f5f5f5;
+    }
+</style>
+@*@{
+        var total = "Total : " + @Model.Count().ToString();
+        <label>@total</label>
+    }*@
+
+@if (Model.listaDenuncias.Any())
+{
+    <div>
+        <div @*style="max-height: 300px;overflow: auto;"*@>
+
+            <table class="table table-bordered" id="tablalistaSabana" style="max-width:1300px;background-color:white;border:1px solid lightgray;border-radius:4px;padding:10px 10px 10px 10px;">
+
+                <thead>
+
+                    <tr class="text-primary">
+                        <th style="padding-left:20px;">DenunciaId</th>
+                        <th nowrap>Nro Expediente</th>
+                        <th>Fecha</th>
+                        <th>Organismo</th>
+                        <th>Servicio</th>
+                        <th>Estudio</th>
+                        <th>Denunciante</th>
+                        <th>Estado Actual</th>
+                        <th>Tipo Proceso</th>
+
+                        @*<th style="text-align:center;">Acción</th>*@
+                    </tr>
+                </thead>
+                <tbody style="text-align:left;">
+
+
+                    @foreach (var item in @Model.listaDenuncias)
+                    {
+                        <tr>
+
+
+                            <td class="text-primary" style="width:80px;text-align:center;">
+                                @Html.ActionLink(@item.DenunciaId.ToString(), "GetDenunciaByIdExternos", "Denuncias", new { id = @item.DenunciaId }, null)
+                            </td>
+                            <td width="100px">
+                                @Html.DisplayFor(modelItem => item.Expediente)
+                            </td>
+                            <td width="100px">
+                                @Convert.ToString(string.Format("{0:dd/MM/yyyy}", item.Fecha_Creacion))
+
+                            </td>
+                            <td width="150px">
+                                @Html.DisplayFor(modelItem => item.Organismo)
+                            </td>
+                            <td width="100px">
+                                @Html.DisplayFor(modelItem => item.Servicio)
+                            </td>
+                            <td width="100px">
+                                @Html.DisplayFor(modelItem => item.Estudio)
+                            </td>
+                            @{
+                                var denunciante = item.Apellido + ',' + item.Nombre;
+                                <td width="150px">
+                                    @denunciante
+                                </td>
+                            }
+
+                            <td width="100px">
+                                @Html.DisplayFor(modelItem => item.Estado_Actual)
+                            </td>
+                            <td width="120px">
+                                @Html.DisplayFor(modelItem => item.Tipo_Proceso)
+                            </td>
+                            @*<td style="text-align:center;background-color:#f9f9f9;">
+                                @if (User.Identity.IsAuthenticated)
+                                {
+                                    if (!User.IsInRole("ANALISTA") && !User.IsInRole("ESTUDIO"))
+                                    {
+                                        if (item.DELETED != true)
+                                        {
+                                            <a href="#" onclick="ConfirmarEliminarDenuncia(@item.DenunciaId,this)" data-toggle="modal" data-target="#deleteDenunciasModal" class="btn btn-danger btn-sm">
+                                                <span class="glyphicon glyphicon-trash"></span>
+                                            </a>
+                                        }
+                                        else
+                                        {
+                                            <a href="#" onclick="getMotivoDeBorrado(@item.DenunciaId,this)" data-toggle="modal" data-target="#deleteDenunciasModal" class="btn btn-info btn-sm">
+                                                <span>Mostrar Motivo</span>
+                                            </a>
+                                        }
+                                    }
+                                }
+                            </td>*@
+
+
+
+
+                        </tr>
+
+                    }
+
+                </tbody>
+            </table>
+            @{
+                int Inicial = 1;
+                var radio = 7;
+                var cantidadMaximaDePaginas = radio * 2 + 1;
+                int Final = (Model.TotalDePaginas > cantidadMaximaDePaginas) ? cantidadMaximaDePaginas : Model.TotalDePaginas;
+                if (Model.PaginaActual > radio + 1)
+                {
+                    Inicial = Model.PaginaActual - radio;
+                    if (Model.TotalDePaginas > Model.PaginaActual + radio)
+                    {
+                        Final = Model.PaginaActual + radio;
+                    }
+                    else
+                    {
+                        Final = Model.TotalDePaginas;
+                    }
+                }
+                <div class="text-center" style="overflow:auto;background-color:#f9f9f9;">
+
+                    <ul class="pagination">
+
+                        @for (int i = Inicial; i <= Final; i++)
+
+                        {
+
+                            if (i != Model.PaginaActual)
+                            {
+                                <li>
+                                    <a href="javascript:PagerClick(@i);">@i</a>
+                                </li>
+                            }
+                            else
+                            {
+                                <li class="active">
+                                    <span class="active">@i</span>
+                                </li>
+                            }
+
+                        }
+                    </ul>
+                </div>
+                <input type="hidden" id="hfCurrentPageIndex" name="currentPageIndex" />
+            }
+
+        </div>
+        <footer class="text-center text-primary" style="height:30px;padding-top:5px;">
+            Total Denuncias : @Model.TotalDeRegistros.ToString()
+        </footer>
+    </div>
+}
+else
+{
+
+    <div>
+        <h5 class="text-primary text-center">No se encontraron coincidencias</h5>
+    </div>
+
+}
+
+
+@*----------- Inicio Modal Delete----------*@
+
+<div class="modal fade" id="deleteDenunciasModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header" style="background-color:#f9f9f9;height:50px;">
+                <button type="button" class="close" data-dismiss="modal">×</button>
+            </div>
+            <div class="text-center" style="display:none;" id="divLoadingDenunciasED">
+                <img src="@Url.Content("~/Images/4.gif")" />
+            </div>
+            <div id="deleteDenunciaModalContent" class="modal-body text-info" style="padding-left:30px;padding-right:30px;text-align:center;">
+
+
+            </div>
+            <form>
+                @Html.AntiForgeryToken()
+                <h4 hidden id="DenunciaDeleteElement"></h4>
+            </form>
+            <div id="deleteFooterContent" class="modal-footer" style="height:60px">
+                @*<button type="button" class="btn btn-danger" id="btnEliminarDenuncia" onclick="eliminarDenuncia()">Eliminar</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal" id="btnCancelDelete">Cancelar</button>*@
+                <input type="button" class="btn btn-danger" id="btnEliminarDenuncia" onclick="eliminarDenuncia()" value="Eliminar" />
+                <input type="button" class="btn btn-default" data-dismiss="modal" id="btnCancelDelete" value="Cancelar" />
+            </div>
+        </div>
+    </div>
+</div>
+
+@section script{
+    <script>
+        $("a").click(function () {
+            showLoader();
+        });
+
+    </script>
+
+
+}

@@ -1,0 +1,59 @@
+﻿@model Greco2.Models.Denunciante.DenuncianteDto
+
+<style>
+    label {
+    margin-left:-10px;
+    }
+
+    div * {
+    font-size:12px;
+    }
+</style>
+
+@if (Model != null)
+{
+   
+        <div class="row">
+            <div class="col-md-1 col-xs-6">
+                <label style="margin-left:-27px;">Nombre: </label>
+            </div>
+            <div class="col-md-10 col-xs-6">
+                <span id="nombre" class="text-primary" style="margin-left:5px;font-size:12px;display:inline-block;">@Model.nombre</span>
+            </div>
+        </div>
+
+
+    
+    <div class="row">
+        <div class="col-md-1 col-xs-6">
+            <label style="margin-left:-27px;">Apellido: </label>
+        </div>
+        <div class="col-md-10 col-xs-6">
+            <span id="apellido" class="text-primary" style="margin-left:5px;font-size:12px;display:inline-block;">@Model.apellido</span>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-1 col-xs-6">
+            <label style="margin-left:-27px;">Dni: </label>
+        </div>
+
+        <div class="col-md-9 col-xs-6">
+            <span id="dni"  class="text-primary" style="margin-left:5px;font-size:12px;display:inline-block;"> @Model.NroDocumento</span>
+        </div>
+        <input id="idDenuncianteResult" type="hidden" value="@Model.DenuncianteId"  style="border-radius:4px;text-align:center;" />
+    </div>
+  
+
+   
+    @*</div>*@
+}
+else
+{
+    <div class="row">
+        <text>Búsqueda Sin Resultados</text>
+        <input id="idDenuncianteResult" type="hidden" value="@Model.DenuncianteId" class="col-xs-1" style="border-radius:4px;text-align:center;" />
+        <button class="btn btn-info btn-sm" id="CleanDenuncianteResult" onclick="limpiarDenuncianteResult()"><i class="glyphicon glyphicon-backward"></i></button>
+    </div>
+
+}

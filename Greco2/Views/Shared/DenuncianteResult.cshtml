@@ -1,0 +1,23 @@
+﻿@model Greco2.Models.Denunciante.DenuncianteModelView
+
+
+@if (Model.denunciante != null)
+{
+<div class="row" id="divDatosDenunciante">
+    <text class="col-xs-4">@Model.denunciante.nombre</text>
+    <text class="col-xs-2">@Model.denunciante.apellido</text>
+    <text class="col-xs-1">@Model.denunciante.NroDocumento</text>
+    <button class="btn btn-info btn-sm" id="CleanDenuncianteResult" onclick="limpiarDenuncianteResult()"><i class="glyphicon glyphicon-backward"></i></button>
+    @*<label class="col-xs-1">Id: </label>*@
+    <input id="idDenuncianteResult" type="hidden" value="@Model.denunciante.DenuncianteId" class="col-xs-1" style="border-radius:4px;text-align:center;" />
+</div>
+}
+else
+{
+    <div class="row">
+        <text>Búsqueda Sin Resultados</text>
+        <input id="idDenuncianteResult" type="hidden" value="@Model.denunciante.DenuncianteId" class="col-xs-1" style="border-radius:4px;text-align:center;" />
+        <button class="btn btn-info btn-sm" id="CleanDenuncianteResult" onclick="limpiarDenuncianteResult()"><i class="glyphicon glyphicon-backward"></i></button>
+    </div>
+
+}

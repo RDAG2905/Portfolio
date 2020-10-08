@@ -1,0 +1,14 @@
+﻿@model List<List<string>>
+
+
+@if (Model.Any())
+{
+<ul class="alert alert-danger">
+   
+    @foreach (var item in Model)
+    {
+        @*<li class="text-danger" style="margin-left:-20px;">Verifique el item de la posición Nro : @item[0]..  El Nro. de Documento: @item[3]  se encuentra asignado a otro Denunciante </li>*@
+        <li class="text-center" style="margin-left:-20px;">Verifique el item de la posición Nro : @item[0]..  El Nro. de Documento: @item[3]  ya se encuentra asignado a un Denunciante </li>
+    }
+</ul>
+}

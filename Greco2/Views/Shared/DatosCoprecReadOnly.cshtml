@@ -1,0 +1,214 @@
+﻿@model Greco2.Models.DatosCoprec.DatosCoprec
+
+<style>
+    .error {
+        border: 2px solid orangered;
+    }
+
+    .form-control {
+        width: 220px;
+        height: 30px;
+        font-size: 12px;
+    }
+
+    #containerVueltaCoprec {
+        margin-left: 100px;
+        width: 800px;
+        background-color: #f9f9f9;
+        font-size: 11px;
+        padding-bottom: 20px;
+        padding-top: 25px;
+        border-radius: 4px;
+    }
+</style>
+<br />
+<div class="container-fluid" id="containerVueltaCoprec">
+
+
+    <div class="row">
+        <div class="col-xs-5 col-md-offset-2">
+            <label>Nro. Gestión</label>
+        </div>
+        <div class="col-xs-6 col-md-4">
+            <input type="text" class="form-control" id="inputNroGestion" value="@Model.NroGestionCoprec" readonly />
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-xs-5 col-md-offset-2">
+            <label>Honorarios</label>
+        </div>
+        <div class="col-xs-6 col-md-4">
+            <input type="number" class="form-control" id="inputHonorarios" value="@Model.HonorariosCoprec" readonly />
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-xs-5 col-md-offset-2">
+            <label>Fecha Gestión Honorarios</label>
+        </div>
+        <div class="col-xs-6 col-md-4">
+            @{
+                var fechaGestionHonorarios = (Model.FechaGestionHonorarios != null) ? @Model.FechaGestionHonorarios.Value.ToString("yyyy-MM-dd") : "";
+                <input type="date" class="form-control" id="inputFechaGestionHonorarios" @*style="margin-left: -80px;"*@ value="@fechaGestionHonorarios" readonly />
+            }
+
+            
+
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-xs-5 col-md-offset-2">
+            <label>Monto Acordado</label>
+        </div>
+        <div class="col-xs-6 col-md-4">
+            <input type="number" class="form-control" id="inputMontoAcordado" value="@Model.MontoAcordado" readonly/>
+        </div>
+    </div>
+
+
+
+    <div class="row">
+        <div class="col-xs-5 col-md-offset-2">
+            <label>Arancel</label>
+        </div>
+        <div class="col-xs-5 col-md-4">
+            <input type="number" class="form-control" id="inputArancel" value="@Model.Arancel" readonly/>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-xs-5 col-md-offset-2">
+
+            <label>Fecha Gestión Arancel</label>
+        </div>
+        <div class="col-xs-5 col-md-4">
+            @{
+                var fechaGestionArancel = (Model.FechaGestionArancel != null) ? @Model.FechaGestionArancel.Value.ToString("yyyy-MM-dd") : "";
+                <input type="date" class="form-control" id="inputFechaGestionArancel" @*style="margin-left: -80px;"*@ value="@fechaGestionArancel" readonly />
+            }
+
+            
+
+        </div>
+    </div>
+
+</div>
+
+@*@using (Html.BeginForm())
+    {
+        @Html.AntiForgeryToken()
+
+
+
+
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        <br />
+        <div class="container-fluid" id="containerVueltaCoprec">
+            <input type="hidden" value="@Model.Id" id="DatosCoprec" />
+            <br />
+            <div class="row">
+                <div class="col-xs-5 col-md-offset-2">
+                    @Html.LabelFor(model => model.NroGestion)
+                </div>
+                <div class="col-xs-6 col-md-4">
+                    <input type="number" value="@Model.NroGestion" class="form-control" id="inputNroGestion" />
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-xs-5 col-md-offset-2">
+
+                    @Html.LabelFor(model => model.Honorarios)
+                </div>
+                <div class="col-xs-6 col-md-4">
+                    <input type="number" value="@Model.Honorarios" class="form-control" id="inputHonorarios" />
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-xs-5 col-md-offset-2">
+                    @Html.LabelFor(model => model.FechaGestionHonorarios)
+                </div>
+                <div class="col-xs-6 col-md-4">
+                    @if (Model.Id > 0 && Model.FechaGestionHonorarios != null)
+                    {
+                        <input type="date" value="@Model.FechaGestionHonorarios.Date.ToString("yyyy-MM-dd")" class="form-control" id="inputFechaGestionHonorarios" />
+                    }
+                    else
+                    {
+                        <input type="date" value="@Model.FechaGestionHonorarios" class="form-control" id="inputFechaGestionHonorarios" />
+                    }
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-xs-5 col-md-offset-2">
+                    @Html.LabelFor(model => model.MontoAcordado)
+                </div>
+                <div class="col-xs-6 col-md-4">
+                    <input type="number" value="@Model.MontoAcordado" class="form-control" id="inputMontoAcordado" />
+                </div>
+            </div>
+
+
+
+            <div class="row">
+                <div class="col-xs-5 col-md-offset-2">
+
+                    @Html.LabelFor(model => model.Arancel)
+                </div>
+                <div class="col-xs-5 col-md-4">
+                    <input type="number" value="@Model.Arancel" class="form-control" id="inputArancel" />
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-xs-5 col-md-offset-2">
+
+                    @Html.LabelFor(model => model.FechaGestionArancel)
+                </div>
+                <div class="col-xs-5 col-md-4">
+                    @if (Model.Id > 0 && Model.FechaGestionArancel != null)
+                    {
+                        <input type="date" value="@Model.FechaGestionArancel.Date.ToString("yyyy-MM-dd")" class="form-control" id="inputFechaGestionArancel" />
+                    }
+                    else
+                    {
+                        <input type="date" value="@Model.FechaGestionArancel" class="form-control" id="inputFechaGestionArancel" />
+                    }
+                </div>
+            </div>
+
+        </div>
+    }
+
+
+    <br />*@
+
+
+@*<div class="bordeBotonera">
+        <div class="row">
+            @if (Model.DenunciaId > 0)
+            {
+                <input type="button" class="btn btn-primary btn-sm btnGuardar" value="Editar" id="EditarDatosCoprec" onclick="editarDatosCoprec()" />
+            }
+            else
+            {
+                <input type="button" class="btn btn-primary btn-sm btnGuardar" value="Guardar" id="GuardarDatosCoprec" onclick="validarDatosCoprec()" />
+            }
+
+        </div>
+    </div>*@
+@*onclick="guardarDatosCoprec()"*@
+<script>
+                                        //function validarDatosCoprec(){
+                                        //    if (!$('#inputHonorarios').patternMismatch) {
+                                        //        $('#inputHonorarios').addClass("error");
+                                        //        //alert('No match');
+                                        //    }
+
+                                        //}
+
+                                        //$('#inputHonorarios').on('focus', function () {
+                                        //    $(this).removeClass('error');
+                                        //});
+
+
+</script>
+

@@ -1,0 +1,70 @@
+﻿@model Greco2.Models.Grupo.GrupoSP
+
+<style>
+    th {
+        font-size: 11px;
+        background-color: #f5f5f5;
+    }
+
+    td {
+        text-align: left;
+        font-size: 10px;
+    }
+</style>
+
+
+<input class="text-primary" type="hidden" id="grupoDenuncianteId" style="margin-left:-10px;" value="@Model.Id" />
+<input type="hidden" id="nombreDenunciantePrincipal" value="@Model.grupoDenunciantes.First().nombre" />
+<input type="hidden" id="apellidoDenunciantePrincipal" value="@Model.grupoDenunciantes.First().apellido" />
+<input type="hidden" id="dniDenunciantePrincipal" value="@Model.grupoDenunciantes.First().DNI" />
+<input type="hidden" id="idDenunciantePrincipal" value="@Model.grupoDenunciantes.First().DenuncianteId.ToString()" />
+@*<input type="text" id="DenunciantePrincipalId" value="@Model.IdDenunciantePrincipal.ToString()" />*@
+@{
+    var denunciantePrincipal = @Model.grupoDenunciantes.First().nombre + "," + @Model.grupoDenunciantes.First().apellido + " y otros";
+}
+<input type="hidden" value="@denunciantePrincipal" id="datosDenunciantePrincipal" />
+
+
+
+<div class="list-group-item" style="max-height:420px;overflow:auto;">
+    <table id="listaDB" class="table" style="background-color:white;">
+        <thead>
+            <tr>
+                <th></th>
+                <th>Nombre</th>
+                <th>Apellido</th>
+                <th>Nro.de Documento</th>
+                <th></th>
+                @*<th style="color:#808080;font-size:12px;">@Html.Raw("GrupoId : " + @Model.Id)</th>*@
+            </tr>
+        </thead>
+
+        @if (Model.grupoDenunciantes.Any())
+        {
+            var posicion = 0;
+            var idFila = "";
+            foreach (var item in Model.grupoDenunciantes)
+            {
+                posicion++;
+                idFila = "filaGR" + posicion;
+
+                <tr id=@idFila>
+                    <td>@posicion</td>
+                    <td>@item.nombre</td>
+                    <td>@item.apellido</td>
+                    <td>@item.DNI</td>
+                    @*<td><button class="btn btn-link" onclick="getDenuncianteGrupoEdicion(this);" data-toggle="modal" data-target="#GrupoDenuncianteEdicionModal" style="height:35px;width:40px;margin-right:-70px;justify-content:center;"><i class="glyphicon glyphicon-pencil"></i></button></td>
+                    <td><button class="btn btn-link" style="height:35px;width:40px;margin-left:15px;" onclick="seleccionaElementoAQuitar(@item.DenuncianteId,this)"  data-toggle="modal" data-target="#DeleteDenuncianteFromGrupoWarningModal"><i class="glyphicon glyphicon-trash"></i></button></td>
+                    <td>@item.DenuncianteId</td>*@
+                </tr>
+
+
+
+            }
+        }
+    </table>
+</div>
+
+
+
+

@@ -1,0 +1,358 @@
+﻿@*@model IEnumerable<Greco.Models.ListDenuncias.ListDenunciasModelView>*@
+@model Greco2.Models.Denuncia.ListDenunciasModelView
+
+<style type="text/css">
+    .columnaIcono:hover {
+    }
+
+
+    .modal fade {
+        border-radius: 2px;
+    }
+
+    #leyenda {
+        padding-right: 50px;
+    }
+
+    #DeleteInfo {
+        display: none;
+        color: black;
+        /*background-color: #888844;*/
+        /*background-color: #666600;*/
+        /*background-color: olive;*/
+        background-color: dodgerblue;
+        /*background-color: #808080;*/
+        /*background-color: #b3b3b3;*/
+        font-weight: 600;
+        padding: 4px 150px 4px 150px;
+        font-size: small;
+        border-radius: 6px;
+    }
+
+    .modalErrorMessage {
+        color: brown;
+    }
+
+    .divSubtituloLista {
+        /*background-color: cadetblue;*/
+        /*background-color: lightgray;*/
+        /*background-color: lightsteelblue;*/
+        /*background-color: silver;*/
+        /*background-color: darkkhaki;*/
+        /*background-color: #999966*/ /*#b8b894*/
+        /*background-color: #c2c2a3;*/
+        background-color: #b8b894;
+        /*background-color: #999999;*/
+        /*background-color: #cccccc;*/
+        height: 35px;
+        width: 100%;
+        padding-top: 8px;
+        /*padding-left: 28px;*/
+        font-weight: 800;
+        text-justify: auto;
+        /*color: #0073e6;*/
+    }
+
+    .divSubtituloListado {
+        /*background-color: cadetblue;*/
+        background-color: #0d0d0d;
+        color: lightcyan;
+        height: 40px;
+        width: 100%;
+        padding-top: 8px;
+        padding-left: 18px;
+        border-bottom: 5px solid;
+        border-bottom-color: #3d3d29;
+        margin-top: 10px;
+        border-radius: 2px;
+    }
+
+    .btnCerrarModal {
+        /*background-color: #b8b894;*/
+        /*color: lightgray;*/
+        border-radius: 6px;
+        padding: 5px 10px 5px 10px;
+        font-weight: 600;
+    }
+
+    .btnAceptarBorrar {
+        /*background-color: #b8b894;*/
+        /*color: lightgray;*/
+        border-radius: 6px;
+        padding: 5px 10px 5px 10px;
+        font-weight: 600;
+    }
+
+    button:hover {
+        background-color: #b8b894;
+    }
+</style>
+
+@*<div class="divSubtituloListado">*@
+   
+  
+
+        @*<label> RESULTADOS DE LA BÚSQUEDA </label>*@
+      <label id="DeleteInfo">Se ha eliminado el Expediente N°...</label>
+
+
+ 
+  @*<div class="jumbotron">*@
+      <div class="borde">
+          <form method="post">
+              <table class="table table-bordered table-hover" id="tb">
+                  <tr @*class="divSubtituloLista"*@>
+                      <th></th>
+                      <th>
+                          Expediente_ID
+                          @*@Html.DisplayNameFor(model => model.EXPEDIENTE_ID)*@
+                      </th>
+                      <th>
+                          FCreacion
+                          @*@Html.DisplayNameFor(model => model.FCREACION)*@
+                      </th>
+                      <th>
+                          Organismo_ID
+                          @*@Html.DisplayNameFor(model => model.ORGANISMO_ID)*@
+                      </th>
+                      <th>
+                          Serv_Den_ID
+                          @*@Html.DisplayNameFor(model => model.SERV_DEN_ID)*@
+                      </th>
+                      <th>
+                          Estudio_ID
+                          @*@Html.DisplayNameFor(model => model.ESTUDIO_ID)*@
+                      </th>
+                      <th>
+                          Denunciante_ID
+                          @*@Html.DisplayNameFor(model => model.DENUNCIANTE_ID)*@
+                      </th>
+                      <th>
+                          Etapa_ID
+                          @*@Html.DisplayNameFor(model => model.ETAPA_ID)*@
+                      </th>
+                      <th>
+                          Tipo_Pro_ID
+                          @*@Html.DisplayNameFor(model => model.TIPO_PRO_ID)*@
+                      </th>
+                      <th class="columnaIcono">@*Editar*@</th>
+                      <th class="columnaIcono"></th>@*Eliminar*@
+                  </tr>
+                  @foreach (var item in Model.denuncias)
+                  {
+
+                      <tr onclick="mostrarDenuncia(this)" @*class="trZebra" id="@item.DenunciaId"*@>
+                          @*<td>@Html.ActionLink(@item.DenunciaId.ToString(), "GetDenunciaById", "Home", "", new { id = @item.DenunciaId })</td>*@
+                          @*<td>@Html.ActionLink(@item.ID,"Edit","Denuncias","",new {id = @item.ID })</td>*@
+                          @*<td id="LinkDenunciaId"><a href="/Denuncias/GetDenunciaById/@item.DenunciaId">@item.DenunciaId</a></td>*@
+                          @*<td><input class="btn-link" id="LinkDenunciaId"value="/><a>@item.DenunciaId</a></td>*@
+                          <td>@Html.ActionLink(@item.DenunciaId.ToString(), "GetDenunciaById", new { id = item.DenunciaId},new { target = "_blank" })</td>@*<a>@item.DenunciaId</a>*@
+                          <td>
+                              @Html.DisplayFor(modelItem => item.EXPEDIENTE_ID)
+                          </td>
+                          <td>
+                              @Html.DisplayFor(modelItem => item.FCREACION)
+                          </td>
+                          <td>
+                              @Html.DisplayFor(modelItem => item.ORGANISMO_ID)
+                          </td>
+                          <td>
+                              @Html.DisplayFor(modelItem => item.SERV_DEN_ID)
+                          </td>
+                          <td>
+                              @Html.DisplayFor(modelItem => item.ESTUDIO_ID)
+                          </td>
+                          <td>
+                              @Html.DisplayFor(modelItem => item.DENUNCIANTE_ID)
+                          </td>
+                          <td>
+                              @Html.DisplayFor(modelItem => item.ETAPA_ID)
+                          </td>
+                          <td>
+                              @Html.DisplayFor(modelItem => item.TIPO_PRO_ID)
+                          </td>
+
+                          <td class="columnaIcono">
+                              <a href="#">
+                                  <span class="glyphicon glyphicon-pencil" id="EditElement" data-toggle="" data- data-target="#myDiv" @*ontoggle=function({alert("lalala")})*@></span>
+                              </a>
+
+                          </td>
+                          <td class="columnaIcono">
+                              <a href="#">
+                                  <span class="glyphicon glyphicon-trash" id="DeleteElement" data-toggle="modal" data-target="#warningModal"></span>
+                              </a>
+                          </td>
+
+                      </tr>
+
+                  }
+
+              </table>
+          </form>
+      </div>
+  @*</div>
+<div class="container">*@
+
+    @*<!-- Modal -->
+        <div class="modal fade" id="myModal" role="dialog">
+            <div class="modal-dialog">
+
+                <!-- Modal content-->
+                <div class="modal-content">
+                    <div class="modal-header" style="background-color:#b8b894; border-bottom: 5px solid;
+            border-bottom-color: #3d3d29;">
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        <h4 class="modal-title">Gestion de Denuncias</h4>
+                    </div>
+                    <div class="modal-body" style="background-color:#f2f2f2;">
+
+                        <H2 class="modalErrorMessage"><b>Error 404</b></H2>
+                        <H3 class="modalErrorMessage"><b>Not Found.</b></H3>
+
+                        <div></div>
+                        <div></div>
+                        <div>No se encontró el recurso</div>
+
+                        <div>Consulte con el Administrador del Sistema</div>
+                        <br />
+                    </div>
+                    <div class="modal-footer" style="background-color:#f2f2f2;">
+
+                        <button type="button" data-dismiss="modal" style="background-color:#b8b894" class="btnCerrarModal" id="cerrarPopup">Cerrar</button>
+
+                    </div>*@
+    @*</div>*@
+
+    <!-- Modal -->
+    <div class="modal fade" id="warningModal" role="dialog" data-collapsed="true">
+        <div class="modal-dialog">
+
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header" style="background-color:#b8b894; border-bottom: 5px solid;
+        border-bottom-color: #3d3d29;">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">Gestion de Denuncias</h4>
+                </div>
+                <div class="modal-body" style="background-color:#f2f2f2;">
+
+
+                    <H3 class="modalErrorMessage"></H3>
+
+                    <div></div>
+                    <div></div>
+                    <div><b>Está seguro que desea eliminar el Expediente ?</b></div>
+
+
+                    <br />
+
+                </div>
+
+                <div class="modal-footer" style="background-color:#f2f2f2;">
+
+                    <button type="button" data-dismiss="modal" class="btnCerrarModal" id="cerrar">Cancelar</button>
+                    <button type="button" class="btnAceptarBorrar" id="aceptar" onclick="showModal()" data-dismiss="modal">Aceptar</button>
+
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+
+@*</div>*@
+
+
+
+
+@Scripts.Render("~/bundles/jquery")
+@section Scripts{
+    <script>
+        
+
+        //$("#tb tbody tr").on("click",(function () {
+
+        //    var idDen = $(this).find("td:eq(0)").text();
+        //    console.log(idDen);
+        //    console.log($(this).find("td:eq(5) a").attr("id"))
+        //    var urlDenuncia = "/Home/GetDenunciaById/";
+        //    $.ajax({
+        //        type: "Get",
+        //        url: urlDenuncia,
+        //        data: { id: idDen }
+        //    }).done(function (data) {
+        //        $("#DenuncianteEditado").html(data);
+
+        //    });
+
+        //});
+
+        //$("table tbody tr").click(function () {
+
+        //    var idDen = $(this).find("td:eq(0)").text();
+        //    console.log(idDen);
+        //    console.log($(this).find("td:eq(5) a").attr("id"))
+        //    var urlDenuncia = "/Home/GetDenunciaById/";
+        //    $.ajax({
+        //        type: "Post",
+        //        url: urlDenuncia,
+        //        data: { id: idDen }
+        //    }).done(function (data) {
+        //        //$("#DenuncianteEditado").html(data);
+
+        //    });
+
+        //});
+
+        //document.ready(function () {
+        //    $("#LinkDenunciaId").click(function () {
+        //        alert($(this).val());
+        //    });
+
+        //    $("tr ").click(function () {
+        //        alert($(this).val());
+
+               
+            //$.ajax({
+            //    url: "/Home/GetDenunciaById",
+            //    type: "Post",
+            //    data: {
+            //        id : $(this).val()
+            //    },
+            //    success: function (response) {
+            //        //$('#denuncianteResult').html(response);
+
+            //    },
+            //    error: function (response) {
+            //        //alert(response);
+            //    }
+            //});
+        //});
+
+        //$('#DeleteElement').click(function () {
+        //    $('#warningModal').modal('show');
+        //});
+
+        //$('#cerrar').click(function () {
+        //    $('#DeleteInfo').addClass("mensajeVisible");
+        //    $('#DeleteInfo').fadeIn(100);
+        //});
+
+        //$('#abrir').click(function () {
+        //    $('#DeleteInfo').fadeIn(1000);
+
+        //});
+
+        //function showModal(id) {
+        //    $('#' + id).fadeIn();
+        //    $('#' + id).fadeOut();
+
+        //}
+        //function hideModal(id) {
+        //    $('#' + id).fadeOut();
+        //}
+
+    </script>
+
+}

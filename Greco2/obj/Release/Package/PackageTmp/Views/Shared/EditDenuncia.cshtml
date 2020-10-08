@@ -1,0 +1,180 @@
+﻿@using Greco2.Models.Evento
+@model Greco2.Models.Denuncia.DenunciaModelView
+
+
+<div display="flex" id="ParentContainer" class="col-xs-12">
+    
+    
+
+    <div class="borde">
+        <div class="row">
+            <label class="col-xs-2">Etapa Procesal: </label>
+            @Html.DropDownListFor(m => m.estadoSeleccionado, Model.Estados, "", new { @class = "col-xs-1 form-control", id = "comboEtapaProcesal", style = "margin-left:-30px;margin-right:40px;" })
+
+            <label class="col-xs-2">Número Denuncia: </label>
+            <text id="nroDenuncia" class="col-xs-1">@Model.denuncia.DenunciaId</text>
+        </div>
+        <div class="row">
+            <label class="col-xs-2">Tipo Proceso: </label>
+
+            @Html.DropDownListFor(m => m.tipoProcesoSeleccionado, Model.tiposProceso, "", new { @class = "col-xs-1 form-control", id = "comboTiposProceso", style = "margin-left:-30px;margin-right:40px;" })
+
+            <label class="col-xs-2">Usuario Creador: </label>
+            <text class="col-xs-2">Usuario-Creador</text>
+        </div>
+        <div class="row">
+            <label class="col-xs-2">Denuncia Preventiva: </label>
+            <label class="col-xs-3"></label>
+            <label class="col-xs-2" style="margin-left:-30px;">Denuncia Formal: </label>
+            <label class="col-xs-3"></label>
+        </div>
+    </div>
+    @*<div class="tab-content">
+        <div id="home" class="tab-pane fade in active">*@
+
+    <div class="borde">
+        <div class="row">
+            <label class="col-xs-3">Denunciante : </label>
+            <img src="@Url.Content("~/Images/4.gif")" id="loading" style="display:none;" />
+            <div style="color:dodgerblue;font-family: 'Times New Roman', Times, serif"
+                 id="denuncianteResult">@Model.datosDenunciante</div>
+
+            </div>
+
+            <input type="hidden" id="denuncianteId" />
+            <input type="hidden" id="creationDate" value="@DateTime.Now" />
+            <br />
+
+            <div class="row">
+                <label class="col-xs-3">Dni Denunciante : </label>
+                <input type="text" class="form-control col-xs-3" placeholder="DNI Denunciante" id="dni" />
+                <button class="btn btn-info btn-sm" id="Buscador" type="submit"><i class="glyphicon glyphicon-search"></i></button>
+
+                <input type="checkbox" value="@Model.denuncianteIndividual"/>
+                <label>Denunciante Individual</label>
+            </div>
+            <div class="row">
+                <label class="col-xs-3">Nombre : </label>
+                <input type="text" class="form-control col-xs-3" placeholder="Nombre Denunciante" id="nombre" />
+                <button class="btn btn-info btn-sm" id="Cleaner"><i class="glyphicon glyphicon-remove"></i></button>
+            </div>
+            <div class="row">
+                <label class="col-xs-3">Apellido : </label>
+                <input type="text" class="form-control col-xs-3" placeholder="Apellido Denunciante" id="apellido" />
+                <button class="btn btn-primary btn-sm" id="alta"><i class="glyphicon glyphicon-export"></i></button>
+            </div>
+
+
+        </div>
+
+        <div class="borde">
+            <div class="row">
+                <label class="col-xs-3">Tramite CRM : </label>
+                <input type="text" id="tramiteCrm" class="form-control col-xs-3" placeholder="Tramite CRM" style="margin-left: -120px;" value="@Model.denuncia.TRAMITECRM" />
+                <label class="col-xs-3">Número de Línea : </label>
+                <input type="text" id="numeroLinea" class="form-control col-xs-3" placeholder="Nro de Linea" style="margin-left: -120px;" value="@Model.denuncia.OBJETORECLAMO" />
+            </div>
+            <div class="row">
+                <label class="col-xs-3">Nro de Cliente/Contrato : </label>
+                <input type="text" id="numeroClienteContrato" class="form-control col-xs-3" placeholder="Nro de Cliente/Contrato" style="margin-left: -120px;" value=""/>
+            </div>
+        </div>
+
+        <div class="borde">
+            <div class="row">
+                <label class="col-xs-3">Fecha de Notificacion: </label>
+                <input id="fechaNotificacion" type="date" class="form-control col-xs-1" placeholder="Fecha de Notificacion" style="margin-left:-120px;" value="@Model.denuncia.FSELLOCIA"/>
+                <label class="col-xs-3">Fecha Notificacion Gcia: </label>
+                <input id="fechaNotificacionGcia" type="date" class="form-control col-xs-1" placeholder="Fecha de Notificacion Gcia" style="margin-left:-120px;" value="@Model.denuncia.FSELLOGCIADC" />
+            </div>
+
+            <div class="row">
+                <label class="col-xs-2" style="margin-right:140px;">Nro Expediente: </label>
+                <input type="text" id="numeroExpediente" class="form-control col-xs-1" placeholder="Nro de Expediente" style="margin-left: -120px;" value="@Model.denuncia.EXPEDIENTE_ID"/>
+                <label class="col-xs-3">Responsable Interno: </label>
+                <text class="col-xs-3">Responsable-Interno</text>
+            </div>
+        </div>
+
+
+        <div class="borde">
+            <div class="row">
+                <label class="col-xs-2">Organismo: </label>
+                @Html.DropDownListFor(m => m.organismoSeleccionado, Model.Organismos, "", new { @class = "col-xs-1 form-control", id = "comboOrganismo", style = "margin-left:-30px;margin-right:40px;" })
+
+                <label class="col-xs-2">Estudio Jurídico: </label>
+                @Html.DropDownListFor(m => m.estudioSeleccionado, Model.Estudios, "", new { @class = "col-xs-1 form-control", id = "comboEstudio", style = "margin-left:-30px;margin-right:40px;" })
+            </div>
+
+            <div class="row">
+                <label class="col-xs-2">Modalidad Gestión: </label>
+                @Html.DropDownListFor(m => m.modalidadGestionSeleccionada, Model.modalidadesDeGestion, "", new { @class = "col-xs-1 form-control", id = "comboModalidadesGestion", style = "margin-left:-30px;margin-right:40px;" })
+
+                <label class="col-xs-2">SubTipo Proceso: </label>
+                @Html.DropDownListFor(m => m.subTipoProcesoSeleccionado, Model.subTiposProceso, "", new { @class = "col-xs-1 form-control", id = "comboSubTiposProceso", style = "margin-left:-30px;margin-right:40px;" })
+
+            </div>
+
+            <div class="row">
+                <label class="col-xs-2">Mediador : </label>
+                <input type="text" class="form-control col-xs-1" id="mediador" style="margin-left:-30px" placeholder="Mediador" />
+
+                <label class="col-xs-3" style="margin-left:-10px;">Domicilio del Mediador : </label>
+                @*<input type="text" class="col-xs-2" id="domicilioMediador" />*@
+            </div>
+            <div class="row">
+                <label class="col-xs-3">Reclamo Relacionado : </label>
+                <input type="text" class="form-control col-xs-3" id="reclamoRelacionado" placeholder="Reclamo Relacionado" style="margin-left: -120px;" />
+
+            </div>
+        </div>
+
+        <div class="borde">
+            <div class="row">
+                <label class="col-xs-2">Servicio Denunciado: </label>
+                @Html.DropDownListFor(m => m.servicioSeleccionado, Model.Servicios, "", new { @class = "col-xs-1 form-control", id = "comboServicios", style = "margin-left:-30px;margin-right:40px;" })
+
+                <label class="col-xs-2">Motivo Reclamo: </label>
+                @Html.DropDownListFor(m => m.motivoReclamoSeleccionado, Model.motivosDeReclamo, "", new { @class = "col-xs-1 form-control", id = "comboMotivosReclamo", style = "margin-left:-30px;margin-right:40px;" })
+
+            </div>
+
+            <div class="row">
+                <label class="col-xs-2">Estado Conciliación: </label>
+                @Html.DropDownListFor(m => m.subEstadoSeleccionado, Model.SubEstados, "", new { @class = "col-xs-1 form-control", id = "comboSubEstados", style = "margin-left:-30px;margin-right:40px;" })
+
+                <label class="col-xs-2">Fecha  Resultado:</label>
+                <input type="date" class="form-control col-xs-1" id="fechaResultado" placeholder="Fecha de Resultado" style="margin-left:-30px;" value="@Model.denuncia.FECHARESULTADO" />
+            </div>
+
+
+        </div>
+        <div class="borde">
+            
+        </div>
+        
+        <div class="bordeBotonera">
+            <div class="row">
+                <div>
+                    <input type="button" class="btn btn-primary btn-sm btnGuardar" value="Guardar" id="GuardarDenuncia" />
+                </div>
+            </div>
+        </div>
+        <div class="borde" style="padding-top:10px;padding-bottom:10px;">
+
+            <div class="row">
+                <h4 style="padding-left:30px;" class="col-xs-2">Eventos</h4>
+            </div>
+            <div class="row">
+                @Html.DropDownListFor(m => m.tipoEventoSeleccionado, Model.tipoEventos, "", new { @class = "col-xs-1 form-control", id = "comboReqsInforme", style = "margin-right:20px;" })
+                <input type="button" value="Nuevo" class="btn btn-info btn-sm col-xs-1" />
+            </div>
+        </div>
+    
+        <div id="divlistaEventos" class="borde" @*style="display:none;"*@>
+           
+            @Html.Partial("Eventos", Model.eventos)
+
+        </div>
+    </div>
+

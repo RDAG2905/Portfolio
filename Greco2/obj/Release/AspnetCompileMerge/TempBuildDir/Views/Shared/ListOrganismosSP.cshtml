@@ -1,0 +1,116 @@
+﻿@using Greco2.Models.Organismo
+@model IEnumerable<OrganismoSP>
+
+<style>
+
+    /*table {
+        margin-left: 80px;
+        margin-right: 80px;
+    }*/
+    th {
+        text-align: center;
+        background-color: #f9f9f9;
+    }
+
+    td, th {
+        font-size: 11px;
+    }
+
+    .check {
+        width: 20px;
+    }
+
+    table {
+        padding-left: 10px;
+        padding-right: 50px;
+    }
+
+    tr:hover {
+        -webkit-box-shadow: 0px 1px 5px 0px rgba(0,0,0,0.25);
+        -moz-box-shadow: 0px 1px 5px 0px rgba(0,0,0,0.25);
+        box-shadow: 0px 1px 5px 0px rgba(0,0,0,0.25);
+        background-color: #f9f9f9;
+    }
+
+
+    /*.glyphicon-trash:hover{
+
+    }
+    .glyphicon-pencil:hover {
+        color: olivedrab;
+    }*/
+    .btn-success, .btn-danger {
+        /*border-radius:20px;*/
+    }
+</style>
+
+@if (Model.Any())
+{
+    <div style="display:flex;max-height:200px;overflow:auto">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th></th>
+                    <th style="text-align:left;">Nombre</th>
+                    <th style="text-align:left;">Provincia</th>
+                    <th style="text-align:left;">Localidad</th>
+                    <th style="text-align:left;">Region</th>
+                    <th>Editar</th>
+                    <th>Eliminar</th>
+                    <th class="text-right">Inactivo</th>
+                </tr>
+            </thead>
+
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td class="check" style="text-align:right">
+                        @Html.DisplayFor(i => item.Id)
+                    </td>
+                    <td style="width:400px;">
+                        @Html.DisplayFor(i => item.Nombre)
+                    </td>
+                    <td style="width:350px;">
+                        @Html.DisplayFor(i => item.Provincia)
+                    </td>
+                    <td style="width:350px;">
+                        @Html.DisplayFor(i => item.Localidad)
+                    </td>
+                    <td style="width:350px;">
+                        @Html.DisplayFor(i => item.Region)
+                    </td>
+
+                    <td class="linkEdit check" @*style="width:40px;"*@>
+                        <a onclick="editarOrganismo(@item.Id)" data-toggle='modal' data-target='#editModalOrganismo'><i class="glyphicon glyphicon-pencil  btn-sm btn-link"></i></a>
+                    </td>
+                    <td class="linkDelete check" @*style="width:40px;"*@>
+                            <a onclick="cargarIdModalDelete(@item.Id.ToString(),this)" data-toggle='modal' data-target='#deleteModalOrganismo'><i class="glyphicon glyphicon-trash btn-sm text-danger"></i></a>
+                        </td>
+                    <td>
+                        @Html.DisplayFor(i => @item.Activo)
+                    </td>
+                </tr>
+            }
+
+        </table>
+    </div>
+    <div class="text-success col-xs-12">@ViewBag.Success</div>
+
+    <br />
+    <div class="text-primary">Total:  @Model.Count()</div>
+
+}
+else
+{
+    <br />
+    <div id="infoResult" class="alert alert-info text-center col-xs-12">
+        <h4>No se encontraron coincidencias</h4>
+    </div>
+    @*<br />
+    <div id="infoResult" class="list-group-item col-xs-12">
+        <h4 style="color:darkturquoise;">La Búsqueda no arroja resultados</h4>
+    </div>*@
+}
+
+
+

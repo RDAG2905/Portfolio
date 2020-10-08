@@ -1,0 +1,199 @@
+﻿@*@using Greco2.Models.Localidad
+    @model LocalidadModelView*@
+
+<style>
+
+    label {
+        text-align: left;
+    }
+</style>
+
+<div>
+    <form>
+        @Html.AntiForgeryToken()
+        <br />
+        <div class="row">
+            <span class="col-xs-2"></span>
+            <label class="col-xs-2">Nombre:</label>
+            <input type="text" class="form-control col-xs-1" id="filtroNombreDG" maxlength="50" onkeypress="BuscarDenuncianteGrupo(this,event)" style="width:350px !important" />
+
+        </div>
+        <div class="row">
+            <span class="col-xs-2"></span>
+            <label class="col-xs-2">Apellido:</label>
+            <input type="text" class="form-control col-xs-1" id="filtroApellidoDG" maxlength="50" onkeypress="BuscarDenuncianteGrupo(this,event)" style="width:350px !important" />
+
+        </div>
+        <div class="row">
+            <span class="col-xs-2"></span>
+            <label class="col-xs-2">Dni:</label>
+            <input type="text" onmouseout="verificarContenidoDni(this)" onmouseover="removeErrorClass(this)" class="form-control col-xs-1" id="filtroDniDG" onkeypress="BuscarDenuncianteGrupo(this,event)" style="width:350px !important" />
+
+        </div>
+        <br />
+        <div class="row text-center">
+
+            <input type="button" value="Limpiar" class="btn btn-primary btn-sm" onclick="limpiarFiltrosBusquedaDG()" style="width:120px;"/>
+            <input type="button" value="Buscar" class="btn btn-primary btn-sm" id="btnBuscarDenunciantesGD" @*onclick="BuscarDenuncianteDenuncia()"*@ onclick="BuscarDenuncianteGrupoDenuncia(this)" style="width:120px;" />
+            @*<input type="button" value="Guardar" class="btn btn-primary btn-sm" id="btnGuardarDenunciante" onclick="guardarDenuncianteSiNoExiste()" />*@
+        </div>
+    </form>
+
+    <br />
+    @*<div>*@
+        <div class="loader-container" id="loadingDG" style="display:none;">
+            <div class="loader"></div>
+        </div>
+        @*<img src="@Url.Content("~/Images/4.gif")" id="loadingDG" style="display:none;" />*@
+    @*</div>*@
+
+    <div class="container-fluid" style="max-height:200px;overflow:auto;" id="elementosDG">
+
+    </div>
+
+</div>
+
+
+<script>
+    //function verificarContenidoDni(elem) {
+    //    var input = $(elem);
+
+    //    if(input.val().length > 10
+    //            || input.val().toString().includes(".")
+    //            || input.val().toString().includes(",")) {
+    //        input.addClass('error');
+    //        toastr.warning('El número de Documento <br/> no debe superar los 10 dígitos');
+
+    //    };
+
+    //}
+
+    //function limpiarFiltrosBusqueda() {
+    //    $('#filtroNombre').val('');
+    //    $('#filtroApellido').val('');
+    //    $('#filtroDni').val('');
+    //    $('#elementos').empty();
+    //}
+
+    // function elDenuncianteEsValido() {
+    //     var mensaje = "Ingrese alguno de los Filtros";
+    //     if (($('#filtroNombre').val().trim().length == 0 &&
+    //         $('#filtroApellido').val().trim().length == 0) &&
+    //         ($('#filtroDni').val().trim().length == 0)) {
+    //         toastr.warning(mensaje);
+    //         return false;
+    //     }
+    //     return true;
+        // } else if (($('#filtroDni').val().length == 0) &&
+        //     ($('#filtroApellido').val().length == 0 ||
+        //     ($('#filtroNombre').val().length == 0))) {
+        //     toastr.warning(mensaje);
+        //     return false;
+        // }
+        // else {
+
+        //    $('#guardarNuevo').attr('data-dismiss', 'modal');
+        //    return true;
+        //}
+    //}
+
+
+
+
+    @*function BuscarDenuncianteGrupoDenuncia(elem) {
+        var filaGrupo = $(elem).parent();
+        console.log(filaGrupo);
+        $('#elementos').empty();
+        if (elDenuncianteEsValido()) {
+            mostrarLoading();
+                $.ajax({
+                    url: '@Url.Action("BuscarDenuncianteGrupoDenuncia", "Denuncias")',
+                    type: "post",
+                    data: {
+                        nombre: $('#filtroNombre').val(),
+                        apellido: $('#filtroApellido').val(),
+                        dni: $('#filtroDni').val()
+                    },
+                    success: function (response) {
+                        ocultarLoading();
+                    },
+                    error: function (response) {
+                        ocultarLoading();
+                        toastr.info(response.responseText + ' ' + response.statusText);
+                    }
+                });
+        }
+    }*@
+
+
+    @*function esValidoNombreEdicion() {
+        if ($('#nombreEdicion').val().length == 0 ||
+            $('#apellidoEdicion').val().length == 0)
+        {
+            toastr.warning('Nombre y Apellido son obligatorios');
+            deshabilitarGuardarEdicion();
+            return false;
+        } else {
+            //toastr.success('OK');
+            habilitarGuardarEdicion();
+            return true;
+        }
+    }
+
+    function guardarDenuncianteEditado() {
+        if (esValidoNombreEdicion()) {
+               $.ajax({
+                    url: '@Url.Action("guardarDenuncianteEditado", "Admin")',
+                    type: "POST",
+                    data: {
+                        id: $('#idElementEdit').val(),
+                        nombre: $('#nombreEdicion').val(),
+                        apellido: $('#apellidoEdicion').val(),
+                        dni: $('#dniEdicion').val(),
+                        campoActivacion: $('input:checkbox[name=checkActivo]:checked').val()
+                    },
+                    success: function (response) {
+                        toastr.success("Registro guardado correctamente");
+                        $('#elementos').html(response);
+                    },
+                    error: function (response) {
+                        toastr.error(response.responseText + ' ' + response.status);
+                    }
+               });
+        }
+    }
+
+
+    function editarDenunciante(Id) {
+        deshabilitarGuardarEdicion();
+        $.ajax({
+            url: '@Url.Action("EditarDenunciante", "Admin")',
+            type: "POST",
+            data: {
+                id: Id
+            },
+            success: function (response) {
+                try {
+                    $('#idElementEdit').val(response.DenuncianteId);
+                    $('#nombreEdicion').val(response.nombre);
+                    $('#apellidoEdicion').val(response.apellido);
+                    $('#dniEdicion').val(response.NroDocumento);
+                    $('#campoActivacion').prop('checked', response.Deleted);
+
+                } catch (response) {
+                    toastr.error(response);
+                }
+            },
+            error: function (response) {
+                toastr.error(response.responseText + ' ' + response.status);
+            }
+        });
+    }*@
+
+
+</script>
+
+
+
+
+

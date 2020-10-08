@@ -1,0 +1,76 @@
+﻿@using Greco2.Models.Log
+@*@model List<CommonChangeLoggerDto>*@
+@model List<SPChangeLogger>
+
+@if (Model.Any())
+{
+    <table class="table" id="listSystemEventsTable" style="max-width:180%;margin-right:-100px;background-color:white;">
+
+        <thead style="background-color:#f5f5f0;">
+            <tr>
+
+                <th>FechaCambio</th>
+                <th>Entidad</th>
+                <th>Id</th>
+                <th>Descripcion</th>
+                <th>ValorAnterior</th>
+                <th>ValorActual</th>
+                <th>Usuario</th>
+
+            </tr>
+        </thead>
+        <tbody style="text-align:left;">
+
+
+            @foreach (var item in @Model)
+            {
+                <tr>
+
+                    <td style="max-width:400px;color:#262626;" nowrap>
+                        @Html.DisplayFor(i => @item.FechaCambio)
+                    </td>
+                    <td class="text-primary" style="width:80px;text-align:center;">
+
+                        @Html.DisplayFor(i => @item.ObjetoModificado)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.ObjetoId)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Descripcion)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.ValorAnterior)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.ValorActual)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Usuario)
+                    </td>
+                </tr>
+            }
+
+
+
+
+
+
+
+
+        </tbody>
+    </table>
+
+
+
+
+
+}
+else
+{
+
+    <div id="sinResultados">
+        <h5 class="text-primary text-center">No se encontraron coincidencias</h5>
+    </div>
+
+}

@@ -1,0 +1,91 @@
+﻿@using Greco2.Models.OrganismosEstudiosRel
+@model IEnumerable<OrganismoEstudioRelSP>
+
+<style>
+
+    /*table {
+        margin-left: 80px;
+        margin-right: 80px;
+    }*/
+    th {
+        text-align: center;
+        font-size: 12px;
+    }
+
+    td, option {
+        font-size: 11px;
+    }
+
+    .check {
+        width: 20px;
+    }
+
+    table {
+        padding-left: 10px;
+        padding-right: 50px;
+    }
+</style>
+
+@if (Model.Any())
+{
+<div style="height:300px;overflow:auto;">
+    <table class="table table-hover list-group-item">
+        <thead>
+            <tr style="background-color:#f5f5f5;">
+                @*<th>OrganismoId</th>*@
+                <th style="text-align:left;">Organismo</th>
+                @*<th>EstudioId</th>*@
+                <th style="text-align:left;">Estudio</th>
+                <th class="col-xs-1">Eliminar</th>
+                @*<th class="text-right">Activo</th>*@
+            </tr>
+        </thead>
+
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td hidden>
+                    @Html.DisplayFor(i => item.OrganismoRelacionId)
+                </td>
+                <td style="width:250px;">
+                    @Html.DisplayFor(i => item.Organismo)
+                </td>
+                <td hidden>
+                    @Html.DisplayFor(i => item.EstudioRelacionId)
+                </td>
+                <td style="width:250px;">
+                    @Html.DisplayFor(i => item.Estudio)
+                </td>
+
+                @*<td class="check">
+                        <a onclick="editarOrganismo(@item.Id)" data-toggle='modal' data-target='#editModalOrganismo'><i class="glyphicon glyphicon-pencil col-xs-1"></i></a>
+                    </td>*@
+                <td class="check">
+                    <a onclick="cargarIdModalDeleteRelacion(@item.OrganismoRelacionId,@item.EstudioRelacionId,this)" data-toggle='modal' data-target='#deleteModalOrganismoEstudioRel'><i class="glyphicon glyphicon-trash text-danger col-xs-1"></i></a>
+                </td>
+                @*<td >
+                        @Html.DisplayFor(i => @item.Activo)
+                    </td>*@
+            </tr>
+        }
+
+    </table>
+</div>
+    
+    <div class="text-success col-xs-12">@ViewBag.Success</div>
+    <br />
+    <div class="text-primary">Total:  @Model.Count()</div>
+
+}
+else
+{
+
+    <div id="infoResult" class="alert alert-info text-center col-xs-12">
+        <h5>No se encontraron coincidencias</h5>
+    </div>
+
+}
+
+
+
+

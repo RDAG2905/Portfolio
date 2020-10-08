@@ -1,0 +1,27 @@
+﻿
+@{
+    ViewBag.Title = "VerifyAccount";
+}
+
+<h2>Verify Account</h2>
+
+@if (ViewBag.Status != null && Convert.ToBoolean(ViewBag.Status))
+{
+    
+<div class="form-group">
+    
+        <div class="alert alert-success">
+            <strong>Success!</strong> @ViewBag.Message
+        </div>
+        <div class="logindisplay">
+            <input type="button" value="Logout" class="btn btn-primary" onclick="location.href='@Url.Action("LogOut", "User")';return false;"/>
+        </div>
+    
+</div>
+}
+else
+{
+    <div class="alert alert-danger">
+        <strong>Error!</strong> @ViewBag.Message
+    </div>
+}

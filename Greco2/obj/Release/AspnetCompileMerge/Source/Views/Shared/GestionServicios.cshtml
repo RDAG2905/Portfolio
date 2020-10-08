@@ -1,0 +1,516 @@
+﻿<div>
+    <div class="jumbotron">
+        <h4 class="text-primary">Gestión de Servicios</h4>
+    </div>
+    @*<br />*@
+    <div class="row">
+        <span class="col-xs-3"></span>
+        <label class="col-xs-1" style="margin-right:15px;font-size:12px;">Nombre:</label>
+        <input type="text" class="input-sm form-control col-xs-3" id="filtro" @*onkeyup="traerServicios(event)"*@ />
+
+        
+    </div>
+    <div class="row" style="margin-top:8px;">
+        <input type="button" value="Nuevo" class="btn btn-primary btn-sm col-xs-1" id="NuevoEstudio"
+               data-toggle="modal" data-target="#nuevoModalServicios" onclick="cleanInput();" style="margin-left:340px;margin-right:10px;" />
+        <input type="button" value="Limpiar" class="btn btn-primary btn-sm col-xs-1" id="btnLimpiar" onclick="LimpiarTodo()"
+               style="
+        margin-right:10px;" />
+        <input type="button" value="Buscar" class="btn btn-primary btn-sm col-xs-1" id="" onclick="BuscarServicio()"
+               style="
+        margin-right:10px;" />
+    </div>
+    <br />
+    <br />
+    <div class="container-fluid" id="elementos">
+
+    </div>
+
+</div>
+
+@*inicio Popup Nuevo*@
+<div class="modal fade" id="nuevoModalServicios" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+
+                <button type="button" class="close" data-dismiss="modal" id="btnCerrarModalNuevoServicio">×</button>
+                <h4 class="modal-title" id="myModalLabel">Nuevo Servicio</h4>
+            </div>
+            <div class="modal-body center-block">
+                <div id="nuevoServicioBodyContent">
+                    <br />
+                    <form>
+                        @Html.AntiForgeryToken()
+
+                        <div class="row col-lg-offset-2">
+                            <label class="col-xs-1" @*style="font-size:11px;"*@>Nombre</label>
+                            <input class="input-sm form-control col-xs-1" type="text" id="filtroNombre" style="margin-left:45px;" />
+                        </div>
+                        <label type="text" class="text-danger" id="MensajeNombreInvalido" style="display:none;"></label>
+                    </form>
+                    <br />
+                    <div id="divExisteServicio" style="color:white">
+
+                    </div>
+                </div>
+
+            </div>
+            <div class="modal-footer">
+                <div class="row" id="nuevoServicioContent">
+                    <span style="margin-right:50px;" class="col-md-offset-3"></span>
+                    <input id="guardarNuevo" type="button" class="btn btn-sm btn-primary col-xs-3" data-dismiss='modal' value="Guardar" onclick="existeServicio()" />
+                    <input type="button" class="btn btn-sm btn-toolbar col-xs-3" value="Cancelar" data-dismiss='modal' />
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@*----------- Fin Popup Nuevo ----------*@
+
+
+@*inicio Popup Edit*@
+<div class="modal fade" id="editModalServicios" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+
+                <button type="button" class="close" data-dismiss="modal" id="btnCloseEditServicios">×</button>
+                <h4 class="modal-title" id="myModalLabel">Editar Estudio</h4>
+            </div>
+            <div class="modal-body center-block">
+
+                <div id="editBodyContent">
+                    <form>
+                        @Html.AntiForgeryToken()
+                        <input type="hidden" id="idElementEdit" />
+                        <br />
+                        <div class="row col-lg-offset-2">
+                            <label class="col-xs-1">Nombre</label>
+                            <input class="input-sm form-control col-xs-1" type="text" id="NombreEdicion" style="margin-left:45px;" />
+                        </div>
+                        <br />
+                        <div class="row col-lg-offset-2">
+                            <label class="col-xs-1">Inactivo</label>
+                            <input style="margin-left: 30px;" class="col-xs-1" type="checkbox" id="campoActivacion" name="checkActivo" />
+                        </div>
+                    </form>
+                </div>
+
+            </div>
+            <div class="modal-footer">
+                <div class="row" id="editFooterContent">
+                    <span style="margin-right:50px;" class="col-md-offset-3"></span>
+                    <input type="button" class="btn btn-sm btn-primary col-xs-3" value="Guardar" onclick="guardarServicioEditado()" id="guardarEdicion"/>
+                    <input type="button" class="btn btn-sm btn-toolbar col-xs-3" value="Cancelar" data-dismiss='modal' />
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@*----------- Inicio Popup Edit ----------*@
+
+<div class="modal fade" id="deleteModalServicios" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" id="btnCerrarModalEliminarServicio">×</button>
+            </div>
+            <div id="deletePopupContent" class="modal-body center-block">
+                <h4>Está a punto de eliminar el Servicio con Id : </h4>
+                <form>
+                    @Html.AntiForgeryToken()
+                    <h4 id="idDeleteHidden"></h4>
+                </form>
+            </div>
+            <div id="divExisteRelacionesServicio">
+
+            </div>
+            <div id="deleteFooterContent" class="modal-footer">
+                <button type="button" class="btn btn-danger" id="btnDelete" onclick="validarRelaciones()">Eliminar</button>
+                <button type="button" class="btn btn-toolbar" data-dismiss="modal">Cancelar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+   
+    function elServicioEsValido() {
+        var mensaje = "Ingrese algún Filtro de Búsqueda";
+        if ($('#filtro').val().length == 0) {
+            toastr.warning(mensaje);
+            return false;
+        } else {
+            $('#guardarNuevo').attr('data-dismiss', 'modal');
+            return true;
+        }
+    }
+
+    function cleanInput() {
+        $('#filtroNombre').val('');
+        $('#guardarNuevo').removeAttr('data-dismiss', 'modal');
+        $('#divExisteServicio').empty();
+    }
+
+    //function traerServicios(e) {
+    //    var key = e.keyCode || e.which;
+    //    if (key === 13) {
+    //        //if (elServicioEsValido()) {
+    //            BuscarServicio();
+    //        //}
+    //    };
+    //}
+
+    $("#filtro").keypress(function (e) {
+        var key = e.keyCode || e.which;
+        if (key === 13) {
+            BuscarServicio();
+        };
+    });
+
+   
+
+    
+
+    function BuscarServicio() {        
+        $('#elementos').empty();
+        mostrarLoading();
+            $.ajax({
+                url: '@Url.Action("BuscarServicio", "Admin")',
+                type: "GET",
+                data: {
+                    filtro: $('#filtro').val()
+                },
+                success: function (response) {
+                    ocultarLoading();
+                    $('#elementos').html(response);
+                },
+                error: function (response) {
+                    ocultarLoading();
+                    toastr.info(response.responseText + ' ' + response.statusText);
+                }
+            });
+    }
+
+    function esValido() {
+        var mensaje = "Ingrese el nombre";
+        if ($('#filtroNombre').val().trim().length == 0) {
+            toastr.warning(mensaje);
+
+            return false;
+        } else {
+            $('#guardarNuevo').attr('data-dismiss', 'modal');
+            return true;
+        }
+    }
+    
+    function guardarNuevoServicio() {
+        if (esValido()) {
+             var token = '@Html.AntiForgeryToken()';
+             var gnstoken = $(token).val();
+            $.ajax({
+                url: '@Url.Action("CrearServicio","Admin")',
+                type: "POST",
+                data: {
+                    Nombre: $('#filtroNombre').val(),
+                    __RequestVerificationToken: gnstoken
+                },
+                success: function (response) {
+                    //toastr.success("Registro guardado correctamente");
+                    $('#elementos').html(response);
+                    limpiaryCerrarModal();
+                },
+                error: function (response) {
+                    toastr.error(response.responseText + ' ' + response.status);
+                }
+            });
+        }
+    }
+
+    function limpiaryCerrarModal() {
+        $('#btnCerrarModalNuevoServicio').click();
+        $('#divExisteServicio').html("");
+    }
+
+    function esValidoNombreEdicion() {
+        if ($('#NombreEdicion').val().trim().length == 0) {
+            toastr.warning('El nombre es obligatorio');
+            deshabilitarGuardarEdicion();
+            return false;
+        } else {
+            //habilitarGuardarEdicion();
+            return true;
+        }
+    }
+
+    function esValidoNombreServicio() {
+        var mensaje = "Ingrese el nombre del Servicio";
+        if ($('#filtroNombre').val().trim().length == 0) {
+            toastr.warning(mensaje);
+            return false;
+        } else {
+            return true;
+        }
+    }
+
+    $("#filtroNombre").keypress(function (e) {
+        if (e.which == 13) {
+            e.preventDefault();
+            existeServicio();
+            //return false;
+        }
+    });
+
+    function existeServicio() {
+        $('#guardarNuevo').prop("disabled", true);
+        var token = '@Html.AntiForgeryToken()';
+        var ctoken = $(token).val();
+        if (esValidoNombreServicio()) {
+            $.ajax({
+                url: '@Url.Action("ExisteServicio","Admin")',
+                type: "POST",
+                data: {
+                    Nombre: $('#filtroNombre').val(),
+                    __RequestVerificationToken: ctoken
+                },
+                success: function (response) {
+                    $("#divExisteServicio").html(response);
+                    $('#guardarNuevo').prop("disabled", false);
+
+                },
+                error: function (response) {
+                    toastr.error(response.responseText + ' ' + response.status);
+                    $('#guardarNuevo').prop("disabled", false);
+                }
+            });
+        }
+        $('#guardarNuevo').prop("disabled", false);
+    }
+
+    @*function guardarServicioEditado() {
+        if (esValidoNombreEdicion()) { 
+            var token = '@Html.AntiForgeryToken()';
+             var gsetoken = $(token).val();
+               $.ajax({
+                    url: '@Url.Action("guardarServicioEditado", "Admin")',
+                    type: "POST",
+                    data: {
+                        id: $('#idElementEdit').val(),
+                        Nombre: $('#NombreEdicion').val(),
+                        campoActivacion: $('input:checkbox[name=checkActivo]:checked').val(),
+                        __RequestVerificationToken: gsetoken
+                    },
+                    success: function (response) {
+                        toastr.success("Registro guardado correctamente");
+                        $('#elementos').html(response);
+                    },
+                    error: function (response) {
+                        toastr.error(response.responseText + ' ' + response.status);
+                    }
+               });
+        }
+    }*@
+
+    function guardarServicioEditado() {
+        if (esValidoNombreEdicion()) {
+            var token = '@Html.AntiForgeryToken()';
+            var atoken = $(token).val();
+            $('#guardarEdicion').prop("disabled",true);
+            $.ajax({
+                url: '@Url.Action("guardarServicioEditado", "Admin")',
+                type: "POST",
+                data: {
+                    id: $('#idElementEdit').val(),
+                    Nombre: $('#NombreEdicion').val(),
+                    campoActivacion: $('input:checkbox[name=checkActivo]:checked').val(),
+                    __RequestVerificationToken: atoken
+
+                },
+                success: function (response) {                 
+                    try {
+                        if (response == "ACTUALIZADO") {                           
+                            GetServicioActualizado(); 
+                            $('#btnCloseEditServicios').click();
+                            $('#guardarEdicion').prop("disabled", false);
+                        }
+                        else
+                            if (response == "No se pueden actualizar los datos.</br>Existe otro Servicio con el mismo Nombre.") {
+                                toastr.warning(response);
+                            }
+                            else {
+                                toastr.error(response);   
+                                //toastr.error("Verifique si la Sesión sigue activa.</br>Verifique si los datos fueron actualizados.");            
+                            }
+                    } catch (error) {
+                        toastr.error(error);
+                    }
+                    
+                },
+                error: function (response) {
+                    toastr.error(response.responseText + ' ' + response.status);
+                }
+            });
+            $('#guardarEdicion').prop("disabled", false);
+        }
+        
+    }
+
+    function GetServicioActualizado() {
+        $.ajax({
+                url: '@Url.Action("GetServicioActualizado", "Admin")',
+                type: "GET",
+                data: {
+                    id: $('#idElementEdit').val()
+                   
+            }, success: function (result) {
+                    $('#elementos').html(result);
+
+            }, error: function (result) {
+                    toastr.error(result.responseText + ' ' + result.status);
+            }
+        });
+
+    }
+
+    $("#NombreEdicion").keypress(function (e) {
+        if (e.which == 13) {
+            e.preventDefault();
+            guardarServicioEditado();
+            //return false;
+        }
+    });
+
+
+    @*function eliminarServicio() {
+            var idOculto = document.getElementById('idDeleteHidden');
+            var Id = parseInt(idOculto.innerText);
+            
+            $.ajax({
+                url: '@Url.Action("EliminarServicio","Admin")',
+                type: "Post",
+                data: {
+                    id: Id
+                },
+                success: function (result) {
+                    try {
+                        if (result == "Registro eliminado con éxito") {
+                            filaARemover.remove();
+                            filaARemover = undefined;
+                        }                       
+                        toastr.info(result);
+                    } catch (error) {
+                        toastr.error(error);
+                    }
+                },
+                error: function (result) {
+                    toastr.error(result.responseText);
+                }
+            });
+
+    }*@
+
+    function editarServicio(Id) {
+        deshabilitarGuardarEdicion();
+        $.ajax({
+            url: '@Url.Action("EditarServicio", "Admin")',
+            type: "GET",
+            data: {
+                id: Id
+            },
+            success: function (response) {
+                try {
+                    $('#idElementEdit').val(response.Id);
+                    $('#NombreEdicion').val(response.Nombre);
+                    $('#campoActivacion').prop('checked', response.Deleted);
+                    
+                } catch (response) {
+                    toastr.error(response);
+                }
+            },
+            error: function (response) {
+                toastr.error(response.responseText + ' ' + response.status);
+            }
+        });
+    }
+
+    function eliminarServicio() {
+        var idOculto = document.getElementById('idDeleteHidden');
+        var Id = parseInt(idOculto.innerText);
+       var token = '@Html.AntiForgeryToken()';
+         var eptoken = $(token).val();
+         $('#btnCerrarModalEliminarServicio').click();  
+        $.ajax({
+            url: '@Url.Action("EliminarServicio","Admin")',
+            type: "Post",
+            data: {
+                servicioId: Id,
+                __RequestVerificationToken: eptoken
+            },
+            success: function (result) {
+                try {
+                    
+                    if (result == "Registro eliminado con éxito") {
+                        filaARemover.remove();
+                        filaARemover = undefined;
+                        toastr.success(result);
+                    } else {
+                        toastr.error(result);
+                    }
+                } catch (error) {
+                    toastr.error(error);
+                }
+            },
+            error: function (result) {
+                toastr.error(result.responseText);
+            }
+        });
+
+    }
+
+   
+
+    function validarRelaciones() {
+        
+         var idOculto = document.getElementById('idDeleteHidden');
+         var Id = parseInt(idOculto.innerText);
+          var token = '@Html.AntiForgeryToken()';
+          var vrtoken = $(token).val();
+          $('#btnDelete').prop("disabled",false);
+
+            $.ajax({
+                url: '@Url.Action("TieneRelacionesElServicio", "Admin")',
+                type: "Post",
+                data: {
+                    servicioId: Id,
+                    __RequestVerificationToken: vrtoken  
+                },
+                success: function (result) {
+                    $('#divExisteRelacionesServicio').html(result);
+                    $('#btnDelete').prop("disabled",true);
+                },
+                error: function (result) {
+                    toastr.error(result.responseText);
+                }
+            });
+        $('#btnDelete').prop("disabled", false);
+    }
+
+    function cargarIdModalDelete(id, element) {
+        $('#idDeleteHidden').html(id);
+        filaARemover = $(element).parent().parent();
+        $('#divExisteRelacionesServicio').empty();
+        $('#btnDelete').prop("disabled", false);
+    }
+
+    function LimpiarTodo() {
+        $('#elementos').empty();
+        $('#filtro').val('');
+    }
+
+
+</script>
+
+

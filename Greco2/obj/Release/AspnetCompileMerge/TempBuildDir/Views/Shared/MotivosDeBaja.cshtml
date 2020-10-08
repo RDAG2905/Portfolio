@@ -1,0 +1,201 @@
+﻿@using Greco2.Models.MotivoDeBaja
+@model MotivoDeBajaDto
+
+<div>
+    <div class="jumbotron">
+        <h4 class="text-primary">Gestión de Motivos de Baja</h4>
+    </div>
+    @*<br />*@
+    <div class="row">
+        <span class="col-xs-3"></span>
+        <label class="col-xs-1">Nombre</label>
+        <input type="text" class="input-sm form-control col-xs-3" id="filtroMotivos" onkeyup="traerMotivosDeBaja(event)" />
+
+        <input type="button" value="Nuevo" class="btn-primary col-xs-1" id="NuevoMotivoBaja"
+               data-toggle="modal" data-target="#nuevoModalMB" onclick="cleanInput();" />
+    </div>
+    <br />
+    <hr />
+    <div class="container-fluid" style="display:flex" id="elementos">
+
+    </div>
+
+</div>
+
+
+@*inicio Popup Nuevo*@
+<div class="modal fade" id="nuevoModalMB" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+
+                <button type="button" class="close" data-dismiss="modal">×</button>
+                <h4 class="modal-title" id="myModalLabel">Nuevo Motivo de Baja</h4>
+            </div>
+            <div class="modal-body center-block">
+                <div id="nuevoBodyContent">
+                    <br />
+                    @*<form id="nuevoMotivoForm">*@
+                    <div class="row col-lg-offset-2">
+                        <label class="col-xs-1">Nombre</label>
+                        <input class="input-lg form-control col-xs-1" type="text" id="NombreMotivoBaja" />
+                    </div>
+                    <label type="text" class="text-danger" id="MensajeNombreInvalido" style="display:none;"></label>
+
+                    <br />
+                </div>
+
+            </div>
+            <div class="modal-footer">
+                <div class="row" id="editNuevoContent">
+                    <span style="margin-right:50px;" class="col-md-offset-3"></span>
+                    <input id="guardarMotivo" type="button" class="btn btn-sm btn-primary col-xs-3" value="Guardar" onclick="guardarMotivo()"/>
+                    <input type="button" class="btn btn-sm btn-default col-xs-3" value="Cancelar" data-dismiss='modal' />
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@*----------- Fin Popup Nuevo ----------*@
+
+
+@*inicio Popup Edit*@
+<div class="modal fade" id="editModalMB" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+
+                <button type="button" class="close" data-dismiss="modal">×</button>
+                <h4 class="modal-title" id="myModalLabel">Editar Motivo de Baja</h4>
+            </div>
+            <div class="modal-body center-block">
+
+                <div id="editBodyContent">
+                    <input type="hidden" id="motivoId" />
+                    <br />
+                    <div class="row col-lg-offset-2">
+                        <label class="col-xs-1">Nombre</label>
+                        <input class="input-lg form-control col-xs-1" type="text" id="NombreEdicion" />
+                    </div>
+                    <br />
+                    <div class="row col-lg-offset-2">
+                        <label class="col-xs-1">Activo</label>
+                        <input style="margin-left:-15px;" class="col-xs-1" type="checkbox" id="motivoActivo" name="checkActivo" />
+                    </div>
+                </div>
+
+            </div>
+            <div class="modal-footer">
+                <div class="row" id="editFooterContent">
+                    <span style="margin-right:50px;" class="col-md-offset-3"></span>
+                    <input type="button" class="btn btn-sm btn-primary col-xs-3" value="Guardar" onclick="editarMotivo()" />
+                    <input type="button" class="btn btn-sm btn-default col-xs-3" value="Cancelar" data-dismiss='modal' />
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@*----------- Inicio Popup Edit ----------*@
+
+<div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">×</button>
+                </div>
+                <div id="deletePopupContent" class="modal-body center-block">
+                    <h4>Está a punto de eliminar el Motivo de Baja con Id : </h4>
+                    <h4 id="idDeleteHidden"></h4>
+
+                </div>
+                <div id="deleteFooterContent" class="modal-footer">
+                    <button type="button" class="btn btn-primary" id="btnDelete" onclick="eliminarMotivo()" data-dismiss="modal">Aceptar</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+<script>
+    function cleanInput() {
+        $('#NombreMotivoBaja').val('');
+        $('#MensajeNombreInvalido').val('');
+        $('#MensajeNombreInvalido').css('display', 'none');
+        $('#guardarMotivo').removeAttr('data-dismiss');
+    }
+
+    function cargarModalDeleteMotivo(id) {
+        $('#idDeleteHidden').html(id);
+    }
+</script>
+@*<script>
+        $('#filtroMotivos').bind('keyup', function (e) {
+            var key = e.keyCode || e.which;
+            if (key === 13) {
+                GetMotivosDeBaja();
+            };
+        });
+
+        function GetMotivosDeBaja() {
+            $.ajax({
+                url: "/Admin/ListarMotivosDeBaja",
+                type: "GET",
+                data: {
+
+                },
+                success: function (response) {
+                    $('#elementos').html(response);
+                },
+                error: function (response) {
+                    //toastr.options.positionClass = 'toast-bottom-right';
+                    alert("No hay resultados");
+
+                }
+            });
+        }
+
+        $('#btnAdd').on("click", function () {
+            $.ajax({
+                url: "/Admin/CrearMotivoBaja",
+                type: "POST",
+                data: {
+                    Nombre: $('#Nombre').val()
+                },
+                success: function (response) {
+                    //toastr.succes("Registro guardado correctamente");
+                    GetMotivosDeBaja();
+                },
+                error: function (response) {
+                    //toastr.options.positionClass = 'toast-bottom-right';
+                    toastr.error(response.responseText + ' ' + response.status);
+
+                }
+            });
+        });
+
+        function Delete(ID) {
+            var ans = confirm("Desea eliminar este Registro..?");
+            if (ans) {
+                $.ajax({
+                    url: "/Admin/EliminarMotivoBaja/" + ID,
+                    type: "GET",
+                    contentType: "application/json;charset=UTF-8",
+                    dataType: "json",
+                    success: function (result) {
+                        GetMotivosDeBaja()
+                        //loadData();
+                    },
+                    error: function (errormessage) {
+                        alert(errormessage.responseText);
+                    }
+                });
+            }
+        }
+
+
+    </script>*@
+

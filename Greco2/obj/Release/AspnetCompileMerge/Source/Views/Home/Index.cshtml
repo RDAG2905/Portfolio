@@ -1,0 +1,118 @@
+﻿@{
+    ViewBag.Title = "Home Page";
+}
+
+<style>
+
+    @@media(min-width: 1150px) {
+        .list-group-item {
+            max-width: 50%;
+            border-left: 5px solid #337ab7;
+            background-image: linear-gradient(#f9f9f9 5%,white);
+            margin-bottom: 1px;
+           
+        }
+        .panel-heading {
+            margin-left: 300px;
+        }
+        
+        }
+
+    
+
+        nav {
+            display: none;
+        }
+
+        .list-group-item {
+            max-width: 100%;
+            border-left: 5px solid #337ab7;
+            background-image: linear-gradient(#f9f9f9 5%,white);
+            margin-bottom: 1px;
+           
+           
+        }
+
+        a {
+            /*color: #00e2e6;*/
+            /*color: white;*/
+        }
+
+        .jumbotron {
+            justify-content: center;
+            padding-top: 10px;
+            padding-bottom: 10px;
+            /*background-color:white;*/
+        }
+
+        .navbar-collapse {
+            padding-right: 15px;
+            padding-left: 15px;
+            overflow-x: visible;
+            -webkit-overflow-scrolling: touch;
+            border-top: 1px solid transparent;
+            -webkit-box-shadow: inset 0 1px 0 rgba(255,255,255,.1);
+            box-shadow: inset 0 1px 0 rgba(255,255,255,.1);
+        }
+
+        .list-group-item:hover {
+           
+            color: darkturquoise;
+            
+            border-left: 5px solid darkturquoise;
+            
+        }
+        /*.gradient {
+        color: rgb(80, 106, 230);
+        color: -moz-linear-gradient(359deg, rgb(80, 106, 230) 50%, rgb(122, 223, 255) 79%);
+        color: -webkit-linear-gradient(359deg, rgb(80, 106, 230) 50%, rgb(122, 223, 255) 79%);
+        color: -o-linear-gradient(359deg, rgb(80, 106, 230) 50%, rgb(122, 223, 255) 79%);
+        color: -ms-linear-gradient(359deg, rgb(80, 106, 230) 50%, rgb(122, 223, 255) 79%);
+        color: linear-gradient(89deg, rgb(80, 106, 230) 50%, rgb(122, 223, 255) 79%);
+    }*/
+        /*.jumbotron {
+        background-image: linear-gradient(#f2f2f2,#f9f9f9);
+    }*/
+
+        footer {
+            background: #F2F2F2;
+            /*#ffece6*/
+        }
+
+        
+</style>
+<div class="jumbotron">
+    <div class="list-group">
+        
+        <i class="col-xs-1 glyphicon glyphicon-th"></i><h4 class="text-primary">Gestión de Reclamos del Consumidor</h4>
+    </div>
+</div>
+@*<hr />*@
+<div class="jumbotron" 
+    
+    
+
+
+    
+     
+    <div class="panel-heading" style="text-align:left;">
+
+        <div class="list-group-item row">@Html.ActionLink("Gestión de Expedientes ", "FiltroDenuncias")<span><i class="col-md-1 col-xs-5 glyphicon glyphicon-folder-open"></i></span><span class="col-md-1 col-xs-5"></span></div>
+        <div class="list-group-item">@Html.ActionLink("Agenda", "Index", "Agenda")<span><i class="col-xs-1 glyphicon glyphicon-calendar"></i></span><span class="col-xs-1"></span></div>
+        <div class="list-group-item">@Html.ActionLink("Administración", "Index", "Admin")<span><i class="col-xs-1 glyphicon glyphicon-cog"></i></span><span class="col-xs-1"></span></div>
+        <div class="list-group-item">@Html.ActionLink("ModificacionesMasivas", "Index", "ModificacionesMasivas")@*<a href="#">Modificaciones Masivas</a>*@<span><i class="col-xs-1 glyphicon glyphicon-pencil"></i></span><span class="col-xs-1"></span></div>
+        <div class="list-group-item">@Html.ActionLink("Reportes", "Index", "Reportes")<span><i class="col-xs-1 glyphicon glyphicon-save-file"></i></span><span class="col-xs-1"></span></div>
+        <div class="list-group-item">@Html.ActionLink("Logs", "Index", "Log")<span><i class="col-xs-1 glyphicon glyphicon-equalizer"></i></span><span class="col-xs-1"></span></div>
+        <div class="list-group-item">@Html.ActionLink("Auditoria", "Index", "Auditorias")<span><i class="col-xs-1 glyphicon glyphicon-paste"></i></span><span class="col-xs-1"></span></div>
+        @*<div style="margin-bottom:6px;" class="list-group-item btn-default"><a href="#">Descargas Excel</a><span><i class="col-xs-1 glyphicon glyphicon-save-file"></i></span><span class="col-xs-1"></span></div>*@
+        @*<div style="margin-bottom:6px;" class="list-group-item btn-default"><a href="#">Acceso Externos</a><span><i class="col-xs-1 glyphicon glyphicon-briefcase"></i></span><span class="col-xs-1"></span></div>*@
+    </div>
+
+
+    </div>
+<div class="panel"></div>
+
+<footer>
+        <SPAN><img style="background:#f2f2f2;" src="@Url.Content("~/Images/canva-photo-editor (1).png")" alt="Alternate Text" /></SPAN>
+    </footer>
+<HR />

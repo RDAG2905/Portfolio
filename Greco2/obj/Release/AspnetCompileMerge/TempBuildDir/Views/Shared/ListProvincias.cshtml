@@ -1,0 +1,89 @@
+﻿@using Greco2.Models.Provincia
+@model IEnumerable<ProvinciaDto>
+
+<style>
+
+    /*table {
+        margin-left: 80px;
+        margin-right: 80px;
+    }*/
+    th {
+        text-align: center;
+        background-color: #f9f9f9;
+    }
+
+    td, th {
+        font-size: 12px;
+    }
+
+    .check {
+        width: 20px;
+    }
+
+    table {
+        padding-left: 10px;
+        padding-right: 50px;
+    }
+
+    tr:hover {
+        -webkit-box-shadow: 0px 1px 5px 0px rgba(0,0,0,0.25);
+        -moz-box-shadow: 0px 1px 5px 0px rgba(0,0,0,0.25);
+        box-shadow: 0px 1px 5px 0px rgba(0,0,0,0.25);
+        background-color: #f9f9f9;
+    }
+
+
+    .infoResult, .list-group-item {
+        border-radius: 4px;
+    }
+</style>
+
+@if (Model.Any())
+{
+    <div style="display:flex;max-height:300px;overflow:auto">
+        <table class="table table-hover ">
+            <thead>
+                <tr>
+                    <th></th>
+                    <th style="text-align:left;">Nombre</th>
+                    <th class="col-xs-1">Editar</th>
+                    <th class="col-xs-1">Eliminar</th>
+                    <th class="col-xs-1" style="text-align:right;">Inactivo</th>
+                </tr>
+            </thead>
+
+            @foreach (var item in @Model)
+            {
+                <tr>
+                    <td class="check" style="text-align:right">
+                        @Html.DisplayFor(i => @item.Id)
+                    </td>
+                    <td style="width:100px;">
+                        @Html.DisplayFor(i => @item.Nombre)
+                    </td>
+
+                    <td class="check">
+                        <a onclick="editarProvincia(@item.Id)" data-toggle='modal' data-target='#editModalProvincias'><i class="glyphicon glyphicon-pencil col-xs-1"></i></a>
+                    </td>
+                    <td class="check">
+                        <a onclick="cargarIdModalDelete(@item.Id.ToString(),this)" data-toggle='modal' data-target='#deleteModalProvincias'><i class="glyphicon glyphicon-trash col-xs-1 text-danger"></i></a>
+                    </td>
+                    <td class="col-xs-1">
+
+                        @Html.DisplayFor(i => @item.Deleted)
+                    </td>
+                </tr>
+            }
+
+        </table>
+    </div>
+    <div class="text-success col-xs-12">@ViewBag.Success</div>
+    <br />
+    <div class="text-primary">Total:  @Model.Count()</div>
+}
+else
+{
+    <div id="infoResult" class="alert alert-info text-center col-xs-12">
+        <h5>No se encontraron coincidencias</h5>
+    </div>
+}

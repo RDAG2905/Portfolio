@@ -1,0 +1,271 @@
+﻿@using Greco2.Models.Evento
+@model IEnumerable<EventoSP>
+
+<style>
+    /*td, th {
+        font-size: 11px !important;
+    }*/
+
+    table > tbody > td, th {
+        font-size: 11px !important;
+    }
+
+    /*tr:hover {
+        background-color: #5bc0de;
+    }*/
+</style>
+
+@if (Model.Any())
+{
+    if (User.IsInRole("ESTUDIO"))
+    {
+
+        <table class="table table-responsive list-group-item" id="listaEventos" style="max-width:120%;margin-right:-60px;margin-left:-50px;">
+            <thead>
+                <tr style="background-color:#f5f5f5;">
+                    <th></th>
+                    <th class="thCentrado" nowrap >Fecha Vencimiento</th>
+                    <th nowrap>Tipo Evento</th>
+                    <th>Observaciones</th>
+                    <th>Contestado</th>
+                    <th style="text-align:center;">Solucionado</th>
+                    <th>Req.Informe</th>
+                    <th style="padding-right:40px;">Editar</th>
+                    <th></th>  
+                   
+                </tr>
+            </thead>
+            <tbody @*style="text-align:left;"*@>
+
+
+                @foreach (var item in @Model)
+                {
+                    <tr>
+                        <td class="text-primary" style="width:80px;text-align:right !important;">
+                            @Html.DisplayFor(i => @item.EventoId)
+
+                        </td>
+
+                        <td style="width:150px;text-align:left;">
+                            @Convert.ToString(string.Format("{0:dd/MM/yyyy HH:mm}", item.Fecha))
+
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.tipoEvento)
+                        </td>
+                        <td>
+                            @if (String.IsNullOrEmpty(item.observacion))
+                            {
+                                @Html.TextAreaFor(modelItem => item.observacion, new { @rows = 2, @cols = 30, style = "background-color:lavender;max-width:280px;border-style:none;overflow:hidden;max-height:120px;" })
+                            }
+                            else
+                            {
+
+                                var filas = Decimal.Round(item.observacion.Length / 15);
+                                @Html.TextAreaFor(modelItem => item.observacion, new { @rows = @filas, @cols = 30, style = "background-color:lavender;max-width:280px;border-style:none;overflow:hidden;max-height:120px;" })
+
+                            }
+                        </td>
+
+                        @*@{
+
+                                var esContestado = (@item.contestado) ? "SI" : "NO";
+                                if (@item.contestado)
+                                {
+                                    <td style="text-align:center;">
+                                        @esContestado
+                                    </td>
+                                }
+                                else
+                                {
+                                    <td style="background-color:#ffff66;color:brown;text-align:center;">
+                                        @esContestado
+                                    </td>
+
+                                }
+
+                            }*@
+                        @{
+
+
+                            if (@item.contestado == 1)
+                            {
+                                <td style="text-align:center;">
+                                    SI
+                                </td>
+                            }
+                            else
+                            {
+                                <td style="background-color:#ffff66;color:brown;text-align:center;">
+                                    NO
+                                </td>
+
+                            }
+
+                        }
+                        @{
+
+                            //var estaSolucionado = (@item.SOLUCIONADO) ? "SI" : "NO";
+                            <td style="width:200px;text-align:center;">
+                                @item.Solucionado
+                            </td>
+                        }
+
+
+                        <td style="width:220px;">
+                            @Html.DisplayFor(modelItem => item.RequerimientoInforme)
+                        </td>
+                        <td>
+
+                            <a href="#" id="btn-editEvent" onclick="return getEventobyId(@item.EventoId)" data-toggle="modal" data-target="#editEventModal"><i class="glyphicon glyphicon-pencil"></i></a>
+
+
+                        </td>
+                        <td>
+                        @*<td class="columnaIcono">
+
+                            <a href="#" onclick="ConfirmarEliminarEvento(@item.EventoId,this)" data-toggle="modal" data-target="#deleteModalEvento" id="btn-deleteEvent">
+                                <span class="glyphicon glyphicon-trash" id="DeleteElement"></span>
+                            </a>
+                        </td>*@
+                        <td hidden id="eventoDenunciaId">
+                            @Html.DisplayFor(modelItem => item.DenunciaId)
+                        </td>
+
+
+                    </tr>
+
+                }
+
+            </tbody>
+        </table>
+
+    }
+    else
+    {
+        <table class="table table-responsive list-group-item" id="listaEventos" style="max-width:110%;margin-left:-10px;margin-right:-20px;">
+            <thead>
+                <tr style="background-color:#f9f9f9;">
+                    <th></th>
+                    <th class="thCentrado" nowrap>Fecha Vencimiento</th>
+                    <th nowrap>Tipo Evento</th>
+                    <th>Observaciones</th>
+                    <th>Contestado</th>
+                    <th>Solucionado</th>
+                    <th>Req.Informe</th>
+                    <th>Editar</th>
+                    <th>Eliminar</th>
+                </tr>
+            </thead>
+            <tbody>
+
+
+                @foreach (var item in @Model)
+                {
+                    <tr>
+                        <td class="text-primary" style="width:80px;text-align:right !important;">
+                            @Html.DisplayFor(i => @item.EventoId)
+
+                        </td>
+
+                        <td style="width:150px;text-align:left;">
+                            @Convert.ToString(string.Format("{0:dd/MM/yyyy HH:mm}", item.Fecha))
+
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.tipoEvento)
+                        </td>
+                        <td>
+                            @if (String.IsNullOrEmpty(item.observacion))
+                            {
+                                @Html.TextAreaFor(modelItem => item.observacion, new { @rows = 2, @cols = 30, style = "background-color:lavender;max-width:280px;border-style:none;overflow:hidden;max-height:120px;" })
+                            }
+                            else
+                            {
+                                var filas = Decimal.Round(item.observacion.Length / 15);
+                                @Html.TextAreaFor(modelItem => item.observacion, new { @rows = @filas, @cols = 30, style = "background-color:lavender;max-width:280px;border-style:none;overflow:hidden;max-height:120px;" })
+
+                            }
+
+                        </td>
+
+                        @*@{
+
+                                var esContestado = (@item.contestado) ? "SI" : "NO";
+                                if (@item.contestado)
+                                {
+                                    <td style="text-align:center;">
+                                        @esContestado
+                                    </td>
+                                }
+                                else
+                                {
+                                    <td style="background-color:#ffff66;color:brown;text-align:center;">
+                                        @esContestado
+                                    </td>
+
+                                }
+
+                            }*@
+                        @{
+
+
+                            if (@item.contestado == 1)
+                            {
+                                <td style="text-align:center;">
+                                    SI
+                                </td>
+                            }
+                            else
+                            {
+                                <td style="background-color:#ffff66;color:brown;text-align:center;">
+                                    NO
+                                </td>
+
+                            }
+
+                        }
+                        @{
+
+                            //var estaSolucionado = (@item.SOLUCIONADO) ? "SI" : "NO";
+                            <td style="width:60px;text-align:center;">
+                                @item.Solucionado
+                            </td>
+                        }
+
+
+                        <td style="width:200px;">
+                            @Html.DisplayFor(modelItem => item.RequerimientoInforme)
+                        </td>
+                        <td>
+
+                            <a href="#" id="btn-editEvent" onclick="return getEventobyId(@item.EventoId)" data-toggle="modal" data-target="#editEventModal"><i class="glyphicon glyphicon-pencil"></i></a>
+
+
+                        </td>
+                        <td class="columnaIcono">
+
+                            <a href="#" onclick="ConfirmarEliminarEvento(@item.EventoId,this)" data-toggle="modal" data-target="#deleteModalEvento" id="btn-deleteEvent">
+                                <span class="glyphicon glyphicon-trash" id="DeleteElement"></span>
+                            </a>
+                        </td>
+                        <td hidden id="eventoDenunciaId">
+                            @Html.DisplayFor(modelItem => item.DenunciaId)
+                        </td>
+
+
+                    </tr>
+
+                }
+
+            </tbody>
+        </table>
+
+
+    }
+
+
+    //aqui iba el popup
+
+}
+

@@ -1,0 +1,125 @@
+﻿@using Greco2.Models.Denuncia
+@model List<ArchivoDto>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<style>
+    tr {
+        width: 100%;      
+    }
+    tr * {
+        font-size: 12px;
+    }
+
+    th {
+        text-align: left;
+        background-color: #f9f9f9;
+        
+    }
+
+    td {
+    text-align:left;
+    }
+</style>
+
+<div class="container" style="height:300px;overflow:auto;background-color:white;">
+
+    <br />
+    @if (Model.Any())
+    {
+        <table class="table">
+            <tr>
+
+                <th>Fecha Creación</th>
+                <th>Hora</th>
+                <th>Archivo</th>
+                <th>Usuario Creador</th>
+                <th>Descargas</th>
+                <th></th>
+            </tr>
+            @foreach (var item in Model)
+            {
+            <tr>
+
+                <td>@item.fechaCreacion.ToShortDateString()</td>
+                <td>@item.fechaCreacion.ToShortTimeString()</td>
+
+                <td style="text-align:left;">
+                    <a href="@Url.Action("DescargarArchivo", "Archivos", new { id = item.Id })">
+                        <span class="glyphicon glyphicon-save"></span>
+                        <span @*style="font-size: 13px;"*@>@item.Nombre.@item.Extension</span>
+                    </a>
+
+                    @*<form>
+                        @Html.AntiForgeryToken()
+                        
+                        <a onclick="descargarArchivo(@item.Id)"> // No se banca el guid como parámetro
+                            <span class="glyphicon glyphicon-save"></span>
+                            <span>@item.Nombre.@item.Extension</span>
+                        </a>
+                    </form>*@
+                </td>
+                <td>@item.usuarioCreador</td>
+                <td>
+                    @item.Descargas......
+                </td>
+                <td>
+                    @if (User.Identity.IsAuthenticated)
+                    {
+                        if (User.IsInRole("ADMINISTRADOR") || User.IsInRole("COORDINADOR") || User.IsInRole("GERENTE") || User.IsInRole("ANALISTA") && String.Equals(User.Identity.Name, item.usuarioCreador))
+                        {
+
+
+                            <a onclick="cargarIdModalDelete(this)" class="text-danger" data-toggle="modal" data-target="#modalConfirmarEliminarArchivo">
+                                <span class="glyphicon glyphicon-trash text-danger"></span>
+
+                            </a>
+
+                            @*<a href="@Url.Action("EliminaArchivo", "Archivos",
+                    new { id = item.Id })" class="text-danger">
+                                           <span class="glyphicon glyphicon-trash text-danger"></span>
+
+                                       </a>*@
+                        }
+                    }
+                </td>
+                <td style="display:none;">
+                    @item.Id
+                </td>
+            </tr>
+            }
+        </table>
+    }
+    else
+    {
+        <span>La Denuncia no posee documentos</span>
+    }
+</div>
+
+
+<!-- Modal -->
+<div id="modalConfirmarEliminarArchivo" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title"></h4>
+            </div>
+            <div class="modal-body" style="margin-left:50px;">
+                <p>Confirma que desea eliminar el Archivo ?</p>
+                <h4 id="idDeleteHiddenArchivo"></h4>
+                
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-dismiss="modal" onclick="EliminarArchivo()">Aceptar</button>
+                <button type="button" class="btn btn-toolbar" data-dismiss="modal">Cancelar</button>
+            </div>
+        </div>
+
+    </div>
+</div>
+

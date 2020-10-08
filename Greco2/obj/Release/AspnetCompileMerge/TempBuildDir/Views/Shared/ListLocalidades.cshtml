@@ -1,0 +1,78 @@
+﻿@using Greco2.Models.Localidad
+@model IEnumerable<LocalidadDto>
+
+<style>
+
+    td, th {
+        font-size: 11px;
+    }
+
+    th {
+        text-align: center;
+        background-color: #f9f9f9;
+    }
+
+    .check {
+        width: 20px;
+    }
+
+    .infoResult {
+        border-radius: 4px;
+    }
+
+    .list-group-item {
+        border-radius: 4px;
+    }
+</style>
+
+@if (Model.Any())
+{
+    <table class="table table-hover">
+        <thead>
+            <tr>
+                <th></th>
+                <th>Nombre</th>
+                <th>Provincia</th>
+                <th class="col-xs-1">Editar</th>
+                <th class="col-xs-1">Eliminar</th>
+                <th class="col-xs-1">Activo</th>
+            </tr>
+        </thead>
+
+        @foreach (var item in @Model)
+        {
+            <tr>
+                <td class="check">
+                    @Html.DisplayFor(i => @item.Id)
+                </td>
+                <td style="width:100px;">
+                    @Html.DisplayFor(i => @item.Nombre)
+                </td>
+                <td style="width:100px;">
+                    @Html.DisplayFor(i => @item.ProvinciaId)
+                </td>
+
+                <td class="check">
+                    <a onclick="editarLocalidad(@item.Id,'EditarLocalidad','ListarLocalidades')" data-toggle='modal' data-target='#editModalLocalidades'><i class="glyphicon glyphicon-pencil col-xs-1"></i></a>
+                </td>
+                <td class="check">
+                    <a onclick="cargarModalDeleteLocalidad(@item.Id.ToString())" data-toggle='modal' data-target='#deleteModalLocalidades'><i class="glyphicon glyphicon-trash col-xs-1"></i></a>
+                </td>
+                <td class="col-xs-1">
+                    @Html.DisplayFor(i => @item.Deleted)
+                </td>
+            </tr>
+        }
+
+    </table>
+    <div class="text-success col-xs-12">@ViewBag.Success</div>
+    <br />
+    <div class="text-primary">Total:  @Model.Count()</div>
+}
+else
+{
+
+    <div id="infoResult" class="alert alert-info text-center col-xs-12">
+        <h4>No se encontraron coincidencias</h4>
+    </div>
+}

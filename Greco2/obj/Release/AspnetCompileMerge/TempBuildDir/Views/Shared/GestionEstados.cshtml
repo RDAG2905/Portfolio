@@ -1,0 +1,610 @@
+﻿@using Greco2.Models.Estado
+@model EstadoModelView
+
+<style>
+    label {
+    text-align:left;
+    font-size:12px;
+    }
+
+    td {
+    font-size:12px;
+    }
+</style>
+<div>
+    <div class="jumbotron">
+        <h4 class="text-primary">Gestión de Estados de Expedientes</h4>
+    </div>
+
+    <div class="row" style="margin-bottom:1px;">
+        <span class="col-xs-2"></span>
+        <label class="col-xs-2" style="margin-right:-5px;">Nombre:</label>
+        
+        @Html.TextBoxFor(n => n.nombreSubEstado,new {id= "filtroNombre",@class= "form-control col-xs-1" })
+        <input  type="button" value="Nuevo" class="btn-primary col-xs-1" id="nuevoSubEstado" style="margin-left:30px;"
+               data-toggle="modal" data-target="#nuevoModalEstados" onclick="cleanNuevoModal()"/>
+    </div>
+
+    <div class="row">
+        <span class="col-xs-2"></span>
+        <label class="col-xs-2" style="margin-right:-5px;">Etapa Procesal:</label>
+
+        @Html.DropDownListFor(m => m.estadoSeleccionado, Model.estados, "", new { @class = "col-xs-1 form-control", id = "comboEstados" ,style="width:280px;"})
+        <input style="margin-left:30px;margin-right:5px;" type="button" value="Buscar" class="btn-primary col-xs-1" id="Buscar" onclick="BuscarSubEstado();" />
+        <input type="button" value="Limpiar" class="btn-primary col-xs-1" id="btnLimpiar" onclick="LimpiarTodo()"
+               style="
+        margin-right:10px;" />
+    </div>
+
+    <br />
+    <br />
+    <div class="container-fluid"  id="elementos">
+
+    </div>
+
+</div>
+
+@*inicio Popup Nuevo*@
+<div class="modal fade" id="nuevoModalEstados" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+               
+                <button type="button" class="close" data-dismiss="modal" id="btnCerrarModalNuevoEstado">×</button>
+                <h4 class="modal-title" id="myModalLabel">Nuevo Estado</h4>
+            </div>
+            <div class="modal-body center-block">
+                <div id="nuevaRegionBodyContent">
+                    <br />
+                    <form>
+                        @Html.AntiForgeryToken()
+                        <div class="row col-lg-offset-1" style="margin-bottom:1px;">
+                            <label class="col-xs-3" style="margin-right:5px;margin-left:20px;">Nombre</label>
+                            <input class="input-sm form-control col-xs-1" type="text" id="nombreNuevoSubEstado" />
+                        </div>
+
+                        <div class="row col-lg-offset-1">
+                            <label class="col-xs-3" style="margin-right:5px;margin-left:20px;" >Etapa Procesal</label>
+                            @Html.DropDownListFor(m => m.estadoSeleccionado, Model.estados, "", new { @class = "col-xs-1 form-control", id = "comboNuevaEtapaProcesal", style = "width:280px;" })
+                        </div>
+                        <br />
+                        <div class="row" style="margin-left:65px;">
+                            <div class="col-xs-3 col-md-3">
+                                <label>Cierra Denuncia</label>
+                            </div>
+                            <div class="col-xs-2 col-md-3" style="margin-left:-85px;">
+                                <input type="checkbox" id="checkboxCierraDenuncia" />
+                            </div>
+                        </div>
+                    </form>
+                    <br />
+                    <div id="divExisteSubEstado" style="color:white">
+
+                    </div>
+
+                </div>
+
+            </div>
+            <div class="modal-footer">
+                <div class="row" id="nuevaLocalidadContent">
+                    <span style="margin-right:50px;" class="col-md-offset-3"></span>
+                    <input id="guardarNuevo" type="button" class="btn btn-sm btn-primary col-xs-3" value="Guardar" onclick="existeSubEstado()" />
+                    <input type="button" class="btn btn-sm btn-toolbar col-xs-3" value="Cancelar" data-dismiss='modal' />
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@*----------- Fin Popup Nuevo ----------*@
+
+
+@*inicio Popup Edit*@
+<div class="modal fade" id="editModalEstados" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+
+                <button type="button" class="close" data-dismiss="modal" id="btnCloseEditSubEstado">×</button>
+                <h4 class="modal-title" id="myModalLabel">Editar Estado de Expediente</h4>
+            </div>
+            <div class="modal-body center-block">
+
+                <div id="editBodyContent">
+                    <form>
+                        @Html.AntiForgeryToken()
+
+                        <input type="hidden" id="idElementEdit" />
+                        <br />
+                        <div class="row col-lg-offset-2" style="margin-bottom:1px;">
+                            <label class="col-xs-1" style="margin-right:50px;">Nombre</label>
+                            <input class="input-sm form-control col-xs-1" type="text" id="NombreEdicion" />
+                        </div>
+                        <div class="row col-lg-offset-2">
+                            <label class="col-xs-1" style="margin-right:50px;">Etapa Procesal</label>
+                            @Html.DropDownListFor(m => m.estadoSeleccionado, Model.estados, "", new { @class = "col-xs-1 form-control", id = "comboEditEtapaProcesal", style = "width:280px;" })
+                        </div>
+                        <br />
+                        <div class="row col-lg-offset-2">
+                            <label class="col-xs-1" style="margin-right:50px;">Cierra Denuncia</label>
+                            <input style="margin-left:-15px;" class="col-xs-1" type="checkbox" id="checkboxCierraDenunciaEdicion" />
+                        </div>
+                        <br />
+                        <div class="row col-lg-offset-2">
+                            <label class="col-xs-1">Inactivo</label>
+                            <input style="margin-left:35px;" class="col-xs-1" type="checkbox" id="campoActivacion" name="checkActivo" />
+                        </div>
+                    </form>
+                </div>
+
+            </div>
+            <div class="modal-footer">
+                <div class="row" id="editFooterContent">
+                    <span style="margin-right:50px;" class="col-md-offset-3"></span>
+                    <input type="button" class="btn btn-sm btn-primary col-xs-3" value="Guardar" onclick="guardarSubEstadoEditado()" id="guardarEdicion"/>
+                    <input type="button" class="btn btn-sm btn-toolbar col-xs-3" value="Cancelar" data-dismiss='modal' />
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@*----------- Inicio Popup Edit ----------*@
+
+<div class="modal fade" id="deleteModalSubEstados" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" id="btnCerrarModalEliminarSubEstado">×</button>
+            </div>
+            <div id="deletePopupContent" class="modal-body center-block">
+                <h4>Está a punto de eliminar al Estado con Id : </h4>
+                <form>
+                    @Html.AntiForgeryToken()
+                    <h4 id="idDeleteHidden"></h4>
+                </form>
+            </div>
+            <div id="divExisteRelacionesSubEstado" style="color:white;">
+
+            </div>
+            <div id="deleteFooterContent" class="modal-footer">
+                <button type="button" class="btn btn-danger" id="btnDelete" onclick="validarRelaciones()">Eliminar</button>
+                <button type="button" class="btn btn-toolbar" data-dismiss="modal">Cancelar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    //function traerEstados(e) {
+    //    var key = e.keyCode || e.which;
+    //    console.log(e.keyCode);
+    //    if (key === 13) {
+    //        GetElements('BuscarEstados');
+    //    };
+    //}
+
+    
+
+    $("#filtroNombre").keypress(function (e) {
+        if (e.which == 13) {
+            e.preventDefault();
+            BuscarSubEstado();
+        }
+    });
+
+
+    $("#nombreNuevoSubEstado").keypress(function (e) {
+        var key = e.keyCode || e.which;
+        if (key === 13) {
+            e.preventDefault();
+            existeSubEstado();
+            //return false();
+        };
+    });
+
+
+    function cleanNuevoModal() {
+        $('#nombreNuevoSubEstado').val('');
+        $('#comboNuevaEtapaProcesal')[0].selectedIndex = 0;
+        $('#divExisteSubEstado').empty();
+    }  
+
+    function losFiltrosSonValidados() {
+        var mensaje = "Ingrese algún Filtro de Búsqueda";
+        if ((($('#filtroNombre').val().length == 0) &&
+            ($('#comboEstados')[0].selectedIndex == 0))){           
+            toastr.warning(mensaje);
+            return false;
+        } else {
+            //toastr.success('OK');
+            return true;
+        }
+    }
+
+    
+
+    function BuscarSubEstado() {
+        $('#elementos').empty();
+        //if (losFiltrosSonValidados()) {
+            mostrarLoading();
+            DesHabilitarBuscar();
+            $.ajax({
+                url: '@Url.Action("BuscarSubEstado","Admin")' /*"/Admin/" + action*/,
+                type: "GET",
+                data: {
+                    nombre: $('#filtroNombre').val(),
+                    estadoId: $('#comboEstados').find('option:selected').val()
+                },
+                success: function (response) {
+                    
+                    ocultarLoading();
+                    $('#elementos').html(response);
+                    HabilitarBuscar();
+                },
+                error: function (response) {
+                    ocultarLoading();
+                    toastr.error(response.responseText + ' ' + response.statusText);
+                    HabilitarBuscar();
+                }
+            });
+        //}
+    }
+
+    function esValido() {
+            var mensaje = "Todos los campos son obligatorios";
+        if (($('#nombreNuevoSubEstado').val().length == 0) ||
+            ($('#comboNuevaEtapaProcesal')[0].selectedIndex == 0)){
+            toastr.warning(mensaje);
+            return false;
+        } else {
+            //toastr.success('OK');
+            //$('#guardarNuevo').attr('data-dismiss', 'modal');
+            return true;
+        }
+            
+       
+    }
+
+    function guardarNuevoSubEstado() {
+        if (esValido()) {
+             var token = '@Html.AntiForgeryToken()';
+            var gnsetoken = $(token).val();
+            $('#btnCerrarModalNuevoEstado').click();
+            $.ajax({
+                url: '@Url.Action("CrearSubEstado", "Admin")',
+                type: "POST",
+                data: {
+                    subEstado: $('#nombreNuevoSubEstado').val(),
+                    etapaProcesal: $('#comboNuevaEtapaProcesal').find("option:selected").val(),
+                    cierraDenuncia: $('#checkboxCierraDenuncia').prop('checked'),
+                    __RequestVerificationToken: gnsetoken
+                },
+                success: function (response) {
+                    //toastr.success("Registro guardado correctamente");
+                    $('#elementos').html(response);
+                    $('#guardarNuevo').removeAttr('data-dismiss');
+                },
+                error: function (response) {
+                    toastr.error(response.responseText + ' ' + response.status);
+                }
+            });
+        }
+
+    }
+
+     function esValidoSubEstado() {
+         var mensaje = "Todos los campos son obligatorios";
+         if (($('#nombreNuevoSubEstado').val().length == 0) ||
+             ($('#comboNuevaEtapaProcesal')[0].selectedIndex == 0)) {
+             toastr.warning(mensaje);
+             return false;
+         } else {
+             return true;
+         }
+     }
+
+    function existeSubEstado() {
+        $('#guardarNuevo').prop("disabled", true);
+        var token = '@Html.AntiForgeryToken()';
+        var ctoken = $(token).val();
+        if (esValidoSubEstado()) {
+             $.ajax({
+                 url: '@Url.Action("ExisteSubEstado","Admin")',
+                 type: "POST",
+                 data: {
+                     Nombre: $('#nombreNuevoSubEstado').val(),
+                     etapaProcesal: $('#comboNuevaEtapaProcesal').find("option:selected").val(),
+                     __RequestVerificationToken: ctoken
+                 },
+                 success: function (response) {
+                     $("#divExisteSubEstado").html(response);
+                     $('#guardarNuevo').prop("disabled",false);
+
+                 },
+                 error: function (response) {
+                     toastr.error(response.responseText + ' ' + response.status);
+                     $('#guardarNuevo').prop("disabled", false);
+                 }
+             });
+        }
+        $('#guardarNuevo').prop("disabled", false);
+    };
+
+    function deshabilitarGuardarEdicion() {
+        $('#guardarEdicion').removeAttr('data-dismiss', 'modal');
+    }
+
+    function habilitarGuardarEdicion() {
+        $('#guardarEdicion').attr('data-dismiss', 'modal');
+    }
+    
+
+    function esValidoNombreEdicion() {   
+
+        if (($('#NombreEdicion').val().trim().length == 0) ||
+            ($('#comboEditEtapaProcesal')[0].selectedIndex == 0)){           
+            toastr.warning('Todos los campos son obligatorios');
+            deshabilitarGuardarEdicion();
+            return false;
+        } else {
+            //toastr.success('OK');
+            //habilitarGuardarEdicion();
+            return true;
+        }
+    }
+
+
+    @*function guardarSubEstadoEditado() {
+        if (esValidoNombreEdicion()) {
+             var token = '@Html.AntiForgeryToken()';
+             var gnseetoken = $(token).val();
+            $.ajax({
+                url: '@Url.Action("guardarSubEstadoEditado", "Admin")',
+                type: "POST",
+                data: {
+                    id: $('#idElementEdit').val(),
+                    Nombre: $('#NombreEdicion').val(),
+                    estadoId: $('#comboEditEtapaProcesal').find("option:selected").val(),
+                    campoActivacion: $('input:checkbox[name=checkActivo]:checked').val(),
+                    cierraDenuncia: $('#checkboxCierraDenunciaEdicion').prop('checked'),
+                    __RequestVerificationToken: gnseetoken
+                },
+                success: function (response) {
+                    toastr.success("Registro guardado correctamente");
+                    $('#elementos').html(response);
+                    //GetOrganismos();
+                },
+                error: function (response) {
+                    toastr.error(response.responseText + ' ' + response.status);
+                }
+            });
+        }
+    }*@
+
+    function guardarSubEstadoEditado() {
+        if (esValidoNombreEdicion()) {
+            var token = '@Html.AntiForgeryToken()';
+            var atoken = $(token).val();
+            $('#guardarEdicion').prop("disabled",true);
+            $.ajax({
+                url: '@Url.Action("guardarSubEstadoEditado", "Admin")',
+                type: "POST",
+                data: {
+                    id: $('#idElementEdit').val(),
+                    Nombre: $('#NombreEdicion').val(),
+                    estadoId: $('#comboEditEtapaProcesal').find("option:selected").val(),
+                    campoActivacion: $('input:checkbox[name=checkActivo]:checked').val(),
+                    cierraDenuncia: $('#checkboxCierraDenunciaEdicion').prop('checked'),
+                    __RequestVerificationToken: atoken
+
+                },
+                success: function (response) {                 
+                    try {
+                        if (response == "ACTUALIZADO") {                           
+                            GetSubEstadoActualizado(); 
+                            $('#btnCloseEditSubEstado').click();
+                            $('#guardarEdicion').prop("disabled", false);
+                        }
+                        else
+                            if (response == "No se pueden actualizar los datos.</br>Ya Existe otro Estado con el mismo Nombre</br>para esta Etapa Procesal") {
+                                toastr.warning(response);
+                            }
+                            else {
+                                toastr.error(response);   
+                                //toastr.error("Verifique si la Sesión sigue activa.</br>Verifique si los datos fueron actualizados.");            
+                            }
+                    } catch (error) {
+                        toastr.error(error);
+                    }
+                    
+                },
+                error: function (response) {
+                    toastr.error(response.responseText + ' ' + response.status);
+                }
+            });
+            $('#guardarEdicion').prop("disabled", false);
+        }
+        
+    }
+
+    function GetSubEstadoActualizado() {
+        $.ajax({
+                url: '@Url.Action("GetSubEstadoActualizado", "Admin")',
+                type: "GET",
+                data: {
+                    id: $('#idElementEdit').val()
+                   
+            }, success: function (result) {
+                    $('#elementos').html(result);
+
+            }, error: function (result) {
+                    toastr.error(result.responseText + ' ' + result.status);
+            }
+        });
+
+    }
+
+    $("#NombreEdicion").keypress(function (e) {
+        if (e.which == 13) {
+            e.preventDefault();
+            guardarSubEstadoEditado();
+            //return false;
+        }
+    });
+
+    
+
+
+    function limpiarCamposEdicion() {
+        $('#NombreEdicion').val('');
+        $('#comboEditEtapaProcesal')[0].selectedIndex = 0;
+        $('#checkboxCierraDenunciaEdicion').prop('checked',false);
+    }
+
+    function editarSubEstado(Id) {
+        deshabilitarGuardarEdicion();
+        limpiarCamposEdicion();
+        $.ajax({
+            url: '@Url.Action("EditarSubEstado","Admin")',
+            type: "GET",
+            data: {
+                id: Id
+            },
+            success: function (response) {
+                try {
+                    $('#idElementEdit').val(response.Id);
+                    $('#NombreEdicion').val(response.Nombre);
+                    var estadoId = response.EstadoId;
+                    
+                    $('#campoActivacion').prop('checked', response.Deleted);
+                    $("#comboEditEtapaProcesal option").each(function (i, valor) {
+                        //console.log(i + ' : ' + $(valor).val())
+                        if ($(valor).val() == estadoId) {
+                            $(valor).prop('selected', true);
+                            //console.log('son iguales');                          
+                        }
+                        $('#checkboxCierraDenunciaEdicion').prop('checked',response.CierraDenuncia)
+                    });
+                    
+                } catch (response) {
+                    toastr.error(response);
+                }
+            },
+            error: function (response) {
+                toastr.error(response.responseText + ' ' + response.status);
+            }
+        });
+    }
+
+
+    @*function eliminarSubEstado() {
+            var idOculto = document.getElementById('idDeleteHidden');
+            var Id = parseInt(idOculto.innerText);
+            console.log(Id);
+
+            $.ajax({
+                url: '@Url.Action("EliminarSubEstado","Admin")',
+                type: "Post",
+                data: {
+                    id: Id
+                },
+                success: function (result) {
+                    try {
+                        if (result == "Registro eliminado con éxito") {
+                            filaARemover.remove();
+                            filaARemover = undefined;
+                        }
+                        toastr.info(result);
+                    } catch (error) {
+                        toastr.error(error);
+                    }
+                },
+                error: function (result) {
+                    toastr.error(result.responseText);
+                }
+            });
+
+    }*@
+
+    function EliminarSubEstado() {
+        var idOculto = document.getElementById('idDeleteHidden');
+        var Id = parseInt(idOculto.innerText);
+       var token = '@Html.AntiForgeryToken()';
+         var eptoken = $(token).val();
+         $('#btnCerrarModalEliminarSubEstado').click();  
+        $.ajax({
+            url: '@Url.Action("EliminarSubEstado", "Admin")',
+            type: "Post",
+            data: {
+                id: Id,
+                __RequestVerificationToken: eptoken
+            },
+            success: function (result) {
+                try {
+                    
+                    if (result == "Registro eliminado con éxito") {
+                        filaARemover.remove();
+                        filaARemover = undefined;
+                        toastr.success(result);
+                    } else {
+                        toastr.error(result);
+                    }
+                } catch (error) {
+                    toastr.error(error);
+                }
+            },
+            error: function (result) {
+                toastr.error(result.responseText);
+            }
+        });
+
+    }
+
+   
+
+    function validarRelaciones() {
+        
+         var idOculto = document.getElementById('idDeleteHidden');
+         var Id = parseInt(idOculto.innerText);
+          var token = '@Html.AntiForgeryToken()';
+          var vrtoken = $(token).val();
+          $('#btnDelete').prop("disabled", false);
+
+            $.ajax({
+                url: '@Url.Action("TieneRelacionesSubEstado", "Admin")',
+                type: "Post",
+                data: {
+                    subEstadoId: Id,
+                    __RequestVerificationToken: vrtoken  
+                },
+                success: function (result) {
+                    $('#divExisteRelacionesSubEstado').html(result);
+                    $('#btnDelete').prop("disabled",true);
+                
+                },
+                error: function (result) {
+                    toastr.error(result.responseText);
+                }
+            });
+        $('#btnDelete').prop("disabled", false);
+    }
+
+    function cargarIdModalDelete(id, element) {
+        $('#idDeleteHidden').html(id);
+        filaARemover = $(element).parent().parent();
+        $('#divExisteRelacionesSubEstado').empty();
+        $('#btnDelete').prop("disabled", false);
+    }
+
+    function LimpiarTodo() {
+        $('#elementos').empty();
+        $('#filtroNombre').val('');
+        $('#comboEstados')[0].selectedIndex = 0;
+    }
+
+
+</script>
+
+
+

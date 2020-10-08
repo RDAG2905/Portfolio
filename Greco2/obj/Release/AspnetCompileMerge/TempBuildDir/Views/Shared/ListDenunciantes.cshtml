@@ -1,0 +1,166 @@
+﻿@*@using Greco2.Models.Denunciante
+@model IEnumerable<DenuncianteDto>*@
+@using Greco2.Models.Paginacion
+@model PaginadorDenunciantes
+
+<style>
+
+    
+    th {
+        text-align: center;
+    }
+
+    th, td {
+        font-size: 12px;
+    }
+
+    .check {
+        width: 20px;
+    }
+
+    span {
+        text-align: center;
+    }
+
+    .infoResult {
+        border-radius: 4px;
+    }
+
+    .list-group-item {
+        border-radius: 4px;
+    }
+</style>
+
+@if (Model.denunciantes.Any())
+{
+<div>
+    <div style="max-height:300px;overflow:auto;">
+        <table class="table table-hover">
+            <thead>
+                <tr style="background-color:#f5f5f5;">
+                    <th></th>
+                    <th style="text-align:left;">Nombre</th>
+                    <th style="text-align:left;">Apellido</th>
+                    <th style="text-align:left;">Dni</th>
+                    <th class="col-xs-1">Editar</th>
+                    <th class="col-xs-1">Eliminar</th>
+                    <th style="text-align:right;">Activo</th>
+                </tr>
+            </thead>
+
+
+            @foreach (var item in Model.denunciantes)
+            {
+                <tr>
+                    <td style="width:100px;text-align:right">
+                        @Html.DisplayFor(i => item.DenuncianteId)
+                    </td>
+                    <td style="width:300px;">
+                        @Html.DisplayFor(i => item.nombre)
+                    </td>
+                    <td style="width:300px;">
+                        @Html.DisplayFor(i => item.apellido)
+                    </td>
+                    <td style="width:150px;">
+                        @Html.DisplayFor(i => item.NroDocumento)
+                    </td>
+
+                    <td class="check">
+                        <a onclick="editarDenunciante(@item.DenuncianteId)" data-toggle='modal' data-target='#editModalDenunciantes'><i class="glyphicon glyphicon-pencil col-xs-1"></i></a>
+                    </td>
+                    <td class="check">
+                        <a onclick="cargarIdModalDelete(@item.DenuncianteId.ToString(),this)" data-toggle='modal' data-target='#deleteModalDenunciantes'><i class="glyphicon glyphicon-trash text-danger col-xs-1"></i></a>
+                    </td>
+                    <td style="width:50px;text-align:right;">
+                        @if (@item.Deleted == null || @item.Deleted == false)
+                        {
+                            <input type="checkbox" disabled />
+                        }
+                        else
+                        {
+                            <input type="checkbox" checked disabled />
+                        }
+                        @*@Html.DisplayFor(i => @item.Deleted)*@
+                    </td>
+                </tr>
+            }
+
+        </table>
+    </div>
+    <div class="text-success col-xs-12">@ViewBag.Success</div>
+    <br />
+    @{
+        int Inicial = 1;
+        var radio = 4;
+        var cantidadMaximaDePaginas = radio * 2 + 1;
+        int Final = (Model.TotalDePaginas > cantidadMaximaDePaginas) ? cantidadMaximaDePaginas : Model.TotalDePaginas;
+        if (Model.PaginaActual > radio + 1)
+        {
+            Inicial = Model.PaginaActual - radio;
+            if (Model.TotalDePaginas > Model.PaginaActual + radio)
+            {
+                Final = Model.PaginaActual + radio;
+            }
+            else
+            {
+                Final = Model.TotalDePaginas;
+            }
+        }
+
+    }
+    @*<div class="text-center" style="overflow:auto;background-color:#f9f9f9;">
+
+        <ul class="pagination">
+
+           
+
+            @for (int i = Inicial; i <= Final; i++)
+
+            {
+
+                if (i != Model.PaginaActual)
+                {
+                    <li>
+                        <a href="javascript:PagerClickDenunciantes(@i);">@i</a>
+                    </li>
+                }
+                else
+                {
+                    <li class="active">
+                        <span class="active">@i</span>
+                    </li>
+                }
+
+            }
+
+            
+        </ul>
+    </div>
+    <input type="hidden" id="hfCurrentPageIndex" name="currentPageIndex" />*@
+
+    <div class="text-primary">Total:  @Model.denunciantes.Count()</div>
+</div>
+
+}
+else
+{
+    <div id="infoResult" class="alert alert-info text-center col-xs-12">
+        <h4>No se encontraron coincidencias</h4>
+    </div>
+
+
+}
+
+
+
+@*@section scripts{ 
+<script>
+
+    function PagerClick(index) {
+        document.getElementById("hfCurrentPageIndex").value = index;
+        BuscarDenunciante();
+
+    }
+</script>
+}*@
+

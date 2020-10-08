@@ -1,0 +1,53 @@
+﻿@using Greco2.Models.Denuncia
+@model List<ArchivoDto>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Upload Files</h2>
+<br />
+
+<div class="container">
+    @using (Html.BeginForm("SubirArchivo", "Archivos", null,
+                FormMethod.Post,
+                new { enctype = "multipart/form-data", method = "post" }))
+    {
+        <div class="row">
+            <div class="col-sm-6">
+                <input type="file" name="file" />
+            </div>
+            <div class="col-md-6 left">
+                <button type="submit" class="btn btn-sm btn-primary">
+                    <span class="glyphicon glyphicon-open"></span>
+                    &nbsp;Subir archivo
+                </button>
+
+            </div>
+        </div>
+    }
+    <hr />
+    @*@Html.ActionLink("Descargar usando ActionLink", "Download", "Archivos")*@
+    <div class="row">
+            <div class="col-md-12">
+                @foreach (var item in Model)
+                {
+                    <span>@item.fechaCreacion.ToShortDateString() - </span>
+                    <a href="@Url.Action("DescargarArchivo", "Archivos", new { id = item.Id })">
+                        <span class="glyphicon glyphicon-save"></span>
+                        <span>@item.Nombre.@item.Extension</span>
+                    </a>
+                    <span> ...... Descargas: @item.Descargas......  </span>
+                    <a href="@Url.Action("EliminarArchivo", "Archivos",
+                             new { id = item.Id })" class="text-danger">
+                        <span class="glyphicon glyphicon-remove text-danger small"></span>
+                        Eliminar archivo
+                    </a>
+                    <br />
+                    <br />
+                }
+            </div>
+        </div>
+</div>
+
+

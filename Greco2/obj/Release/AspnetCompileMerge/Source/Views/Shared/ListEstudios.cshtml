@@ -1,0 +1,103 @@
+﻿@using Greco2.Models.Estudios
+@model IEnumerable<EstudioDto>
+
+<style>
+
+    /*table {
+        margin-left: 80px;
+        margin-right: 80px;
+    }*/
+    th {
+        text-align: center;
+        background-color: #f9f9f9;
+    }
+
+
+    .check {
+        width: 20px;
+    }
+
+    span {
+        text-align: center;
+    }
+
+    .infoResult {
+        border-radius: 4px;
+    }
+
+    .list-group-item {
+        border-radius: 4px;
+    }
+
+    td, th,label,.form-control {
+        font-size: 12px;
+    }
+
+    table {
+        padding: 15px,15px,15px,15px;
+    }
+</style>
+
+<br />
+
+@if (Model.Any())
+{
+    <div style="display:flex;max-height:300px;overflow:auto">
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th></th>
+                    <th style="text-align:left;padding-left:80px;">Nombre</th>
+                    <th class="col-xs-1">Editar</th>
+                    <th class="col-xs-1">Eliminar</th>
+                    <th style="text-align:right;" class="col-xs-1">Inactivo</th>
+
+                </tr>
+            </thead>
+
+
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td class="check" style="text-align:right">
+                        @Html.DisplayFor(i => item.Id)
+                    </td>
+                    <td style="width:100px;padding-left:30px;">
+                        @Html.DisplayFor(i => item.Nombre)
+                    </td>
+
+                    <td class="check">
+
+                        <a onclick="editarEstudio(@item.Id)" data-toggle='modal' data-target='#editModalEstudios'><i class="glyphicon glyphicon-pencil col-xs-1"></i></a>
+                    </td>
+                    <td class="check">
+                        <a onclick="cargarIdModalDelete(@item.Id.ToString(),this)" data-toggle='modal' data-target='#deleteModalEstudios'><i class="glyphicon glyphicon-trash text-danger col-xs-1"></i></a>
+                    </td>
+                    <td class="col-xs-1">
+                        @*<input type="checkbox" checked = @item.Deleted disabled/>*@
+                        @*@Html.CheckBoxFor(i => @item.Deleted,new { @checked = @item.Deleted })*@
+                        @Html.DisplayFor(i => @item.Deleted)
+                    </td>
+                </tr>
+            }
+
+        </table>
+
+
+    </div>
+    <div class="text-success col-xs-12">@ViewBag.Success</div>
+    <br />
+    <div class="text-primary">Total:  @Model.Count()</div>
+}
+else
+{
+    <br />
+    <div id="infoResult" class="alert alert-info text-center col-xs-12">
+        <h4>No se encontraron coincidencias</h4>
+    </div>
+
+}
+
+
+
+
